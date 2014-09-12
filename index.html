@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Firefox OS Styleguide</title>
+  <link rel="stylesheet" type="text/css" href="bower_components/gaia-theme/gaia-base.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/gaia-theme/gaia-theme.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/gaia-fonts/style.css">
+
+  <script src="bower_components/evt/index.js"></script>
+  <script src="bower_components/drag/index.js"></script>
+  <script src="bower_components/gaia-icons/script.js"></script>
+  <script src="bower_components/gaia-theme/lib/gaia-theme-selector.js"></script>
+  <script src="bower_components/gaia-text-input/gaia-text-input.js"></script>
+  <script src="bower_components/gaia-switch/gaia-switch.js"></script>
+
+  <style>
+
+    html {
+      height: 100%;
+      font-family: 'FiraSans';
+      font-weight: lighter;
+    }
+
+    body {
+      padding: 16px;
+      padding-top: 48px;
+      background-color: var(--background);
+    }
+
+    body > section {
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    section > * {
+      margin-bottom: 16px;
+    }
+
+    .menu {
+      padding: 0;
+    }
+
+    .menu > li {
+      padding: 1rem 0;
+      list-style-type: none;
+      border-top: solid 1px;
+      border-color:
+        var(--border-color,
+        var(--background-plus));
+    }
+
+    .menu > li:first-child {
+      border-top: 0;
+    }
+
+  </style>
+</head>
+<body class="theme-settings">
+  <gaia-theme-selector></gaia-theme-selector>
+
+  <section class="sg-landing sg-section-full l-mb-mega">
+    <div class="sg-title">
+      <h1 class="mega l-align-center">FirefoxOS</h1>
+      <h2 class="beta l-align-center l-p-micro">Design guide</h2>
+    </div>
+  </section>
+
+  <section class="l-mb-mega">
+    <gaia-text-input placeholder="Default"><label>Input Label</label></gaia-text-input>
+    <gaia-text-input type="password" placeholder="Password"><label>Password</label></gaia-text-input>
+    <gaia-text-input type="search" placeholder="Search..."><label>Search</label></gaia-text-input>
+  </section>
+
+  <hr class="l-mb-mega"/>
+
+  <section class="l-mb-mega">
+    <ul class="menu">
+      <li class="l-flex l-flex-valign">
+        <label class="l-flex-grow">This is a label</label>
+        <gaia-switch checked></gaia-switch>
+      </li>
+      <li class="l-flex l-flex-valign">
+        <label class="l-flex-grow">This is a label</label>
+        <gaia-switch></gaia-switch>
+      </li>
+    </ul>
+  </section>
+
+</body>
+</html>
