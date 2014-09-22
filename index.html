@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>Firefox OS Styleguide</title>
+  <title>Gaia Components</title>
   <link rel="stylesheet" type="text/css" href="bower_components/gaia-theme/gaia-base.css">
   <link rel="stylesheet" type="text/css" href="bower_components/gaia-theme/gaia-theme.css">
   <link rel="stylesheet" type="text/css" href="bower_components/gaia-fonts/style.css">
@@ -12,21 +12,27 @@
   <script src="bower_components/drag/index.js"></script>
   <script src="bower_components/gaia-icons/script.js"></script>
   <script src="bower_components/gaia-theme/lib/gaia-theme-selector.js"></script>
+  <script src="bower_components/gaia-sub-header/gaia-sub-header.js"></script>
   <script src="bower_components/gaia-text-input/gaia-text-input.js"></script>
+  <script src="bower_components/gaia-menu-item/gaia-menu-item.js"></script>
+  <script src="bower_components/gaia-checkbox/gaia-checkbox.js"></script>
+  <script src="bower_components/gaia-slider/gaia-slider.js"></script>
+  <script src="bower_components/gaia-header/lib/font-fit.js"></script>
+  <script src="bower_components/gaia-header/gaia-header.js"></script>
   <script src="bower_components/gaia-switch/gaia-switch.js"></script>
+  <script src="bower_components/gaia-button/gaia-button.js"></script>
+  <script src="bower_components/gaia-dialog/gaia-dialog.js"></script>
+  <script src="bower_components/gaia-dialog/gaia-dialog-alert.js"></script>
+  <script src="bower_components/gaia-dialog/gaia-dialog-confirm.js"></script>
+  <script src="bower_components/gaia-dialog/gaia-dialog-prompt.js"></script>
+  <script src="bower_components/gaia-dialog/gaia-dialog-action.js"></script>
+  <script src="bower_components/gaia-dialog/gaia-dialog-select.js"></script>
+  <script src="bower_components/gaia-tabs/gaia-tabs.js"></script>
 
   <style>
 
-    html {
-      height: 100%;
-      font-family: 'FiraSans';
-      font-weight: lighter;
-    }
-
     body {
-      padding: 16px;
       padding-top: 48px;
-      background-color: var(--background);
     }
 
     body > section {
@@ -40,7 +46,6 @@
     }
 
     .menu {
-      padding: 0;
     }
 
     .menu > li {
@@ -49,7 +54,8 @@
       border-top: solid 1px;
       border-color:
         var(--border-color,
-        var(--background-plus));
+        var(--background-plus,
+        rgba(0,0,0,0.2)));
     }
 
     .menu > li:first-child {
@@ -68,16 +74,50 @@
     </div>
   </section>
 
-  <section class="l-mb-mega">
+  <section class="l-mb-mega l-plr-small ">
     <gaia-text-input placeholder="Default"><label>Input Label</label></gaia-text-input>
+    <gaia-text-input placeholder="Disabled" disabled><label>Disabled Input</label></gaia-text-input>
     <gaia-text-input type="password" placeholder="Password"><label>Password</label></gaia-text-input>
     <gaia-text-input type="search" placeholder="Search..."><label>Search</label></gaia-text-input>
   </section>
 
   <hr class="l-mb-mega"/>
 
+  <section class="l-mb-mega l-align-center">
+    <div><gaia-button>Gaia-button</gaia-button></div>
+    <div><gaia-button circular><span data-icon="arrow-forward"></span></div>
+  </section>
+
+  <hr class="l-mb-mega"/>
+
+  <section class="l-mb-mega l-align-center">
+    <div>
+      <gaia-menu-item><i data-icon="brightness"></i>Menu 1</gaia-menu-item>
+      <gaia-menu-item><a><i data-icon="location"></i>Menu 2</a></gaia-menu-item>
+      <gaia-menu-item><a><i data-icon="settings"></i>Menu 3</a></gaia-menu-item>
+    </div>
+  </section>
+
+  <hr class="l-mb-mega"/>
+
   <section class="l-mb-mega">
-    <ul class="menu">
+    <gaia-header action="back">
+      <h1>Application Header</h1>
+      <button>Done</button>
+    </gaia-header>
+  </section>
+
+  <hr class="l-mb-mega"/>
+
+  <section class="l-mb-mega">
+    <gaia-sub-header>Sub-Header</gaia-sub-header>
+    <gaia-sub-header><a href="#">Gaia Sub-Header Link</a></gaia-sub-header>
+  </section>
+
+  <hr class="l-mb-mega"/>
+
+  <section class="l-mb-mega">
+    <ul class="menu l-plr-small">
       <li class="l-flex l-flex-valign">
         <label class="l-flex-grow">This is a label</label>
         <gaia-switch checked></gaia-switch>
@@ -89,5 +129,92 @@
     </ul>
   </section>
 
+  <hr class="l-mb-mega"/>
+
+  <section class="l-mb-mega">
+    <ul class="menu l-plr-small">
+      <li class="l-flex l-flex-valign">
+        <label class="l-flex-grow">This is a label</label>
+        <gaia-checkbox checked></gaia-checkbox>
+      </li>
+      <li class="l-flex l-flex-valign">
+        <label class="l-flex-grow" for="my-checkbox">This is a label</label>
+        <gaia-checkbox id="my-checkbox"></gaia-checkbox>
+      </li>
+    </ul>
+  </section>
+
+  <hr class="l-mb-mega"/>
+
+  <section class="l-mb-mega l-plr-small">
+    <gaia-slider></gaia-slider>
+  </section>
+
+  <hr class="l-mb-mega"/>
+
+  <section class="l-mb-mega l-plr-small">
+    <gaia-tabs selected="2">
+      <a class="icon-dialer">Item 1</a>
+      <a class="icon-contacts">Item 2</a>
+      <a class="icon-call-log">Item 3</a>
+      <a disabled="">Item 4</a>
+      <a>Item 5</a>
+    </gaia-tabs>
+  </section>
+
+  <hr class="l-mb-mega"/>
+
+  <section class="l-mb-mega l-plr-small">
+    <div>
+      <gaia-menu-item class="js-open-dialog" data-dialog="gaia-dialog-alert">Alert</gaia-menu-item>
+      <gaia-menu-item class="js-open-dialog" data-dialog="gaia-dialog-confirm">Confirm</gaia-menu-item>
+      <gaia-menu-item class="js-open-dialog" data-dialog="gaia-dialog-prompt">Prompt</gaia-menu-item>
+      <gaia-menu-item class="js-open-dialog" data-dialog="gaia-dialog-select">Select</gaia-menu-item>
+      <gaia-menu-item class="js-open-dialog" data-dialog="gaia-dialog-select[multiple]">Select Multiple</gaia-menu-item>
+    </div>
+
+    <script>
+      var buttons = document.querySelectorAll('.js-open-dialog');
+      [].forEach.call(buttons, function(button) {
+        button.addEventListener('mouseup', function() {
+          var dialog = document.querySelector(button.dataset.dialog);
+          console.log(dialog);
+          dialog.open = true;
+        });
+      });
+    </script>
+  </section>
+
+  <div id="dialogs">
+    <gaia-dialog-alert>No SIM card is present</gaia-dialog-alert>
+    <gaia-dialog-confirm>Are you sure you want to delete this contact?</gaia-dialog-confirm>
+    <gaia-dialog-prompt>Device name</gaia-dialog-prompt>
+
+    <gaia-dialog-action>
+      <h1>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eu mollis tortor.</h1>
+      <button>Action 1</button>
+      <button>Action 2</button>
+    </gaia-dialog-action>
+
+    <gaia-dialog-select>
+      <h1>Ring tone</h1>
+      <li>Classic prism</li>
+      <li>Wallphone</li>
+      <li>Disco drive</li>
+      <li>Touchmatic</li>
+      <li>Classic courier</li>
+      <li>Hacker</li>
+    </gaia-dialog-select>
+
+    <gaia-dialog-select multiple>
+      <h1>Ring tone</h1>
+      <li>Classic prism</li>
+      <li>Wallphone</li>
+      <li>Disco drive</li>
+      <li>Touchmatic</li>
+      <li>Classic courier</li>
+      <li>Hacker</li>
+    </gaia-dialog-select>
+  </div>
 </body>
 </html>
