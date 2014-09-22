@@ -1,0 +1,31 @@
+{
+  "name": "gaia-checkbox",
+  "homepage": "https://github.com/gaia-components/gaia-checkbox",
+  "authors": [
+    "Wilson Page <wilsonpage@me.com>"
+  ],
+  "main": "script.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "examples",
+    "test",
+    "tests",
+    "README.md"
+  ],
+  "dependencies": {
+    "gaia-icons": "gaia-components/gaia-icons"
+  },
+  "_release": "f49105d135",
+  "_resolution": {
+    "type": "branch",
+    "branch": "v1",
+    "commit": "f49105d135eabc6ffe90da51634db13e314a6254"
+  },
+  "_source": "git://github.com/gaia-components/gaia-checkbox.git",
+  "_target": "v1",
+  "_originalSource": "gaia-components/gaia-checkbox",
+  "_direct": true
+}

@@ -1,0 +1,21 @@
+{
+  "name": "gaia-sub-header",
+  "version": "0.1.0",
+  "homepage": "https://github.com/gaia-components/gaia-subheader",
+  "authors": [
+    "rnowm <arnau@arnaumarch.com>"
+  ],
+  "main": "script.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "gaia-theme": "gaia-components/gaia-theme#v1",
+    "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1"
+  }
+}

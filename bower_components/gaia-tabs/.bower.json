@@ -1,0 +1,28 @@
+{
+  "name": "gaia-tabs",
+  "authors": [
+    "Wilson Page <wilsonpage@me.com>"
+  ],
+  "main": "script.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "examples",
+    "test",
+    "tests",
+    "README.md"
+  ],
+  "homepage": "https://github.com/gaia-components/gaia-tabs",
+  "_release": "5437bbdc89",
+  "_resolution": {
+    "type": "branch",
+    "branch": "v1",
+    "commit": "5437bbdc89430d7803d6a44eed14460ffc989832"
+  },
+  "_source": "git://github.com/gaia-components/gaia-tabs.git",
+  "_target": "v1",
+  "_originalSource": "gaia-components/gaia-tabs",
+  "_direct": true
+}

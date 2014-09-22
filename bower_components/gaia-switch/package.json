@@ -1,0 +1,28 @@
+{
+  "name": "gaia-switch",
+  "main": "script.js",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "devDependencies": {
+    "bower": "^1.3.5",
+    "karma": "^0.12.16",
+    "karma-firefox-launcher": "^0.1.3",
+    "karma-mocha": "^0.1.3",
+    "karma-sinon-chai": "^0.1.6",
+    "mocha": "^1.20.1"
+  },
+  "scripts": {
+    "test": "./node_modules/karma/bin/karma start --single-run",
+    "bower-install": "bower install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gaia-components/gaia-switch.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gaia-components/gaia-switch/issues"
+  },
+  "homepage": "https://github.com/gaia-components/gaia-switch"
+}

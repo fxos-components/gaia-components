@@ -1,0 +1,245 @@
+;(function(define){define(function(require,exports,module){
+/*jshint esnext:true*/
+'use strict';
+
+/**
+ * Dependencies
+ */
+
+var GaiaDialog = require('gaia-dialog');
+
+// Load icon-font
+require('gaia-icons');
+
+/**
+ * Extend from the `HTMLElement` prototype
+ *
+ * @type {Object}
+ */
+var proto = Object.create(GaiaDialog.proto);
+
+var removeAttribute = HTMLElement.prototype.removeAttribute;
+var setAttribute = HTMLElement.prototype.setAttribute;
+
+/**
+ * Runs when an instance of `GaiaTabs`
+ * is first created.
+ *
+ * The initial value of the `select` attribute
+ * is used to select a tab.
+ *
+ * @private
+ */
+proto.createdCallback = function() {
+  this.createShadowRoot().innerHTML = template;
+
+  this.els = {
+    dialog: this.shadowRoot.querySelector('gaia-dialog'),
+    submit: this.shadowRoot.querySelector('.submit'),
+    cancel: this.shadowRoot.querySelector('.cancel'),
+    list: this.shadowRoot.querySelector('ul')
+  };
+
+  this.multiple = this.hasAttribute('multiple');
+
+  on(this.els.list, 'click', this.onListClick, this);
+  on(this.els.submit, 'click', this.submit, this);
+  on(this.els.cancel, 'click', this.cancel, this);
+
+  this.setupAnimationListeners();
+  this.styleHack();
+};
+
+proto.onListClick = function(e) {
+  var el = getLi(e.target);
+  var selected = el.getAttribute('aria-selected') === 'true';
+  if (!this.multiple) { this.submit(); }
+  el.setAttribute('aria-selected', !selected);
+};
+
+proto.clearSelected = function() {
+  [].forEach.call(this.selectedOptions, function(option) {
+    option.removeAttribute('aria-selected');
+  });
+};
+
+proto.cancel = function() {
+  this.open = false;
+};
+
+proto.submit = function() {
+  this.open = false;
+};
+
+proto.setAttribute = function(attr, value) {
+  this.els.dialog.setAttribute(attr, value);
+  setAttribute.call(this, attr, value);
+};
+
+proto.removeAttribute = function(attr) {
+  this.els.dialog.removeAttribute(attr);
+  removeAttribute.call(this, attr);
+};
+
+proto.attrs = {
+  multiple: {
+    get: function() { return !!this._multiple; },
+    set: function(value) {
+      value = value === '' ? true : value;
+      if (value === this._multiple) { return; }
+      if (!value) {
+        this._multiple = false;
+        this.removeAttribute('multiple');
+      } else {
+        this._multiple = true;
+        this.setAttribute('multiple', '');
+      }
+    }
+  },
+
+  options: {
+    get: function() { return this.querySelectorAll('li'); }
+  },
+
+  selectedOptions: {
+    get: function() { return this.querySelectorAll('li[aria-selected="true"]'); }
+  },
+
+  value: {
+    get: function() { return this.selectedOptions[0]; }
+  },
+
+  length: {
+    get: function() { return this.options.length; }
+  }
+};
+
+Object.defineProperties(proto, proto.attrs);
+
+var template = `
+<style>
+.shadow-host {
+  display: none;
+}
+
+.shadow-host[open],
+.shadow-host.animating {
+  display: block;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+/** Title
+ ---------------------------------------------------------*/
+
+.shadow-content h1 {
+  padding: 16px;
+  font-size: 23px;
+  line-height: 26px;
+  font-weight: 200;
+  font-style: italic;
+  color: #858585;
+}
+
+/** List
+ ---------------------------------------------------------*/
+
+ul {
+  display: block;
+  padding: 0;
+  margin: 0;
+}
+
+/** Options
+ ---------------------------------------------------------*/
+
+.shadow-content li {
+  position: relative;
+  display: block;
+  padding: 16px;
+  text-align: left;
+  -moz-user-select: none;
+  cursor: pointer;
+}
+
+.shadow-content li[aria-selected='true'] {
+  color: #00CAF2;
+  font-weight: normal;
+}
+
+.shadow-content li:after {
+  content: '';
+  display: block;
+  position: absolute;
+  height: 1px;
+  left: 16px;
+  right: 16px;
+  bottom: 1px;
+  background: #E7E7E7;
+}
+
+.shadow-content li:last-of-type:after {
+  display: none
+}
+
+/** Buttons
+ ---------------------------------------------------------*/
+
+gaia-dialog:not([multiple]) .submit {
+  display: none !important;
+}
+
+gaia-dialog:not([multiple]) .cancel {
+  width: 100% !important;
+}
+
+gaia-dialog:not([multiple]) .cancel:after {
+  display: none% !important;
+}
+
+/** Tick Icon
+ ---------------------------------------------------------*/
+
+.shadow-content li[aria-selected='true']:before {
+  content: 'tick';
+  position: absolute;
+  top: 50%; right: 20px;
+  display: block;
+  margin-top: -12px;
+  font-family: 'gaia-icons';
+  font-size: 14px;
+  font-weight: 500;
+  text-rendering: optimizeLegibility;
+}
+
+</style>
+
+<gaia-dialog>
+  <content select="h1"></content>
+  <ul><content select="li"></content></ul>
+  <fieldset>
+    <button class="cancel">Cancel</button>
+    <button class="submit">Select</button>
+  </fieldset>
+</gaia-dialog>`;
+
+
+function on(el, name, fn, ctx) {
+  if (ctx) { fn = fn.bind(ctx); }
+  el.addEventListener(name, fn);
+}
+
+function getLi(el) {
+  return el && (el.tagName === 'LI' ? el : getLi(el.parentNode));
+}
+
+
+// Register and expose the constructor
+module.exports = document.registerElement('gaia-dialog-select', { prototype: proto });
+module.exports.proto = proto;
+
+});})(typeof define=='function'&&define.amd?define
+:(function(n,w){'use strict';return typeof module=='object'?function(c){
+c(require,exports,module);}:function(c){var m={exports:{}};c(function(n){
+return w[n];},m.exports,m);w[n]=m.exports;};})('gaia-dialog-select',this));

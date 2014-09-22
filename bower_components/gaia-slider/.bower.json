@@ -1,0 +1,28 @@
+{
+  "name": "gaia-slider",
+  "homepage": "https://github.com/gaia-components/gaia-slider",
+  "authors": [
+    "Wilson Page <wilsonpage@me.com>"
+  ],
+  "main": "script.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "examples",
+    "README.md"
+  ],
+  "_release": "7cdfd4d7a3",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "7cdfd4d7a3acd250282b0d4af5a92657a4e561c3"
+  },
+  "_source": "git://github.com/gaia-components/gaia-slider.git",
+  "_target": "master",
+  "_originalSource": "gaia-components/gaia-slider",
+  "_direct": true
+}

@@ -1,0 +1,22 @@
+{
+  "name": "gaia-switch",
+  "version": "0.0.0",
+  "homepage": "https://github.com/gaia-components/gaia-switch",
+  "authors": [
+    "Wilson Page <wilsonpage@me.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "gaia-component-utils": "gaia-components/gaia-component-utils#~0.1.0"
+  },
+  "devDependencies": {
+    "gaia-icons": "gaia-components/gaia-icons#~0.5.6"
+  }
+}

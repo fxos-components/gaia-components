@@ -1,0 +1,28 @@
+{
+  "name": "gaia-dialog",
+  "homepage": "https://github.com/gaia-components/gaia-dialog",
+  "authors": [
+    "Wilson Page <wilsonpage@me.com>"
+  ],
+  "main": "script.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "examples",
+    "test",
+    "tests",
+    "README.md"
+  ],
+  "_release": "5836d5cf05",
+  "_resolution": {
+    "type": "branch",
+    "branch": "v1",
+    "commit": "5836d5cf05beb638558deac5175f03ed8e987c82"
+  },
+  "_source": "git://github.com/gaia-components/gaia-dialog.git",
+  "_target": "v1",
+  "_originalSource": "gaia-components/gaia-dialog",
+  "_direct": true
+}

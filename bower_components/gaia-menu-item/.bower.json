@@ -1,0 +1,31 @@
+{
+  "name": "gaia-menu-item",
+  "homepage": "https://github.com/gaia-components/gaia-menu-item",
+  "authors": [
+    "Wilson Page <wilsonpage@me.com>"
+  ],
+  "main": "script.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "gaia-theme": "gaia-components/gaia-theme#v1",
+    "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1",
+    "gaia-icons": "gaia-components/gaia-icons#master"
+  },
+  "_release": "d16f0240ea",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "d16f0240ea60009682e87f5ef201f636561d3a96"
+  },
+  "_source": "git://github.com/gaia-components/gaia-menu-item.git",
+  "_target": "master",
+  "_originalSource": "gaia-components/gaia-menu-item",
+  "_direct": true
+}
