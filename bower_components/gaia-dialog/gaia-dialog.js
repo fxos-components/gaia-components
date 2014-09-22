@@ -137,7 +137,7 @@ var template = `
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  border: 0
+  border: 0;
 }
 
 .shadow-host {
@@ -148,6 +148,7 @@ var template = `
   height: 100%;
   z-index: 200;
   font-style: italic;
+  text-align: center;
 }
 
 .shadow-host[open],
