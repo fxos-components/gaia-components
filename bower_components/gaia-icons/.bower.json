@@ -28,6 +28,6 @@
     "commit": "83669119ade7d9b551005133e87e9f9a58a6dd37"
   },
   "_source": "git://github.com/gaia-components/gaia-icons.git",
-  "_target": "*",
+  "_target": "~0.5.0",
   "_originalSource": "gaia-components/gaia-icons"
 }

@@ -19,11 +19,10 @@
   "_release": "f53399e483",
   "_resolution": {
     "type": "branch",
-    "branch": "v-1",
+    "branch": "dev",
     "commit": "f53399e4837fed2e0095a49a246b3e4b539bc72a"
   },
   "_source": "git://github.com/gaia-components/gaia-button.git",
-  "_target": "v-1",
-  "_originalSource": "gaia-components/gaia-button",
-  "_direct": true
+  "_target": "dev",
+  "_originalSource": "gaia-components/gaia-button"
 }

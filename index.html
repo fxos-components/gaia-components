@@ -178,7 +178,6 @@
       [].forEach.call(buttons, function(button) {
         button.addEventListener('mouseup', function() {
           var dialog = document.querySelector(button.dataset.dialog);
-          console.log(dialog);
           dialog.open = true;
         });
       });

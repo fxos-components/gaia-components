@@ -12,7 +12,6 @@ var proto = Object.create(HTMLElement.prototype);
 
 proto.createdCallback = function() {
   this.createShadowRoot().innerHTML = template;
-  this.tabIndex = 0;
   this.styleHack();
 };
 

@@ -15,7 +15,6 @@
   ],
   "dependencies": {
     "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1",
-    "gaia-button": "gaia-components/gaia-button#v-1",
     "gaia-subheader": "gaia-components/gaia-sub-header#v1",
     "gaia-sub-header": "gaia-components/gaia-sub-header#v1",
     "gaia-checkbox": "gaia-components/gaia-checkbox#v1",
@@ -27,6 +26,7 @@
     "gaia-tabs": "gaia-components/gaia-tabs#v1",
     "gaia-text-input": "gaia-components/gaia-text-input#v1",
     "gaia-theme": "gaia-components/gaia-theme#v1",
-    "drag": "gaia-components/drag#master"
+    "drag": "gaia-components/drag#master",
+    "gaia-button": "gaia-components/gaia-button#dev"
   }
 }
