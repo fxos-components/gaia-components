@@ -15,8 +15,7 @@
   ],
   "dependencies": {
     "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1",
-    "gaia-button": "gaia-components/gaia-button#v-1",
-    "gaia-subheader": "gaia-components/gaia-sub-header#v1",
+    "gaia-button": "gaia-components/gaia-button#dev",
     "gaia-sub-header": "gaia-components/gaia-sub-header#v1"
   }
 }
