@@ -33,13 +33,26 @@
       flex: 1;
       padding: 2rem 0;
     }
+
+    .track {
+      width: 100px;
+      height: 50px;
+      background: silver
+    }
+
+    .thumb {
+      width: 50px;
+      height: 50px;
+      background: red;
+    }
   </style>
   <script>
-    window.packagesBaseUrl = '../bower_components/';
-    window.GaiaSwitchBaseUrl = '../';
+    window.GAIA_SWITCH_BASE_URL = './';
   </script>
-  <script src="../bower_components/gaia-component-utils/index.js"></script>
-  <script src="../script.js"></script>
+  <script src="bower_components/gaia-component-utils/index.js"></script>
+  <script src="bower_components/evt/index.js"></script>
+  <script src="bower_components/drag/index.js"></script>
+  <script src="gaia-switch.js"></script>
 </head>
 <body role="application">
   <section>
@@ -56,7 +69,6 @@
   <script>
   (function() {
     'use strict';
-    var result = document.getElementById('result');
     var elements = document.querySelectorAll('gaia-switch');
     [].forEach.call(elements, function(switchEl, index) {
       switchEl.addEventListener('click', function(e) {

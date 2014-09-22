@@ -23,7 +23,7 @@
     "gaia-header": "gaia-components/gaia-header#v1",
     "gaia-menu-item": "gaia-components/gaia-menu-item#master",
     "gaia-slider": "gaia-components/gaia-slider#master",
-    "gaia-switch": "gaia-components/gaia-switch#master",
+    "gaia-switch": "gaia-components/gaia-switch#v1",
     "gaia-tabs": "gaia-components/gaia-tabs#v1",
     "gaia-text-input": "gaia-components/gaia-text-input#v1",
     "gaia-theme": "gaia-components/gaia-theme#v1",
