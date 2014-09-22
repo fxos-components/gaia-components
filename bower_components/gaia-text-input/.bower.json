@@ -20,14 +20,13 @@
     "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1"
   },
   "homepage": "https://github.com/gaia-components/gaia-text-input",
-  "_release": "2500878ea7",
+  "_release": "8bff7a9426",
   "_resolution": {
     "type": "branch",
-    "branch": "v1",
-    "commit": "2500878ea7ccce169282b7c93a1a1dd6fded93a0"
+    "branch": "dev",
+    "commit": "8bff7a94267af708e7522d71d521106b4fbdc690"
   },
   "_source": "git://github.com/gaia-components/gaia-text-input.git",
-  "_target": "v1",
-  "_originalSource": "gaia-components/gaia-text-input",
-  "_direct": true
+  "_target": "dev",
+  "_originalSource": "gaia-components/gaia-text-input"
 }

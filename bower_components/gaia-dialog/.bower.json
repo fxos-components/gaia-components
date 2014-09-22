@@ -23,6 +23,5 @@
   },
   "_source": "git://github.com/gaia-components/gaia-dialog.git",
   "_target": "v1",
-  "_originalSource": "gaia-components/gaia-dialog",
-  "_direct": true
+  "_originalSource": "gaia-components/gaia-dialog"
 }

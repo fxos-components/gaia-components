@@ -99,7 +99,6 @@ proto.clear = function(e) {
 // hack until we can import entire custom-elements
 // using HTML Imports (bug 877072).
 var template = document.createElement('template');
-
 template.innerHTML = `
 <style>
 
@@ -113,11 +112,10 @@ input, button {
   padding: 0;
 }
 
-gaia-text-input {
-  display: block;
-}
+/** Host
+ ---------------------------------------------------------*/
 
-:host() {
+gaia-text-input {
   display: block;
 }
 
@@ -184,7 +182,7 @@ label {
  */
 
 .input[disabled] {
-  opacity: 0.6;
+  background: transparent;
 }
 
 /** Placeholder Text
