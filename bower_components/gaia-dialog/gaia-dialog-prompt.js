@@ -10,14 +10,11 @@ var GetTextInput = require('gaia-text-input');
 var GaiaDialog = require('gaia-dialog');
 
 /**
- * Extend from the `HTMLElement` prototype
+ * Extend from `GaiaDialog` prototype
  *
  * @type {Object}
  */
-var proto = Object.create(GaiaDialog.proto);
-
-var removeAttribute = HTMLElement.prototype.removeAttribute;
-var setAttribute = HTMLElement.prototype.setAttribute;
+var proto = GaiaDialog.extend();
 
 /**
  * Runs when an instance of `GaiaTabs`
@@ -29,48 +26,24 @@ var setAttribute = HTMLElement.prototype.setAttribute;
  * @private
  */
 proto.createdCallback = function() {
-  this.createShadowRoot().innerHTML = template;
+  this.onCreated();
 
-  this.els = {
-    dialog: this.shadowRoot.querySelector('gaia-dialog'),
-    input: this.shadowRoot.querySelector('gaia-text-input'),
-    submit: this.shadowRoot.querySelector('.submit'),
-    cancel: this.shadowRoot.querySelector('.cancel')
-  };
+  this.els.input = this.shadowRoot.querySelector('gaia-text-input');
+  this.els.submit = this.shadowRoot.querySelector('.submit');
+  this.els.cancel = this.shadowRoot.querySelector('.cancel');
 
-  this.els.input.placeholder = this.textContent;
-  this.els.cancel.addEventListener('click', this.cancel.bind(this));
-  this.els.submit.addEventListener('click', this.submit.bind(this));
-  this.setupAnimationListeners();
-
-  this.styleHack();
+  this.els.input.placeholder = this.firstChild.textContent;
+  this.els.cancel.addEventListener('click', this.close.bind(this));
+  this.els.submit.addEventListener('click', this.close.bind(this));
 };
 
-proto.submit = function() {
-  this.open = false;
-};
-
-proto.cancel = function() {
-  this.open = false;
-};
-
-proto.setAttribute = function(attr, value) {
-  this.els.dialog.setAttribute(attr, value);
-  setAttribute.call(this, attr, value);
-};
-
-proto.removeAttribute = function(attr) {
-  this.els.dialog.removeAttribute(attr);
-  removeAttribute.call(this, attr);
-};
-
-var template = `
+proto.template = `
 <style>
 gaia-dialog-prompt {
   display: none;
 }
 
-gaia-dialog-prompt[open],
+gaia-dialog-prompt[opened],
 gaia-dialog-prompt.animating {
   display: block;
   position: fixed;

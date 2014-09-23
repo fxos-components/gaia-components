@@ -8,14 +8,8 @@
 
 var GaiaDialog = require('gaia-dialog');
 
-/**
- * Extend from the `HTMLElement` prototype
- *
- * @type {Object}
- */
-var proto = Object.create(GaiaDialog.proto);
-var removeAttribute = HTMLElement.prototype.removeAttribute;
-var setAttribute = HTMLElement.prototype.setAttribute;
+
+var proto = GaiaDialog.extend();
 
 /**
  * Runs when an instance of `GaiaTabs`
@@ -27,39 +21,18 @@ var setAttribute = HTMLElement.prototype.setAttribute;
  * @private
  */
 proto.createdCallback = function() {
-  this.createShadowRoot().innerHTML = template;
-
-  this.els = {
-    dialog: this.shadowRoot.querySelector('gaia-dialog'),
-    submit: this.shadowRoot.querySelector('.submit')
-  };
-
-  this.els.submit.addEventListener('click', this.submit.bind(this));
-  this.setupAnimationListeners();
-  this.styleHack();
+  this.onCreated();
+  this.els.submit = this.shadowRoot.querySelector('.submit');
+  this.els.submit.addEventListener('click', this.close.bind(this));
 };
 
-proto.submit = function() {
-  this.open = false;
-};
-
-proto.setAttribute = function(attr, value) {
-  this.els.dialog.setAttribute(attr, value);
-  setAttribute.call(this, attr, value);
-};
-
-proto.removeAttribute = function(attr) {
-  this.els.dialog.removeAttribute(attr);
-  removeAttribute.call(this, attr);
-};
-
-var template = `
+proto.template = `
 <style>
 .shadow-host {
   display: none;
 }
 
-.shadow-host[open],
+.shadow-host[opened],
 .shadow-host.animating {
   display: block;
   position: fixed;

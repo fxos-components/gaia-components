@@ -15,13 +15,13 @@
     "tests",
     "README.md"
   ],
-  "_release": "8c41faff16",
+  "_release": "6b539f3957",
   "_resolution": {
     "type": "branch",
-    "branch": "v1",
-    "commit": "8c41faff16b5c42b1d76c4314fc335757b6955b1"
+    "branch": "dev",
+    "commit": "6b539f3957507ec27a58c7a3857564dbaba86209"
   },
   "_source": "git://github.com/gaia-components/gaia-dialog.git",
-  "_target": "v1",
+  "_target": "dev",
   "_originalSource": "gaia-components/gaia-dialog"
 }

@@ -176,9 +176,9 @@
     <script>
       var buttons = document.querySelectorAll('.js-open-dialog');
       [].forEach.call(buttons, function(button) {
-        button.addEventListener('mouseup', function() {
+        button.addEventListener('mouseup', function(e) {
           var dialog = document.querySelector(button.dataset.dialog);
-          dialog.open = true;
+          dialog.open(e);
         });
       });
     </script>

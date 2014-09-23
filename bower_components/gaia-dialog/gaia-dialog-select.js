@@ -12,14 +12,11 @@ var GaiaDialog = require('gaia-dialog');
 require('gaia-icons');
 
 /**
- * Extend from the `HTMLElement` prototype
+ * Extend from `GaiaDialog` prototype
  *
  * @type {Object}
  */
-var proto = Object.create(GaiaDialog.proto);
-
-var removeAttribute = HTMLElement.prototype.removeAttribute;
-var setAttribute = HTMLElement.prototype.setAttribute;
+var proto = GaiaDialog.extend();
 
 /**
  * Runs when an instance of `GaiaTabs`
@@ -31,29 +28,23 @@ var setAttribute = HTMLElement.prototype.setAttribute;
  * @private
  */
 proto.createdCallback = function() {
-  this.createShadowRoot().innerHTML = template;
+  this.onCreated();
 
-  this.els = {
-    dialog: this.shadowRoot.querySelector('gaia-dialog'),
-    submit: this.shadowRoot.querySelector('.submit'),
-    cancel: this.shadowRoot.querySelector('.cancel'),
-    list: this.shadowRoot.querySelector('ul')
-  };
+  this.els.submit = this.shadowRoot.querySelector('.submit');
+  this.els.cancel = this.shadowRoot.querySelector('.cancel');
+  this.els.list = this.shadowRoot.querySelector('ul');
 
   this.multiple = this.hasAttribute('multiple');
 
   on(this.els.list, 'click', this.onListClick, this);
-  on(this.els.submit, 'click', this.submit, this);
-  on(this.els.cancel, 'click', this.cancel, this);
-
-  this.setupAnimationListeners();
-  this.styleHack();
+  on(this.els.submit, 'click', this.close, this);
+  on(this.els.cancel, 'click', this.close, this);
 };
 
 proto.onListClick = function(e) {
   var el = getLi(e.target);
   var selected = el.getAttribute('aria-selected') === 'true';
-  if (!this.multiple) { this.submit(); }
+  if (!this.multiple) { this.close(); }
   el.setAttribute('aria-selected', !selected);
 };
 
@@ -61,24 +52,6 @@ proto.clearSelected = function() {
   [].forEach.call(this.selectedOptions, function(option) {
     option.removeAttribute('aria-selected');
   });
-};
-
-proto.cancel = function() {
-  this.open = false;
-};
-
-proto.submit = function() {
-  this.open = false;
-};
-
-proto.setAttribute = function(attr, value) {
-  this.els.dialog.setAttribute(attr, value);
-  setAttribute.call(this, attr, value);
-};
-
-proto.removeAttribute = function(attr) {
-  this.els.dialog.removeAttribute(attr);
-  removeAttribute.call(this, attr);
 };
 
 proto.attrs = {
@@ -116,13 +89,13 @@ proto.attrs = {
 
 Object.defineProperties(proto, proto.attrs);
 
-var template = `
+proto.template = `
 <style>
 .shadow-host {
   display: none;
 }
 
-.shadow-host[open],
+.shadow-host[opened],
 .shadow-host.animating {
   display: block;
   position: fixed;
@@ -208,6 +181,7 @@ gaia-dialog:not([multiple]) .cancel:after {
   display: block;
   margin-top: -12px;
   font-family: 'gaia-icons';
+  font-style: normal;
   font-size: 14px;
   font-weight: 500;
   text-rendering: optimizeLegibility;
