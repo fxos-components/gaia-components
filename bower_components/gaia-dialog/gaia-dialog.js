@@ -92,7 +92,7 @@ proto.animateIn = function(e) {
 
 proto.animateInFromTarget = function(e) {
   var pos = e.touches && e.touches[0] || e;
-  var scale = window.innerHeight / 20 * 1.2;
+  var scale = Math.max(window.innerWidth, window.innerHeight) / 20 * 1.2;
   var background = this.els.background;
   var end = 'transitionend';
   var self = this;
