@@ -1,14 +1,17 @@
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.GaiaHeader=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function(define){define(function(require,exports,module){
+/*jshint laxbreak:true*/
 
 /**
  * Exports
  */
 
-exports = module.exports = function(base) {
-  var url = base + 'gaia-icons/style.css';
-  if (!isLoaded()) { load(url); }
-};
+var base = window.GAIA_ICONS_BASE_URL
+  || window.COMPONENTS_BASE_URL
+  || 'bower_components/';
+
+// Load it if it's not already loaded
+if (!isLoaded()) { load(base + 'gaia-icons/style.css'); }
 
 function load(href) {
   var link = document.createElement('link');
@@ -31,20 +34,96 @@ c(require,exports,module);}:function(c){var m={exports:{}};c(function(n){
 return w[n];},m.exports,m);w[n]=m.exports;};})('gaia-icons',this));
 
 },{}],2:[function(require,module,exports){
+;(function(define){define(function(require,exports,module){
+
+/**
+ * Pointer event abstraction to make
+ * it work for touch and mouse.
+ *
+ * @type {Object}
+ */
+var pointer = [
+  { down: 'touchstart', up: 'touchend' },
+  { down: 'mousedown', up: 'mouseup' }
+]['ontouchstart' in window ? 0 : 1];
+
+exports = module.exports = function(el, options) {
+  var released = (options && options.released) || 200;
+  var min = (options && options.min) || 300;
+  var timeouts = {};
+  var removeReleased;
+
+  el.addEventListener(pointer.down, function(e) {
+    var start = e.timeStamp;
+    var target = e.target;
+
+    // If there is a removeRelease pending
+    // run it before we add any more 'pressed'
+    if (removeReleased) { removeReleased(); }
+
+    // Add the 'pressed' class up the tree
+    // and clear and pending timeouts.
+    classListUp(target, 'add', 'pressed');
+    clearTimeout(timeouts.pressed);
+
+    addEventListener(pointer.up, function fn(e) {
+      removeEventListener(pointer.up, fn, true);
+
+      var duration = e.timeStamp - start;
+      var delta = min - duration;
+      var lag = Math.max(delta, 0);
+
+      // Once we consider the 'press' event
+      // to be over, we remove the 'pressed'
+      // class and add a 'released' class.
+      timeouts.pressed = setTimeout(function() {
+        classListUp(target, 'remove', 'pressed');
+        classListUp(target, 'add', 'released');
+
+        removeReleased = function() {
+          clearTimeout(timeouts.released);
+          classListUp(target, 'remove', 'released');
+          removeReleased = null;
+        };
+
+        timeouts.released = setTimeout(removeReleased, released);
+      }, lag);
+    }, true);
+  }, true);
+};
+
+/**
+ * Run a classList method on every
+ * element up the DOM tree.
+ *
+ * @param  {Element} el
+ * @param  {String} method
+ * @param  {String} cls
+ */
+function classListUp(el, method, cls) {
+  while (el && el.classList) {
+    el.classList[method](cls);
+    el = el.parentNode;
+  }
+}
+
+});})(typeof define=='function'&&define.amd?define
+:(function(n,w){'use strict';return typeof module=='object'?function(c){
+c(require,exports,module);}:function(c){var m={exports:{}};c(function(n){
+return w[n];},m.exports,m);w[n]=m.exports;};})('pressed',this));
+},{}],3:[function(require,module,exports){
 ;(function(define){'use strict';define(function(require,exports,module){
+/*jshint esnext:true*/
 
 /**
  * Dependencies
  */
 
-var loadGaiaIcons = require('gaia-icons');
 var fontFit = require('./lib/font-fit');
+var pressed = require('pressed');
 
-/**
- * Locals
- */
-
-var baseComponents = window.COMPONENTS_BASE_URL || 'bower_components/';
+// Load 'gaia-icons' font-family
+require('gaia-icons');
 
 /**
  * Detects presence of shadow-dom
@@ -84,14 +163,13 @@ var actionTypes = {
  * @private
  */
 proto.createdCallback = function() {
-  var shadow = this.createShadowRoot();
-  var tmpl = template.content.cloneNode(true);
+  this.createShadowRoot().innerHTML = template;
 
   // Get els
   this.els = {
-    actionButton: tmpl.querySelector('.action-button'),
+    actionButton: this.shadowRoot.querySelector('.action-button'),
     headings: this.querySelectorAll('h1,h2,h3,h4'),
-    inner: tmpl.querySelector('.inner')
+    inner: this.shadowRoot.querySelector('.inner')
   };
 
   this.els.actionButton.addEventListener('click',
@@ -99,8 +177,7 @@ proto.createdCallback = function() {
 
   this.configureActionButton();
   this.setupInteractionListeners();
-  shadow.appendChild(tmpl);
-  this.styleHack();
+  this.shadowStyleHack();
   this.runFontFit();
 };
 
@@ -113,7 +190,7 @@ proto.shadowStyleHack = function() {
 };
 
 proto.attachedCallback = function() {
-  this.shadowStyleHack();
+  this.restyleShadowDom();
   this.rerunFontFit();
 };
 
@@ -126,7 +203,7 @@ proto.attachedCallback = function() {
  *
  * @private
  */
-proto.shadowStyleHack = function() {
+proto.restyleShadowDom = function() {
   var style = this.shadowRoot.querySelector('style');
   this.shadowRoot.removeChild(style);
   this.shadowRoot.appendChild(style);
@@ -237,7 +314,7 @@ proto.onActionButtonClick = function(e) {
  * @private
  */
 proto.setupInteractionListeners = function() {
-  stickyActive(this.els.inner);
+  pressed(this.els.inner);
 };
 
 // HACK: Create a <template> in memory at runtime.
@@ -251,11 +328,10 @@ proto.setupInteractionListeners = function() {
 // hack until we can import entire custom-elements
 // using HTML Imports (bug 877072).
 
-var template = document.createElement('template');
-template.innerHTML = `
+var template = `
 <style>
 
-gaia-header {
+:host {
   display: block;
 
   --gaia-header-button-color:
@@ -351,7 +427,7 @@ gaia-header[hidden] {
  *   </gaia-header>
  */
 
-.-content .l10n-action {
+::content .l10n-action {
   position: absolute;
   left: 0;
   top: 0;
@@ -369,7 +445,7 @@ gaia-header[hidden] {
  *    without an inner div.
  */
 
-.-content h1 {
+::content h1 {
   flex: 1;
   margin: 0;
   white-space: nowrap;
@@ -396,7 +472,7 @@ gaia-header[hidden] {
  * we pad it in a bit.
  */
 
-.-content h1.flush-left {
+::content h1.flush-left {
   padding-left: 10px;
 }
 
@@ -408,7 +484,7 @@ gaia-header[hidden] {
  * we pad it in a bit.
  */
 
-.-content h1.flush-right {
+::content h1.flush-right {
   padding-right: 10px; /* 1 */
 }
 
@@ -417,8 +493,8 @@ gaia-header[hidden] {
 
 a,
 button,
-.-content a,
-.-content button {
+::content a,
+::content button {
   box-sizing: border-box;
   display: flex;
   border: none;
@@ -437,38 +513,48 @@ button,
   border-radius: 0;
   font-style: italic;
 
-  transition:
-    var(--button-trasition);
-
   color:
     var(--gaia-header-button-color);
 }
 
 /**
- * .active
+ * .pressed
  *
- * Turn off transiton-delay so the
- * active state shows instantly.
- *
- * Only apply the :active state when the
- * component indicates an interaction is
- * taking place.
+ * The pressed.js library adds a 'pressed'
+ * class which we use instead of :active,
+ * to give us more control over
+ * interaction styling.
  */
 
-a.active,
-button.active,
-.-content a.active,
-.-content button.active {
+a.pressed,
+button.pressed,
+::content a.pressed,
+::content button.pressed {
   opacity: 0.2;
-  transition: none;
+}
+
+/**
+ * .released
+ *
+ * The pressed.js library adds a 'released'
+ * class for a few ms after the finger
+ * leaves the button. This allows us
+ * to style touchend interactions.
+ */
+
+a.released,
+button.released,
+::content a.released,
+::content button.released {
+  transition: opacity 200ms;
 }
 
 /**
  * [hidden]
  */
 
-.-content a[hidden],
-.-content button[hidden] {
+::content a[hidden],
+::content button[hidden] {
   display: none;
 }
 
@@ -476,10 +562,10 @@ button.active,
  * [disabled]
  */
 
-.-content a[disabled],
-.-content button[disabled] {
+::content a[disabled],
+::content button[disabled] {
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.3;
 }
 
 /** Icon Buttons
@@ -489,8 +575,8 @@ button.active,
  * Icons are a different color to text
  */
 
-.-content .icon,
-.-content [data-icon] {
+::content .icon,
+::content [data-icon] {
   color:
     var(--header-icon-color,
     var(--gaia-header-button-color));
@@ -520,66 +606,14 @@ button.active,
   <content select="h1,h2,h3,h4,a,button"></content>
 </div>`;
 
-/**
- * Adds a '.active' helper class to the given
- * element that sticks around for the given
- * lag period.
- *
- * Usually the native :active hook is far
- * too quick for our UX needs.
- *
- * This may be needed in other components, so I've
- * made sure it's decoupled from gaia-header.
- *
- * We support mouse events so that our visual
- * demos still work correcly on desktop.
- *
- * Options:
- *
- *   - `on` {Function} active callback
- *   - `off` {Function} inactive callback
- *   - `ms` {Number} number of ms lag
- *
- * @param {Element} el
- * @param {Object} options
- * @private
- */
-var stickyActive = (function() {
-  var noop = function() {};
-  var pointer = [
-    { down: 'touchstart', up: 'touchend' },
-    { down: 'mousedown', up: 'mouseup' }
-  ]['ontouchstart' in window ? 0 : 1];
-
-  function exports(el, options) {
-    options = options || {};
-    var on = options.on || noop;
-    var off = options.off || noop;
-    var lag = options.ms || 300;
-    var timeout;
-
-    el.addEventListener(pointer.down, function(e) {
-      var target = e.target;
-      clearTimeout(timeout);
-      target.classList.add(exports.class);
-      on();
-
-      el.addEventListener(pointer.up, function fn(e) {
-        el.removeEventListener(pointer.up, fn);
-        timeout = setTimeout(function() {
-          target.classList.remove(exports.class);
-          off();
-        }, lag);
-      });
-    });
-  }
-
-  exports.class = 'active';
-  return exports;
-})();
-
-// Header depends on gaia-icons
-loadGaiaIcons(baseComponents);
+// If the browser doesn't support shadow-css
+// selectors yet, we update the template
+// to use the shim classes instead.
+if (!hasShadowCSS) {
+  template = template
+    .replace('::content', '.-content', 'g')
+    .replace(':host', '.-host', 'g');
+}
 
 // Register and return the constructor
 // and expose `protoype` (bug 1048339)
@@ -591,7 +625,7 @@ module.exports._prototype = proto;
 c(require,exports,module);}:function(c){var m={exports:{}};c(function(n){
 return w[n];},m.exports,m);w[n]=m.exports;};})('gaia-header',this));
 
-},{"./lib/font-fit":3,"gaia-icons":1}],3:[function(require,module,exports){
+},{"./lib/font-fit":4,"gaia-icons":1,"pressed":2}],4:[function(require,module,exports){
 ;(function(define){'use strict';define(function(require,exports,module){
 
   /**
@@ -929,5 +963,5 @@ return w[n];},m.exports,m);w[n]=m.exports;};})('gaia-header',this));
 c(require,exports,module);}:function(c){var m={exports:{}};c(function(n){
 return w[n];},m.exports,m);w[n]=m.exports;};})('./lib/font-fit',this));
 
-},{}]},{},[2])(2)
+},{}]},{},[3])(3)
 });

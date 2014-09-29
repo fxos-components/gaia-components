@@ -4,7 +4,7 @@
   "authors": [
     "Wilson Page <wilsonpage@me.com>"
   ],
-  "main": "script.js",
+  "main": "gaia-header.js",
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -18,19 +18,20 @@
     "README.md"
   ],
   "dependencies": {
-    "gaia-icons": "gaia-components/gaia-icons#~0.5.0"
+    "gaia-icons": "gaia-components/gaia-icons#~0.6.0",
+    "pressed": "gaia-components/pressed#~0.1.0"
   },
   "devDependencies": {
     "gaia-theme": "gaia-components/gaia-theme#~0.3.0",
     "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1"
   },
-  "_release": "57a89658de",
+  "_release": "ad052a8b2d",
   "_resolution": {
     "type": "branch",
-    "branch": "v1",
-    "commit": "57a89658de4b14b62750bd69b01ea6c6303dbc9a"
+    "branch": "dev",
+    "commit": "ad052a8b2de3d916724566dd0696546ca7f992cf"
   },
   "_source": "git://github.com/gaia-components/gaia-header.git",
-  "_target": "v1",
+  "_target": "dev",
   "_originalSource": "gaia-components/gaia-header"
 }

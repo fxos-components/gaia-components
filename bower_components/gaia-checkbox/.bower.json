@@ -4,7 +4,7 @@
   "authors": [
     "Wilson Page <wilsonpage@me.com>"
   ],
-  "main": "script.js",
+  "main": "gaia-checkbox.js",
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -16,15 +16,15 @@
     "README.md"
   ],
   "dependencies": {
-    "gaia-icons": "gaia-components/gaia-icons"
+    "gaia-icons": "gaia-components/gaia-icons#~0.6.0"
   },
-  "_release": "f49105d135",
+  "_release": "01527f9660",
   "_resolution": {
     "type": "branch",
-    "branch": "v1",
-    "commit": "f49105d135eabc6ffe90da51634db13e314a6254"
+    "branch": "dev",
+    "commit": "01527f96600440a44b8a1a525514954d4eba0910"
   },
   "_source": "git://github.com/gaia-components/gaia-checkbox.git",
-  "_target": "v1",
+  "_target": "dev",
   "_originalSource": "gaia-components/gaia-checkbox"
 }

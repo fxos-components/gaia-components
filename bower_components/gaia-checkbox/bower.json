@@ -5,7 +5,7 @@
   "authors": [
     "Wilson Page <wilsonpage@me.com>"
   ],
-  "main": "script.js",
+  "main": "gaia-checkbox.js",
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -17,6 +17,6 @@
     "README.md"
   ],
   "dependencies": {
-    "gaia-icons": "gaia-components/gaia-icons"
+    "gaia-icons": "gaia-components/gaia-icons#~0.6.0"
   }
 }

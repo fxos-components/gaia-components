@@ -8,7 +8,7 @@
   <link rel="stylesheet" type="text/css" href="bower_components/gaia-theme/gaia-theme.css">
   <link rel="stylesheet" type="text/css" href="bower_components/gaia-fonts/style.css">
   <script src="bower_components/gaia-theme/lib/gaia-theme-selector.js"></script>
-  <script src="bower_components/gaia-icons/script.js"></script>
+  <script src="bower_components/gaia-icons/gaia-icons.js"></script>
   <script src="gaia-text-input.js"></script>
   <style type="text/css">
 
@@ -28,6 +28,10 @@
       margin-bottom: 16px;
     }
 
+    .tall {
+      height: 160px;
+    }
+
   </style>
 </head>
 <body role="application">
@@ -38,5 +42,8 @@
   <gaia-text-input placeholder="Default"><label>Input Label</label></gaia-text-input>
   <gaia-text-input type="password" placeholder="Password"><label>Password</label></gaia-text-input>
   <gaia-text-input type="search" placeholder="Search..."><label>Search</label></gaia-text-input>
+  <gaia-text-input disabled placeholder="Disabled"><label>Disabled</label></gaia-text-input>
+  <gaia-text-input type="multiline" placeholder="Multiline"><label>Multiline</label></gaia-text-input>
+  <gaia-text-input type="multiline" class="tall" placeholder="Tall multiline"></gaia-text-input>
 </body>
 </html>

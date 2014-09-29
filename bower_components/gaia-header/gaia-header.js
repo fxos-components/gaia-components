@@ -1,17 +1,15 @@
 ;(function(define){'use strict';define(function(require,exports,module){
+/*jshint esnext:true*/
 
 /**
  * Dependencies
  */
 
-var loadGaiaIcons = require('gaia-icons');
 var fontFit = require('./lib/font-fit');
+var pressed = require('pressed');
 
-/**
- * Locals
- */
-
-var baseComponents = window.COMPONENTS_BASE_URL || 'bower_components/';
+// Load 'gaia-icons' font-family
+require('gaia-icons');
 
 /**
  * Detects presence of shadow-dom
@@ -23,8 +21,6 @@ var hasShadowCSS = (function() {
   try { document.querySelector(':host'); return true; }
   catch (e) { return false; }
 })();
-
-// console.log(hasShadowCSS);
 
 /**
  * Element prototype, extends from HTMLElement
@@ -204,7 +200,7 @@ proto.onActionButtonClick = function(e) {
  * @private
  */
 proto.setupInteractionListeners = function() {
-  stickyActive(this.els.inner);
+  pressed(this.els.inner);
 };
 
 // HACK: Create a <template> in memory at runtime.
@@ -403,30 +399,40 @@ button,
   border-radius: 0;
   font-style: italic;
 
-  transition:
-    var(--button-trasition);
-
   color:
     var(--gaia-header-button-color);
 }
 
 /**
- * .active
+ * .pressed
  *
- * Turn off transiton-delay so the
- * active state shows instantly.
- *
- * Only apply the :active state when the
- * component indicates an interaction is
- * taking place.
+ * The pressed.js library adds a 'pressed'
+ * class which we use instead of :active,
+ * to give us more control over
+ * interaction styling.
  */
 
-a.active,
-button.active,
-::content a.active,
-::content button.active {
+a.pressed,
+button.pressed,
+::content a.pressed,
+::content button.pressed {
   opacity: 0.2;
-  transition: none;
+}
+
+/**
+ * .released
+ *
+ * The pressed.js library adds a 'released'
+ * class for a few ms after the finger
+ * leaves the button. This allows us
+ * to style touchend interactions.
+ */
+
+a.released,
+button.released,
+::content a.released,
+::content button.released {
+  transition: opacity 200ms;
 }
 
 /**
@@ -445,7 +451,7 @@ button.active,
 ::content a[disabled],
 ::content button[disabled] {
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.3;
 }
 
 /** Icon Buttons
@@ -494,67 +500,6 @@ if (!hasShadowCSS) {
     .replace('::content', '.-content', 'g')
     .replace(':host', '.-host', 'g');
 }
-
-/**
- * Adds a '.active' helper class to the given
- * element that sticks around for the given
- * lag period.
- *
- * Usually the native :active hook is far
- * too quick for our UX needs.
- *
- * This may be needed in other components, so I've
- * made sure it's decoupled from gaia-header.
- *
- * We support mouse events so that our visual
- * demos still work correcly on desktop.
- *
- * Options:
- *
- *   - `on` {Function} active callback
- *   - `off` {Function} inactive callback
- *   - `ms` {Number} number of ms lag
- *
- * @param {Element} el
- * @param {Object} options
- * @private
- */
-var stickyActive = (function() {
-  var noop = function() {};
-  var pointer = [
-    { down: 'touchstart', up: 'touchend' },
-    { down: 'mousedown', up: 'mouseup' }
-  ]['ontouchstart' in window ? 0 : 1];
-
-  function exports(el, options) {
-    options = options || {};
-    var on = options.on || noop;
-    var off = options.off || noop;
-    var lag = options.ms || 300;
-    var timeout;
-
-    el.addEventListener(pointer.down, function(e) {
-      var target = e.target;
-      clearTimeout(timeout);
-      target.classList.add(exports.class);
-      on();
-
-      el.addEventListener(pointer.up, function fn(e) {
-        el.removeEventListener(pointer.up, fn);
-        timeout = setTimeout(function() {
-          target.classList.remove(exports.class);
-          off();
-        }, lag);
-      });
-    });
-  }
-
-  exports.class = 'active';
-  return exports;
-})();
-
-// Header depends on gaia-icons
-loadGaiaIcons(baseComponents);
 
 // Register and return the constructor
 // and expose `protoype` (bug 1048339)

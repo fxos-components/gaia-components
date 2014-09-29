@@ -16,9 +16,9 @@
   "dependencies": {
     "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1",
     "gaia-sub-header": "gaia-components/gaia-sub-header#v1",
-    "gaia-checkbox": "gaia-components/gaia-checkbox#v1",
+    "gaia-checkbox": "gaia-components/gaia-checkbox#dev",
     "gaia-dialog": "gaia-components/gaia-dialog#dev",
-    "gaia-header": "gaia-components/gaia-header#v1",
+    "gaia-header": "gaia-components/gaia-header#dev",
     "gaia-menu-item": "gaia-components/gaia-menu-item#master",
     "gaia-slider": "gaia-components/gaia-slider#master",
     "gaia-switch": "gaia-components/gaia-switch#v1",

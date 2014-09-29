@@ -2,15 +2,8 @@
 /*jshint esnext:true*/
 'use strict';
 
-/**
- * Locals
- */
-
-var baseComponents = window.COMPONENTS_BASE_URL || 'bower_components/';
-var base = window.GAIA_CHECKBOX_BASE_URL || baseComponents + 'gaia-checkbox/';
-
-// Load gaia-icons
-require('gaia-icons')(baseComponents);
+// Load 'gaia-icons' font-family
+require('gaia-icons');
 
 /**
  * Prototype extends from
@@ -33,10 +26,9 @@ proto.attrs = {
 };
 
 proto.createdCallback = function() {
-  var tmpl = template.content.cloneNode(true);
-  var shadow = this.createShadowRoot();
+  this.createShadowRoot().appendChild(template.content.cloneNode(true));
 
-  this.els = { inner: tmpl.querySelector('.inner') };
+  this.els = { inner: this.shadowRoot.querySelector('.inner') };
   this.els.inner.addEventListener('click', this.onClick.bind(this));
 
   // Setup initial attributes
@@ -46,16 +38,6 @@ proto.createdCallback = function() {
 
   // Make tabable
   this.tabIndex = 0;
-
-  shadow.appendChild(tmpl);
-};
-
-proto.bindLabels = function() {
-  if (!this.id) { return; }
-  var fn = this.onClick.bind(this);
-  var selector = 'label[for="' + this.id + '"]';
-  var els = document.querySelectorAll(selector);
-  [].forEach.call(els, function(el) { el.addEventListener('click', fn); });
 };
 
 proto.attributeChangedCallback = function(name, from, to) {
@@ -63,6 +45,7 @@ proto.attributeChangedCallback = function(name, from, to) {
 };
 
 proto.onClick = function(e) {
+  e.stopPropagation();
   this.checked = !this.checked;
 };
 
@@ -113,11 +96,6 @@ var template = document.createElement('template');
 template.innerHTML = `
 <style>
 
-/** Reset
- ---------------------------------------------------------*/
-
-* { box-sizing: border-box }
-
 /** Host
  ---------------------------------------------------------*/
 
@@ -127,6 +105,7 @@ gaia-checkbox {
   width: 28px;
   height: 28px;
   cursor: pointer;
+  outline: 0;
 }
 
 /** Inner
@@ -134,24 +113,38 @@ gaia-checkbox {
 
 .inner {
   display: block;
+  box-sizing: border-box;
   position: relative;
   width: 100%;
   height: 100%;
   border-radius: 50%;
   border: 2px solid #a6a6a6;
-  overflow: hidden;
   z-index: 0;
+
+  --gaia-checkbox-background:
+    var(--checkbox-background,
+    var(--input-background,
+    var(--button-background,
+    var(--background-plus))));
+
+  background:
+    var(--gaia-checkbox-background);
 
   border-color:
     var(--checkbox-border-color,
     var(--border-color,
     var(--background-minus)));
+}
 
-  background:
-    var(--checkbox-background,
-    var(--input-background,
-    var(--button-background,
-    var(--background-plus))));
+/**
+ * Increase hit area
+ */
+
+.inner:before {
+  content: '';
+  position: absolute;
+  top: -10px; right: -10px;
+  bottom: -10px; left: -10px;
 }
 
 /** Background
@@ -165,30 +158,35 @@ gaia-checkbox {
   left: 0px;
   position: absolute;
   z-index: -1;
+  opacity: 1;
   transform: scale(0);
-  transition: all 0.2s;
-  transition-delay: 0.2s;
-
   background: var(--highlight-color, #000);
 }
 
 /**
- * :active
+ * .active
  */
 
-.inner:active .background {
-  transform: scale(1);
-  transition: none;
+.inner[checked] .background {
+  transform: scale(1.6);
+  transition-property: transform, opacity;
+  transition-duration: 300ms;
+  transition-timing-function: linear;
+  opacity: 0;
 }
 
 /** Tick
  ---------------------------------------------------------*/
 
 .tick {
-  opacity: 0;
-  color: var(--highlight-color, #000);
   text-align: center;
-  line-height: 26px
+  line-height: 26px;
+  opacity: 0;
+
+  transition-property: opacity;
+  transition-duration: 100ms;
+
+  color: var(--highlight-color, #000);
 }
 
 /**
@@ -197,6 +195,7 @@ gaia-checkbox {
 
 [checked] .tick {
   opacity: 1;
+  transition-delay: 180ms;
 }
 
 /** Icon
@@ -219,31 +218,46 @@ gaia-checkbox {
   <div class="tick"></div>
 </div>`;
 
-
-document.addEventListener('click', function(e) {
+// Bind a 'click' delegate to the
+// window to listen for all clicks
+// and toggle checkboxes when required.
+addEventListener('click', function(e) {
   var label = getLabel(e.target);
   var checkbox = getLinkedCheckbox(label);
   if (checkbox) { checkbox.toggle(); }
 }, true);
 
+/**
+ * Find a checkbox when given a <label>.
+ *
+ * @param  {Element} label
+ * @return {GaiaCheckbox|null}
+ */
 function getLinkedCheckbox(label) {
   if (!label) { return; }
   var id = label.getAttribute('for');
   var checkbox = id && document.getElementById(id);
-  return checkbox || label.querySelector('gaia-checkbox');
+  return checkbox;// || label.querySelector('gaia-checkbox');
 }
 
+/**
+ * Walk up the DOM tree from a given
+ * element until a <label> is found.
+ *
+ * @param  {Element} el
+ * @return {HTMLLabelElement|undefined}
+ */
 function getLabel(el) {
   return el && (el.tagName == 'LABEL' ? el : getLabel(el.parentNode));
 }
 
+// Makes checkboxs togglable via keboard
 addEventListener('keypress', function(e) {
-  var isSpace = e.which === 32;
+  if (e.which !== 32) { return; }
   var el = document.activeElement;
   var isCheckbox = el.tagName === 'GAIA-CHECKBOX';
-  if (isSpace && isCheckbox) { el.toggle(); }
+  if (isCheckbox) { el.toggle(); }
 });
-
 
 // Register and return the constructor
 module.exports = document.registerElement('gaia-checkbox', { prototype: proto });

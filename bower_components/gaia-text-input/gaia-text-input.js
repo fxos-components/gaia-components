@@ -2,13 +2,6 @@
 /*jshint esnext:true*/
 'use strict';
 
-/**
- * Locals
- */
-
-var baseComponents = window.COMPONENTS_BASE_URL || 'bower_components/';
-var base = window.GAIA_TEXT_INPUT_BASE_URL || baseComponents + 'gaia-text-input/';
-
 // Load gaia-icons
 require('gaia-icons');
 
@@ -24,69 +17,94 @@ proto.createdCallback = function() {
   var tmpl = template.content.cloneNode(true);
 
   this.els = {
+    textarea: tmpl.querySelector('textarea'),
     inner: tmpl.querySelector('.inner'),
-    input: tmpl.querySelector('.input'),
+    input: tmpl.querySelector('input'),
     clear: tmpl.querySelector('.clear')
   };
 
-  this.placeholder = this.getAttribute('placeholder');
+  //
+  this.els.field = this.els.input;
+
+  this.type = this.getAttribute('type');
   this.disabled = this.hasAttribute('disabled');
+  this.placeholder = this.getAttribute('placeholder');
   this.required = this.getAttribute('required');
   this.value = this.getAttribute('value');
-  this.type = this.getAttribute('type');
 
   // Don't take focus from the input field
   this.els.clear.addEventListener('mousedown', function(e) { e.preventDefault(); });
   this.els.clear.addEventListener('click', this.clear.bind(this));
 
   shadow.appendChild(tmpl);
-  this.styleHack();
+  this.shadowStyleHack();
 };
 
-proto.styleHack = function() {
+proto.attributeChangedCallback = function(attr, from, to) {
+  if (this.attrs[attr]) { this[attr] = to; }
+};
+
+proto.shadowStyleHack = function() {
   var style = this.shadowRoot.querySelector('style');
   style.setAttribute('scoped', '');
   this.appendChild(style.cloneNode(true));
 };
 
+proto.configureField = function() {
+  var previous = this.els.field;
+  this.multiline = this.type == 'multiline';
+  this.els.field = this.multiline ? this.els.textarea : this.els.input;
+  if (!this.multiline) { this.els.field.type = this.type; }
+  if (previous) { this.els.field.value = previous.value; }
+};
 
-Object.defineProperties(proto, {
+proto.clear = function(e) {
+  this.value = '';
+};
+
+proto.attrs = {
   type: {
-    get: function() { return this.els.input.type; },
+    get: function() { return this.els.inner.getAttribute('type'); },
     set: function(value) {
       if (!value) { return; }
       this.els.inner.setAttribute('type', value);
-      this.els.input.type = value;
+      this.configureField();
     }
   },
 
   placeholder: {
-    get: function() { return this.els.input.placeholder; },
+    get: function() { return this.field.placeholder; },
     set: function(value) {
-      if (!value) { return; }
+      if (!value && value !== '') { return; }
+      this.els.textarea.placeholder = value;
       this.els.input.placeholder = value;
     }
   },
 
   value: {
-    get: function() { return this.els.input.value; },
-    set: function(value) { this.els.input.value = value; }
+    get: function() { return this.els.field.value; },
+    set: function(value) { this.els.field.value = value; }
   },
 
   required: {
-    get: function() { return this.els.input.required; },
-    set: function(value) { this.els.input.required = value; }
+    get: function() { return this.els.field.required; },
+    set: function(value) {
+      this.els.textarea.required = value;
+      this.els.input.required = value;
+    }
   },
 
   disabled: {
-    get: function() { return this.els.input.disabled; },
-    set: function(value) { this.els.input.disabled = value; }
+    get: function() { return this.els.field.disabled; },
+    set: function(value) {
+      value = !!(value === '' || value);
+      this.els.textarea.disabled = value;
+      this.els.input.disabled = value;
+    }
   }
-});
-
-proto.clear = function(e) {
-  this.els.input.value = '';
 };
+
+Object.defineProperties(proto, proto.attrs);
 
 // HACK: Create a <template> in memory at runtime.
 // When the custom-element is created we clone
@@ -105,7 +123,9 @@ template.innerHTML = `
 /** Reset
  ---------------------------------------------------------*/
 
-input, button {
+input,
+button,
+textarea {
   box-sizing: border-box;
   border: 0;
   margin: 0;
@@ -119,6 +139,13 @@ gaia-text-input {
   display: block;
 }
 
+/** Inner
+ ---------------------------------------------------------*/
+
+.inner {
+  height: 100%;
+}
+
 /** Label
  ---------------------------------------------------------*/
 
@@ -128,18 +155,23 @@ label {
   margin: 0 0 4px 16px;
 }
 
-/** Inner
+/** Fields
  ---------------------------------------------------------*/
 
-.input-container {
+.fields {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
   --gi-border-color:
     var(--input-border-color,
     var(--border-color,
     var(--background-plus,
     #e7e7e7)));
 
-  position: relative;
-  border-color: var(--gi-border-color);
+  border-color:
+    var(--gi-border-color);
+
   border:
     var(--input-border,
     var(--border,
@@ -147,28 +179,39 @@ label {
 }
 
 /**
- * [type="search"]
+ * [type='search']
  */
 
-[type='search'] .input-container {
+[type='search'] .fields {
   border-radius: 30px;
   overflow: hidden;
+}
+
+/**
+ * [type='multiline']
+ */
+
+[type='multiline'] .single-line {
+  display: none;
 }
 
 /** Input Field
  ---------------------------------------------------------*/
 
-.input {
+input,
+textarea {
   display: block;
   width: 100%;
   height: 40px;
   font-size: inherit;
-  width: 100%;
   border: none;
   padding: 0 16px;
   margin: 0;
   font: inherit;
-  color: var(--input-color, #000);
+  resize: none;
+
+  color:
+    var(--input-color, #000);
 
   background:
     var(--text-input-background,
@@ -181,16 +224,19 @@ label {
  * [disabled]
  */
 
-.input[disabled] {
+input[disabled],
+textarea[disabled] {
   background: transparent;
 }
 
 /** Placeholder Text
  ---------------------------------------------------------*/
 
-.input::-moz-placeholder {
+::-moz-placeholder {
   font-style: italic;
-  color: var(--input-placeholder-color, #909ca7);
+
+  color:
+    var(--input-placeholder-color, #909ca7);
 }
 
 /** Clear Button
@@ -200,7 +246,6 @@ label {
   position: absolute;
   top: 12px;
   right: 10px;
-  background: var(--input-clear-background, #999);
   width: 17px;
   height: 17px;
   padding: 0;
@@ -208,13 +253,16 @@ label {
   border-radius: 50%;
   opacity: 0;
   color: #fff;
+
+  background:
+    var(--input-clear-background, #999);
 }
 
 /**
  * input:focus
  */
 
-.input:focus ~ .clear {
+input:focus ~ .clear {
   opacity: 1;
 }
 
@@ -251,20 +299,51 @@ label {
  * input:focus
  */
 
-.input:focus ~ .focus {
+:focus ~ .focus {
   transform: scaleX(1);
-  transition-delay: var(--button-transition-delay, 200ms);
+  transition-delay: 200ms;
   visibility: visible;
+}
+
+/** Textarea Container
+ ---------------------------------------------------------*/
+
+.multiline {
+  display: none;
+  height: 100%;
+}
+
+/**
+ * [type='multiline']
+ */
+
+[type='multiline'] .multiline {
+  display: block;
+}
+
+/** Textarea
+ ---------------------------------------------------------*/
+
+textarea {
+  height: 100%;
+  min-height: 86px;
+  padding: 10px 16px;
 }
 
 </style>
 
 <div class="inner">
   <content select="label"></content>
-  <div class="input-container">
-    <input class="input" type="text"/>
-    <button class="clear"></button>
-    <div class="focus"></div>
+  <div class="fields">
+    <div class="single-line">
+      <input type="text"/>
+      <button class="clear" tabindex="-1"></button>
+      <div class="focus"></div>
+    </div>
+    <div class="multiline">
+      <textarea></textarea>
+      <div class="focus"></div>
+    </div>
   </div>
 </div>`;
 
