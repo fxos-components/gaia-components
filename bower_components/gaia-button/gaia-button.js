@@ -3,42 +3,102 @@
 'use strict';
 
 /**
+ * Dependencies
+ */
+
+var pressed = require('pressed');
+
+/**
  * Prototype extends from
  * the HTMLElement.
  *
  * @type {Object}
  */
-var proto = Object.create(HTMLElement.prototype);
+var proto = Object.create(HTMLButtonElement.prototype);
 
 proto.createdCallback = function() {
   this.createShadowRoot().innerHTML = template;
+  this.els = {
+    inner: this.shadowRoot.querySelector('.inner'),
+    content: this.shadowRoot.querySelector('.content')
+  };
+
+  this.circular = this.hasAttribute('circular');
+  this.disabled = this.hasAttribute('disabled');
+  this.setAttribute('role', 'button');
+  this.tabIndex = 0;
+
+  pressed(this.shadowRoot);
   this.styleHack();
+};
+
+proto.attributeChangedCallback = function(attr, from, to) {
+  if (this.attrs[attr]) { this[attr] = to; }
 };
 
 proto.styleHack = function() {
   var style = this.shadowRoot.querySelector('style').cloneNode(true);
+  this.classList.add('-host', '-content');
   style.setAttribute('scoped', '');
   this.appendChild(style);
 };
 
+proto.attrs = {
+  circular: {
+    get: function() { this.getAttribute('circular'); },
+    set: function(value) {
+      value = !!(value === '' || value);
+      if (value) {
+        this.setAttribute('circular', '');
+        this.els.inner.setAttribute('circular', '');
+      } else {
+        this.removeAttribute('circular');
+        this.els.inner.removeAttribute('circular');
+      }
+    }
+  },
+
+  disabled: {
+    get: function() { this.getAttribute('disabled'); },
+    set: function(value) {
+      value = !!(value === '' || value);
+      if (value) {
+        this.setAttribute('disabled', '');
+        this.els.inner.setAttribute('disabled', '');
+      } else {
+        this.removeAttribute('disabled');
+        this.els.inner.removeAttribute('disabled');
+      }
+    }
+  }
+};
+
+Object.defineProperties(proto, proto.attrs);
+
 var template = `
 <style>
 
-gaia-button {
+.-host {
   display: inline-block;
   box-sizing: border-box;
+  outline: 0;
+}
+
+/** Inner
+ ---------------------------------------------------------*/
+
+.inner {
+  position: relative;
   height: 50px;
-  font-style: italic;
-  font-size: 17px;
-  text-align: center;
-  line-height: 50px;
-  padding: 0 25px;
-  text-align: center;
-  margin: 0;
-  border: 0;
   border-radius: 50px;
+  overflow: hidden;
   cursor: pointer;
-  transition: all 200ms 300ms;
+
+  background:
+    var(--button-background,
+    var(--input-background,
+    var(--background-plus,
+    #fff)));
 
   color:
     var(--button-color,
@@ -49,50 +109,96 @@ gaia-button {
     var(--button-box-shadow,
     var(--box-shadow,
     none));
-
-  background:
-    var(--button-background,
-    var(--input-background,
-    var(--background-plus,
-    #fff)));
 }
 
 /**
  * [circular]
  */
 
-gaia-button[circular] {
+.inner[circular] {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  padding: 0;
 }
 
 /**
- * :active
+ * [disabled]
  */
 
-gaia-button:active {
+.inner[disabled] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/**
+ * .pressed
+ */
+
+.inner.pressed {
   color: var(--button-color-active, #fff);
-  transition: none;
+  box-shadow: var(--button-box-shadow-active, none);
+}
+
+/** Background
+ ---------------------------------------------------------*/
+
+.background {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
 
   background:
     var(--button-background-active,
     var(--highlight-color,
     #333));
-
-  box-shadow:
-    var(--button-box-shadow-active, none);
 }
 
-gaia-button:before {
-  vertical-align: middle;
+.pressed .background {
+  opacity: 1;
+}
+
+.released .background {
+  transition: opacity 200ms;
+}
+
+/** Content
+ ---------------------------------------------------------*/
+
+/**
+ * 1. In some cases events seems to be getting
+ *    swallowed by text-nodes. Ignoring pointer-
+ *    events means we can listen on parent nodes
+ *    instead.
+ */
+
+.content {
+  position: relative;
+  z-index: 2;
+  padding: 0 25px;
+  font-style: italic;
+  font-size: 17px;
+  text-align: center;
+  line-height: 50px;
+  text-align: center;
+  pointer-events: none; /* 1 */
+}
+
+[circular] .content {
+  padding: 0;
 }
 
 </style>
-<content></content>`;
+<div class="inner">
+  <div class="background"></div>
+  <div class="content"><content></content></div>
+</div>`;
 
-return document.registerElement('gaia-button', { prototype: proto });
+module.exports = document.registerElement('gaia-button', { prototype: proto });
 
 });})((function(n,w){return typeof define=='function'&&define.amd?
 define:typeof module=='object'?function(c){c(require,exports,module);}:function(c){
