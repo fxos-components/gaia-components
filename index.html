@@ -10,7 +10,8 @@
 
   <script src="bower_components/evt/index.js"></script>
   <script src="bower_components/drag/index.js"></script>
-  <script src="bower_components/gaia-icons/script.js"></script>
+  <script src="bower_components/pressed/pressed.js"></script>
+  <script src="bower_components/gaia-icons/gaia-icons.js"></script>
   <script src="bower_components/gaia-theme/lib/gaia-theme-selector.js"></script>
   <script src="bower_components/gaia-sub-header/gaia-sub-header.js"></script>
   <script src="bower_components/gaia-text-input/gaia-text-input.js"></script>
@@ -79,6 +80,7 @@
     <gaia-text-input placeholder="Disabled" disabled><label>Disabled Input</label></gaia-text-input>
     <gaia-text-input type="password" placeholder="Password"><label>Password</label></gaia-text-input>
     <gaia-text-input type="search" placeholder="Search..."><label>Search</label></gaia-text-input>
+    <gaia-text-input type="multiline" placeholder="Multiline"><label>Multi-line</label></gaia-text-input>
   </section>
 
   <hr class="l-mb-mega"/>
@@ -86,6 +88,7 @@
   <section class="l-mb-mega l-align-center">
     <div><gaia-button>Gaia-button</gaia-button></div>
     <div><gaia-button circular><span data-icon="arrow-forward"></span></div>
+    <div><gaia-button disabled>Disabled</gaia-button></div>
   </section>
 
   <hr class="l-mb-mega"/>
@@ -133,13 +136,15 @@
 
   <section class="l-mb-mega">
     <ul class="menu l-plr-small">
-      <li class="l-flex l-flex-valign">
-        <label class="l-flex-grow">This is a label</label>
-        <gaia-checkbox checked></gaia-checkbox>
+      <li>
+        <label class="l-flex l-flex-valign" for="gaia-checkbox-1">
+          <div class="l-flex-grow">This is a label</div>
+          <gaia-checkbox checked id="gaia-checkbox-1"></gaia-checkbox>
+        </label>
       </li>
       <li class="l-flex l-flex-valign">
-        <label class="l-flex-grow" for="my-checkbox">This is a label</label>
-        <gaia-checkbox id="my-checkbox"></gaia-checkbox>
+        <label class="l-flex-grow" for="gaia-checkbox-2">This is a label</label>
+        <gaia-checkbox id="gaia-checkbox-2"></gaia-checkbox>
       </li>
     </ul>
   </section>
