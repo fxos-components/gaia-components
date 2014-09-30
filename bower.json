@@ -25,6 +25,7 @@
     "gaia-tabs": "gaia-components/gaia-tabs#v1",
     "gaia-text-input": "gaia-components/gaia-text-input#dev",
     "gaia-theme": "gaia-components/gaia-theme#v1",
-    "gaia-button": "gaia-components/gaia-button#dev"
+    "gaia-button": "gaia-components/gaia-button#dev",
+    "gaia-loading": "gaia-components/gaia-loading#dev"
   }
 }

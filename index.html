@@ -28,6 +28,7 @@
   <script src="bower_components/gaia-dialog/gaia-dialog-prompt.js"></script>
   <script src="bower_components/gaia-dialog/gaia-dialog-action.js"></script>
   <script src="bower_components/gaia-dialog/gaia-dialog-select.js"></script>
+  <script src="bower_components/gaia-loading/gaia-loading.js"></script>
   <script src="bower_components/gaia-tabs/gaia-tabs.js"></script>
 
   <style>
@@ -42,7 +43,7 @@
       margin-right: auto;
     }
 
-    section > * {
+    section > *:not(:last-child) {
       margin-bottom: 16px;
     }
 
@@ -99,6 +100,12 @@
       <gaia-menu-item><a><i data-icon="location"></i>Menu 2</a></gaia-menu-item>
       <gaia-menu-item><a><i data-icon="settings"></i>Menu 3</a></gaia-menu-item>
     </div>
+  </section>
+
+  <hr class="l-mb-mega"/>
+
+  <section class="l-mb-mega l-align-center">
+    <gaia-loading></gaia-loading>
   </section>
 
   <hr class="l-mb-mega"/>
