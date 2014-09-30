@@ -20,7 +20,7 @@
     "gaia-dialog": "gaia-components/gaia-dialog#dev",
     "gaia-header": "gaia-components/gaia-header#dev",
     "gaia-menu-item": "gaia-components/gaia-menu-item#master",
-    "gaia-slider": "gaia-components/gaia-slider#master",
+    "gaia-slider": "gaia-components/gaia-slider#dev",
     "gaia-switch": "gaia-components/gaia-switch#v1",
     "gaia-tabs": "gaia-components/gaia-tabs#v1",
     "gaia-text-input": "gaia-components/gaia-text-input#dev",

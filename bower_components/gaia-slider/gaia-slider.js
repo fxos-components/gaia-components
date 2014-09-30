@@ -11,15 +11,38 @@ var proto = Object.create(HTMLElement.prototype);
 
 proto.createdCallback = function() {
   this.createShadowRoot().innerHTML = template;
-  this.els = {};
-  this.styleHack();
+
+  this.els = {
+    input: this.shadowRoot.querySelector('input'),
+    value: this.shadowRoot.querySelector('.value'),
+    output: this.querySelector('output')
+  };
+
+  this.els.input.addEventListener('input', this.onChange.bind(this));
+  this.updateOutput();
+  this.shadowStyleHack();
 };
 
-proto.styleHack = function() {
+proto.shadowStyleHack = function() {
   var style = this.shadowRoot.querySelector('style').cloneNode(true);
   this.classList.add('-content', '-host');
   style.setAttribute('scoped', '');
   this.appendChild(style);
+};
+
+proto.onChange = function(e) {
+  var self = this;
+  this.updateOutput();
+  this.classList.add('changing');
+  clearTimeout(this.changingTimeout);
+  this.changingTimeout = setTimeout(function() {
+    self.classList.remove('changing');
+  }, 400);
+};
+
+proto.updateOutput = function() {
+  if (!this.els.output) { return; }
+  this.els.output.textContent = this.els.input.value;
 };
 
 var template = `
@@ -34,6 +57,47 @@ var template = `
   display: block;
 }
 
+/** Head
+ ---------------------------------------------------------*/
+
+.head {
+  position: relative;
+  margin-bottom: 14px;
+}
+
+.-content label {
+  display: block;
+  font-size: 14px;
+  margin-left: 16px;
+  line-height: 1;
+}
+
+
+.-content output {
+  display: block;
+  position: absolute;
+  right: 0; bottom: 0;
+  text-align: right;
+  font-size: 17px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1;
+  transition: transform 200ms;
+  transform-origin: 100% 50%;
+
+  color:
+    var(--text-color);
+}
+
+.-content output:after {
+  content: '%';
+}
+
+.changing output {
+  transform: scale(1.25);
+  color: var(--highlight-color);
+}
+
 /** Input
  ---------------------------------------------------------*/
 
@@ -46,7 +110,7 @@ input {
 /** Progress
  ---------------------------------------------------------*/
 
-input::-moz-range-progress {
+::-moz-range-progress {
   background: var(--highlight-color);
   height: 3px;
 }
@@ -54,7 +118,7 @@ input::-moz-range-progress {
 /** Track
  ---------------------------------------------------------*/
 
-input::-moz-range-track {
+::-moz-range-track {
   width: 100%;
   height: 3px;
   border: none;
@@ -67,7 +131,7 @@ input::-moz-range-track {
 /** Thumb
  ---------------------------------------------------------*/
 
-input::-moz-range-thumb {
+::-moz-range-thumb {
   width: 34px;
   height: 34px;
   border-radius: 17px;
@@ -85,15 +149,18 @@ input::-moz-range-thumb {
  * :active
  */
 
-input::-moz-range-thumb:active {
+::-moz-range-thumb:active {
   box-shadow: 0 0 0 16px rgba(0, 202, 242, 0.2);
   transform: scale(1.1);
 }
 
 </style>
 
-<div class="inner" id="inner">
-  <input type="range" />
+<div class="inner">
+  <div class="head">
+    <content select="label,output"></content>
+  </div>
+  <input type="range"/>
 </div>`;
 
 // Register and return the constructor

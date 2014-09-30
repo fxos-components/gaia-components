@@ -15,13 +15,13 @@
     "examples",
     "README.md"
   ],
-  "_release": "7cdfd4d7a3",
+  "_release": "9a923e90fd",
   "_resolution": {
     "type": "branch",
-    "branch": "master",
-    "commit": "7cdfd4d7a3acd250282b0d4af5a92657a4e561c3"
+    "branch": "dev",
+    "commit": "9a923e90fd6d5bc85ccfbe7e98a44a14311b03cf"
   },
   "_source": "git://github.com/gaia-components/gaia-slider.git",
-  "_target": "master",
+  "_target": "dev",
   "_originalSource": "gaia-components/gaia-slider"
 }
