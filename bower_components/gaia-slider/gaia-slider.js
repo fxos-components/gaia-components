@@ -1,4 +1,4 @@
-;(function(umd){umd(function(require,exports,module){
+;(function(define){define(function(require,exports,module){
 /*jshint esnext:true*/
 'use strict';
 
@@ -166,7 +166,7 @@ input {
 // Register and return the constructor
 module.exports = document.registerElement('gaia-slider', { prototype: proto });
 
-},'gaia-slider',this);})(function(c,n,w){if(typeof define=='function'&&define.amd){
-define(function(require,exports,module){c(require,exports,module);});
-}else if(typeof module=='object'){c(require,exports,module);}else{
-var m={exports:{}};w[n]=c(function(n){return w[n];},m.exports,m)||m.exports;}});
+});})(typeof define=='function'&&define.amd?define
+:(function(n,w){'use strict';return typeof module=='object'?function(c){
+c(require,exports,module);}:function(c){var m={exports:{}};c(function(n){
+return w[n];},m.exports,m);w[n]=m.exports;};})('gaia-slider',this));
