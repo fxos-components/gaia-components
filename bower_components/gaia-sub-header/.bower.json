@@ -17,13 +17,16 @@
     "gaia-theme": "gaia-components/gaia-theme#v1",
     "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1"
   },
-  "_release": "7eefffca93",
+  "dependencies": {
+    "pressed": "gaia-components/pressed#~0.1.0"
+  },
+  "_release": "508e4fa319",
   "_resolution": {
     "type": "branch",
-    "branch": "v1",
-    "commit": "7eefffca93739ac02579b3de42126cfdac03c6db"
+    "branch": "dev",
+    "commit": "508e4fa3193d7b21ee6a4baf121981df49b639e8"
   },
   "_source": "git://github.com/gaia-components/gaia-sub-header.git",
-  "_target": "v1",
+  "_target": "dev",
   "_originalSource": "gaia-components/gaia-sub-header"
 }

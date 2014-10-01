@@ -3,11 +3,7 @@
 /*jshint node:true*/
 /*globals define*/
 
-/**
- * Locals
- */
-
-var depsBase = window.COMPONENTS_BASE_URL || '/bower_components/';
+var pressed = require('pressed');
 
 /**
  * Prototype extends from the HTMLElement.
@@ -20,10 +16,12 @@ var proto = Object.create(HTMLElement.prototype);
 proto.createdCallback = function() {
   this.createShadowRoot().innerHTML = template;
   this.styleHack();
+  pressed(this);
 };
 
 proto.styleHack = function() {
   var style = this.shadowRoot.querySelector('style').cloneNode(true);
+  this.classList.add('-content', '-host');
   style.setAttribute('scoped', '');
   this.appendChild(style);
 };
@@ -40,9 +38,12 @@ gaia-sub-header {
 
 .line {
   position: relative;
-  background: var(--color-zeta);
-  height: 1px;
+  height: 2px;
   flex: 1;
+
+  background:
+    var(--border-color,
+    var(--background-plus));
 }
 
 .middle {
@@ -61,6 +62,16 @@ button {
   padding-right: var(--dim-small);
   font: inherit;
   color: var(--highlight-color);
+  cursor: pointer;
+}
+
+/**
+ * .pressed
+ */
+
+a.pressed,
+button.pressed {
+  opacity: 0.5;
 }
 
 a:after,
@@ -78,9 +89,7 @@ button:after {
 </style>
 
 <div class="line left"></div>
-<div class="middle">
-  <content></content>
-</div>
+<div class="middle"><content></content></div>
 <div class="line right"></div>`;
 
 // Register and return the constructor

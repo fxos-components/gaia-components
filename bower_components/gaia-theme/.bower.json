@@ -21,13 +21,13 @@
     "gaia-switch": "gaia-components/gaia-switch",
     "gaia-checkbox": "gaia-components/gaia-checkbox"
   },
-  "_release": "bfc8925d10",
+  "_release": "85621954ae",
   "_resolution": {
     "type": "branch",
-    "branch": "v1",
-    "commit": "bfc8925d10968da9ddaedbae494a30877c223e06"
+    "branch": "dev",
+    "commit": "85621954aee7e21c77f4a2ffa92b0a06cc6e8d6c"
   },
   "_source": "git://github.com/gaia-components/gaia-theme.git",
-  "_target": "v1",
+  "_target": "dev",
   "_originalSource": "gaia-components/gaia-theme"
 }

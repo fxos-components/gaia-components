@@ -2,12 +2,6 @@
 /*jshint esnext:true*/
 
 /**
- * Dependencies
- */
-
-require('gaia-icons');
-
-/**
  * Detects presence of shadow-dom
  * CSS selectors.
  *
@@ -17,8 +11,6 @@ var hasShadowCSS = (function() {
   try { document.querySelector(':host'); return true; }
   catch (e) { return false; }
 })();
-
-// console.log(hasShadowCSS);
 
 /**
  * Element prototype, extends from HTMLElement
@@ -45,9 +37,14 @@ proto.createdCallback = function() {
 
   this.addEventListener('mousedown', this.onClick.bind(this));
   this.addEventListener('touchstart', this.onClick.bind(this));
-  this.tabIndex = 0;
-
+  this.makeAccessible();
   this.shadowStyleHack();
+};
+
+proto.makeAccessible = function() {
+  [].forEach.call(this.children, function(el) {
+    el.tabIndex = 0;
+  });
 };
 
 proto.shadowStyleHack = function() {
@@ -80,92 +77,123 @@ proto.restyleShadowDom = function() {
   this.shadowRoot.appendChild(style);
 };
 
+proto.itemShouldRipple = function(el) {
+  if (el.classList.contains('ripple')) { return true; }
+  else if (el.classList.contains('no-ripple')) { return false; }
+  else if (this.classList.contains('ripple')){ return true; }
+  else if (this.classList.contains('no-ripple')){ return false; }
+  else if (el.tagName === 'A') { return true; }
+  else { return false; }
+};
+
 proto.onClick = function(e) {
-  var el = document.createElement('div');
-  var pos = this.getBoundingClientRect();
-  var offset = {
-    x: e.clientX - pos.left,
-    y: e.clientY - pos.top
+  var target = this.getChild(e.target);
+
+  if (!this.itemShouldRipple(target)) { return; }
+
+  var pos = {
+    list: this.getBoundingClientRect(),
+    item: target.getBoundingClientRect()
   };
 
-  el.className = 'ripple';
-  el.style.left = offset.x + 'px';
-  el.style.top = offset.y + 'px';
-  el.addEventListener('animationend', el.remove.bind(el));
-  this.appendChild(el);
+  var els = {
+    container: document.createElement('div'),
+    ripple: document.createElement('div')
+  };
+
+  els.container.className = 'ripple-container';
+  els.container.style.left = (pos.item.left - pos.list.left) + 'px';
+  els.container.style.top = (pos.item.top - pos.list.top) + 'px';
+  els.container.style.width = pos.item.width + 'px';
+  els.container.style.height = pos.item.height + 'px';
+
+  var offset = {
+    x: e.clientX - pos.item.left,
+    y: e.clientY - pos.item.top
+  };
+
+  els.ripple.className = 'ripple';
+  els.ripple.style.left = offset.x + 'px';
+  els.ripple.style.top = offset.y + 'px';
+  els.ripple.addEventListener('animationend', els.container.remove.bind(els.container));
+
+  els.container.appendChild(els.ripple);
+
+  this.appendChild(els.container);
+};
+
+proto.getChild = function(el) {
+  return el.parentNode === this ? el : this.getChild(el.parentNode);
 };
 
 var template = `
 <style>
 
+/** Reset
+ ---------------------------------------------------------*/
+
 :host {
   display: block;
   position: relative;
-  padding: 0 16px;
   font-size: 17px;
   overflow: hidden;
+  text-align: left;
 }
 
 /** Inner
  ---------------------------------------------------------*/
 
-.inner,
-::content a {
+::content > *:not(style) {
+  box-sizing: border-box;
   position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
-  padding: 18px 0;
+  width: 100%;
+  min-height: 60px;
+  margin: 0;
+  padding: 9px 16px;
+  font-size: 17px;
   font-style: normal;
+  background: transparent;
+  list-style-type: none;
+  outline: 0;
+  border: 0;
+
+  color:
+    var(--text-color);
 }
 
 /** Border
  ---------------------------------------------------------*/
 
-.inner:before {
+::content > *:before {
   content: '';
   position: absolute;
   bottom: 0px;
-  left: 0;
-  right: 0;
+  left: 16px;
+  right: 16px;
   height: 1px;
+
   background:
     var(--border-color,
-    var(--text-color));
+    var(--background-plus));
 }
 
-/** Forward Icon
+/** Titles
  ---------------------------------------------------------*/
 
-.inner:after {
-  content: 'forward';
-  display: block;
-  position: absolute;
-  top: 50%;
-  right: 0;
-  margin-top: -14px;
-  font-family: 'gaia-icons';
-  font-size: 28px;
-  font-style: normal;
-  text-rendering: optimizeLegibility;
-  font-weight: 500;
-  line-height: 1;
-  color: var(--text-color-minus);
-}
-
-/** Anchors
- ---------------------------------------------------------*/
-
-::content a {
-  width: 100%;
-  margin: -16px 0;
-  color: var(--text-color);
+::content small,
+::content p {
+  font-size: 0.7em;
+  line-height: 1.35em;
 }
 
 /** Icon
  ---------------------------------------------------------*/
 
 ::content i {
-  display: block;
+  display: inline-block;
   width: 40px;
 }
 
@@ -173,10 +201,41 @@ var template = `
   display: block;
 }
 
+::content > * > i:last-child {
+  display: block;
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  margin-top: -14px;
+  line-height: 1;
+  text-align: right;
+}
+
+/** Divided
+ ---------------------------------------------------------*/
+
+::content .divided {
+  border-left: solid 1px;
+  padding-left: 14px;
+
+  border-color:
+    var(--border-color,
+    var(--background-plus));
+}
+
+/** Ripple Container
+ ---------------------------------------------------------*/
+
+.ripple-container.ripple-container {
+  position: absolute;
+  z-index: 1;
+  overflow: hidden;
+}
+
 /** Ripple
  ---------------------------------------------------------*/
 
-.ripple {
+.ripple-container > .ripple {
   background: var(--color-epsilon);
   position: absolute;
   left: 0;
@@ -185,7 +244,7 @@ var template = `
   height: 30px;
   margin: -15px;
   border-radius: 50%;
-  animation: gaia-menu-item-ripple 400ms linear;
+  animation: gaia-list-item-ripple 400ms linear;
   animation-fill-mode: forwards;
   will-change: transform, opacity;
 }
@@ -203,13 +262,11 @@ if (!hasShadowCSS) {
     .replace(':host', '.-host', 'g');
 }
 
-
-
 (function() {
   var style = document.createElement('style');
 
   style.innerHTML = `
-    @keyframes gaia-menu-item-ripple {
+    @keyframes gaia-list-item-ripple {
       0% {
         opacity: 0.6;
         transform: scale(1);
@@ -223,20 +280,12 @@ if (!hasShadowCSS) {
   document.head.appendChild(style);
 })();
 
-
-addEventListener('keypress', function(e) {
-  var isSpace = e.which === 32;
-  var el = document.activeElement;
-  var isCheckbox = el.tagName === 'GAIA-MENU-ITEM';
-  if (isSpace && isCheckbox) { el.click(); }
-});
-
 // Register and return the constructor
 // and expose `protoype` (bug 1048339)
-module.exports = document.registerElement('gaia-menu-item', { prototype: proto });
+module.exports = document.registerElement('gaia-list', { prototype: proto });
 module.exports.proto = proto;
 
 });})(typeof define=='function'&&define.amd?define
 :(function(n,w){'use strict';return typeof module=='object'?function(c){
 c(require,exports,module);}:function(c){var m={exports:{}};c(function(n){
-return w[n];},m.exports,m);w[n]=m.exports;};})('gaia-menu-item',this));
+return w[n];},m.exports,m);w[n]=m.exports;};})('gaia-list',this));

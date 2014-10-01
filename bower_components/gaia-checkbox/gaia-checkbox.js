@@ -102,8 +102,6 @@ template.innerHTML = `
 gaia-checkbox {
   position: relative;
   display: inline-block;
-  width: 28px;
-  height: 28px;
   cursor: pointer;
   outline: 0;
 }
@@ -115,8 +113,8 @@ gaia-checkbox {
   display: block;
   box-sizing: border-box;
   position: relative;
-  width: 100%;
-  height: 100%;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   border: 2px solid #a6a6a6;
   z-index: 0;
@@ -236,8 +234,8 @@ addEventListener('click', function(e) {
 function getLinkedCheckbox(label) {
   if (!label) { return; }
   var id = label.getAttribute('for');
-  var checkbox = id && document.getElementById(id);
-  return checkbox;// || label.querySelector('gaia-checkbox');
+  var el = id && document.getElementById(id);
+  return el && el.tagName === 'GAIA-CHECKBOX' ? el : null;// || label.querySelector('gaia-checkbox');
 }
 
 /**

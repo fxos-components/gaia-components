@@ -17,5 +17,8 @@
   "devDependencies": {
     "gaia-theme": "gaia-components/gaia-theme#v1",
     "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1"
+  },
+  "dependencies": {
+    "pressed": "gaia-components/pressed#~0.1.0"
   }
 }

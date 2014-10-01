@@ -1,7 +1,7 @@
 {
-  "name": "gaia-menu-item",
+  "name": "gaia-list",
   "version": "0.1.0",
-  "homepage": "https://github.com/gaia-components/gaia-menu-item",
+  "homepage": "https://github.com/gaia-components/gaia-list",
   "authors": [
     "Wilson Page <wilsonpage@me.com>"
   ],
@@ -15,7 +15,7 @@
     "tests"
   ],
   "devDependencies": {
-    "gaia-theme": "gaia-components/gaia-theme#v1",
+    "gaia-theme": "gaia-components/gaia-theme#dev",
     "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1",
     "gaia-icons": "gaia-components/gaia-icons#master"
   }

@@ -43,26 +43,79 @@
       margin-right: auto;
     }
 
-    section > *:not(:last-child) {
-      margin-bottom: 16px;
+    gaia-menu.settings {
+
     }
 
-    .menu {
+/*    gaia-menu.settings > *:not(style),
+    gaia-menu.settings label {
+      display: flex !important;
+      align-items: center;
+    }*/
+
+    gaia-menu.settings [data-icon='forward'] {
+      color: var(--text-color-minus);
     }
 
-    .menu > li {
-      padding: 1rem 0;
-      list-style-type: none;
-      border-top: solid 1px;
+    gaia-menu .divided {
+      border-left: solid 1px;
+      padding-left: 14px;
+
       border-color:
         var(--border-color,
-        var(--background-plus,
-        rgba(0,0,0,0.2)));
+        var(--background-plus));
     }
 
-    .menu > li:first-child {
-      border-top: 0;
+    gaia-menu.contacts {
+
     }
+
+    gaia-menu.contacts .face {
+      position: absolute;
+      top: 50%; right: 16px;
+      width: 40px;
+      height: 40px;
+      margin-top: -20px;
+      border-radius: 50%;
+      border: solid 2px;
+
+      border-color:
+        var(--border-color,
+        var(--background-minus));
+      background: var(--background-plus);
+    }
+
+    gaia-menu.email > * {
+      padding-left: 32px !important;
+    }
+
+    gaia-menu.email time {
+      position: absolute;
+      right: 0; top: 0;
+      margin: 9px 16px;
+      font-size: 0.7em;
+      opacity: 0.6;
+    }
+
+    gaia-menu.email p {
+      opacity: 0.6;
+    }
+
+    gaia-menu.email .unread:after {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 16px; top: 50%;
+      width: 8px;
+      height: 8px;
+      margin-top: -4px;
+      border-radius: 50%;
+
+      background:
+        var(--highlight-color);
+    }
+
+
 
   </style>
 </head>
@@ -94,12 +147,86 @@
 
   <hr class="l-mb-mega"/>
 
-  <section class="l-mb-mega l-align-center">
-    <div>
-      <gaia-menu-item><i data-icon="brightness"></i>Menu 1</gaia-menu-item>
-      <gaia-menu-item><a><i data-icon="location"></i>Menu 2</a></gaia-menu-item>
-      <gaia-menu-item><a><i data-icon="settings"></i>Menu 3</a></gaia-menu-item>
-    </div>
+  <section class="gaia-menu l-mb-mega l-align-center">
+    <gaia-menu class="settings l-mb-mega">
+      <a>
+        <i data-icon="brightness"></i><h3>Menu 1</h3><i data-icon="forward-light"></i></a>
+      <a><i data-icon="location"></i><h3>Menu 2</h3><i data-icon="forward-light"></i></a>
+      <a><i data-icon="settings"></i>Menu 3<i data-icon="forward-light"></i></a>
+      <li>
+        <label class="l-flex l-flex-grow" for="wifi-switch">
+          <i data-icon="wifi-4"></i><h3>Wifi</h3>
+        </label>
+        <gaia-switch id="wifi-switch" class="divided"></gaia-switch>
+      </li>
+    </gaia-menu>
+
+    <gaia-menu class="contacts l-mb-mega">
+      <a>
+        <div>
+          <h3>Noah Green</h3>
+          <p>Atsara Kitchens</p>
+          <div class="face"></div>
+        </div>
+      </a>
+      <a>
+        <div>
+          <h3>Will Grand</h3>
+          <p>CBN Studio</p>
+          <div class="face"></div>
+        </div>
+      </a>
+      <a>
+        <div>
+          <h3>Carolina Grey</h3>
+          <p>Mozilla</p>
+          <div class="face"></div>
+        </div>
+      </a>
+    </gaia-menu>
+
+
+    <gaia-menu class="email">
+      <a class="unread">
+        <div>
+          <h3>Will Gordan</h3>
+          <p>Send photos please!</p>
+          <p>You're the best, thank you so much for all</p><time>11:30AM</time>
+        </div>
+      </a>
+      <a class="unread">
+        <div>
+          <h3>Jennifer Liu</h3>
+          <p>Road trip next weekend</p>
+          <p>I've been wanting to visit that place for a</p>
+          <time>11:30AM</time>
+        </div>
+      </a>
+      <a>
+        <div>
+          <h3>Michael Stanford</h3>
+          <p>You might like this or not?</p>
+          <p>Great find, I definitely check with Brian if</p>
+          <time>11:30AM</time>
+        </div>
+      </a>
+      <a class="unread">
+        <div>
+          <h3>Jennifer Liu</h3>
+          <p>Road trip next weekend</p>
+          <p>I'vee been wanting to visit that place for a</p>
+          <time>11:30AM</time>
+        </div>
+      </a>
+      <a>
+        <div>
+          <h3>Michael Stanford</h3>
+          <p>You might like this or not?</p>
+          <p>Great find, I definitely check with Brian if</p>
+          <time>11:30AM</time>
+        </div>
+      </a>
+    </gaia-menu>
   </section>
 
   <hr class="l-mb-mega"/>
@@ -121,39 +248,41 @@
 
   <section class="l-mb-mega">
     <gaia-sub-header>Sub-Header</gaia-sub-header>
-    <gaia-sub-header><a href="#">Gaia Sub-Header Link</a></gaia-sub-header>
+    <gaia-sub-header><a>Gaia Sub-Header Link</a></gaia-sub-header>
   </section>
 
   <hr class="l-mb-mega"/>
 
   <section class="l-mb-mega">
-    <ul class="menu l-plr-small">
-      <li class="l-flex l-flex-valign">
-        <label class="l-flex-grow">This is a label</label>
-        <gaia-switch checked></gaia-switch>
+    <gaia-menu>
+      <li class="l-flex l-flex-v-align">
+        <label class="l-flex-grow" for="gaia-switch-1">This is a label</label>
+        <gaia-switch id="gaia-switch-1" checked></gaia-switch>
       </li>
-      <li class="l-flex l-flex-valign">
-        <label class="l-flex-grow">This is a label</label>
-        <gaia-switch></gaia-switch>
+      <li class="l-flex l-flex-v-align">
+        <label class="l-flex-grow" for="gaia-switch-2">This is a label</label>
+        <gaia-switch id="gaia-switch-2"></gaia-switch>
       </li>
-    </ul>
+    </gaia-menu>
   </section>
 
   <hr class="l-mb-mega"/>
 
   <section class="l-mb-mega">
-    <ul class="menu l-plr-small">
-      <li>
-        <li class="l-flex l-flex-valign">
-          <label class="l-flex-grow" for="gaia-checkbox-1">This is a label</label>
-          <gaia-checkbox checked id="gaia-checkbox-1"></gaia-checkbox>
-        </li>
+    <gaia-menu>
+      <li class="l-flex l-flex-v-align">
+        <label class="l-flex-grow" for="gaia-checkbox-1">This is a label</label>
+        <gaia-checkbox checked id="gaia-checkbox-1"></gaia-checkbox>
       </li>
-      <li class="l-flex l-flex-valign">
+      <li class="l-flex l-flex-v-align">
         <label class="l-flex-grow" for="gaia-checkbox-2">This is a label</label>
         <gaia-checkbox id="gaia-checkbox-2"></gaia-checkbox>
       </li>
-    </ul>
+      <li class="l-flex l-flex-v-align">
+        <label class="l-flex-grow">This is a label</label>
+        <gaia-checkbox class="divided"></gaia-checkbox>
+      </li>
+    </gaia-menu>
   </section>
 
   <hr class="l-mb-mega"/>
@@ -180,13 +309,13 @@
   <hr class="l-mb-mega"/>
 
   <section class="l-mb-mega l-plr-small">
-    <div>
-      <gaia-menu-item class="js-open-dialog" data-dialog="gaia-dialog-alert">Alert</gaia-menu-item>
-      <gaia-menu-item class="js-open-dialog" data-dialog="gaia-dialog-confirm">Confirm</gaia-menu-item>
-      <gaia-menu-item class="js-open-dialog" data-dialog="gaia-dialog-prompt">Prompt</gaia-menu-item>
-      <gaia-menu-item class="js-open-dialog" data-dialog="gaia-dialog-select">Select</gaia-menu-item>
-      <gaia-menu-item class="js-open-dialog" data-dialog="gaia-dialog-select[multiple]">Select Multiple</gaia-menu-item>
-    </div>
+    <gaia-menu>
+      <li class="js-open-dialog" data-dialog="gaia-dialog-alert">Alert<i data-icon="forward-light"></i></li>
+      <li class="js-open-dialog" data-dialog="gaia-dialog-confirm">Confirm<i data-icon="forward-light"></i></li>
+      <li class="js-open-dialog" data-dialog="gaia-dialog-prompt">Prompt<i data-icon="forward-light"></i></li>
+      <li class="js-open-dialog" data-dialog="gaia-dialog-select">Select<i data-icon="forward-light"></i></li>
+      <li class="js-open-dialog" data-dialog="gaia-dialog-select[multiple]">Select Multiple<i data-icon="forward-light"></i></li>
+    </gaia-menu>
 
     <script>
       var buttons = document.querySelectorAll('.js-open-dialog');
