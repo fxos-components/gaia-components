@@ -31,8 +31,8 @@ var template = `
 
 gaia-sub-header {
   display: flex;
-  margin: var(--dim-small) 0 0 0;
-  padding: 0 var(--dim-small) 0 var(--dim-small);
+  margin: 14px 0 0 0;
+  padding: 0 14px 0 14px;
   align-items: center;
 }
 
@@ -47,22 +47,26 @@ gaia-sub-header {
 }
 
 .middle {
-  color: var(--color-zeta);
-  margin: 0 var(--dim-small) 0 var(--dim-small);
+  margin: 0 14px 0 14px;
   padding: 0;
   text-transform: uppercase;
   font-size: 14px;
   font-weight: normal;
+
+  color:
+    var(--color-zeta);
 }
 
 a,
 button {
   position: relative;
   display: block;
-  padding-right: var(--dim-small);
+  padding-right: 16px;
   font: inherit;
-  color: var(--highlight-color);
   cursor: pointer;
+
+  color:
+    var(--highlight-color);
 }
 
 /**
@@ -80,10 +84,14 @@ button:after {
   position: absolute;
   width: 0px;
   height: 0px;
-  top: 3px;
+  top: 6px;
   right: 0px;
-  border-bottom: 10px solid var(--highlight-color, var(--color-zeta));
-  border-left: 10px solid transparent;
+  border-bottom: 8px solid;
+  border-left: 8px solid transparent;
+
+  border-bottom-color:
+    var(--highlight-color,
+    var(--color-zeta))
 }
 
 </style>

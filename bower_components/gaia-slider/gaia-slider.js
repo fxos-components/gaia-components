@@ -3,6 +3,12 @@
 'use strict';
 
 /**
+ * Dependencies
+ */
+
+var pressed = require('pressed');
+
+/**
  * Extend from the `HTMLElement` prototype
  *
  * @type {Object}
@@ -19,6 +25,8 @@ proto.createdCallback = function() {
   };
 
   this.els.input.addEventListener('input', this.onChange.bind(this));
+  pressed(this);
+
   this.updateOutput();
   this.shadowStyleHack();
 };
@@ -31,13 +39,7 @@ proto.shadowStyleHack = function() {
 };
 
 proto.onChange = function(e) {
-  var self = this;
   this.updateOutput();
-  this.classList.add('changing');
-  clearTimeout(this.changingTimeout);
-  this.changingTimeout = setTimeout(function() {
-    self.classList.remove('changing');
-  }, 400);
 };
 
 proto.updateOutput = function() {
@@ -67,8 +69,6 @@ var template = `
 
 .-content label {
   display: block;
-  font-size: 14px;
-  margin-left: 16px;
   line-height: 1;
 }
 
@@ -93,7 +93,7 @@ var template = `
   content: '%';
 }
 
-.changing output {
+.pressed output {
   transform: scale(1.25);
   color: var(--highlight-color);
 }

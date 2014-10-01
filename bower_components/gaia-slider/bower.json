@@ -15,5 +15,8 @@
     "tests",
     "examples",
     "README.md"
-  ]
+  ],
+  "dependencies": {
+    "pressed": "gaia-components/pressed#~0.1.0"
+  }
 }

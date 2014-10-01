@@ -137,6 +137,7 @@ textarea {
 
 gaia-text-input {
   display: block;
+  margin-bottom: 16px;
 }
 
 /** Inner
@@ -153,6 +154,14 @@ label {
   font-size: 14px;
   display: block;
   margin: 0 0 4px 16px;
+}
+
+/**
+ * [disbled]
+ */
+
+[disabled] label {
+  opacity: 0.3;
 }
 
 /** Fields
