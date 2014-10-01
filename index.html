@@ -15,7 +15,7 @@
   <script src="bower_components/gaia-theme/lib/gaia-theme-selector.js"></script>
   <script src="bower_components/gaia-sub-header/gaia-sub-header.js"></script>
   <script src="bower_components/gaia-text-input/gaia-text-input.js"></script>
-  <script src="bower_components/gaia-menu-item/gaia-menu-item.js"></script>
+  <script src="bower_components/gaia-list/gaia-list.js"></script>
   <script src="bower_components/gaia-checkbox/gaia-checkbox.js"></script>
   <script src="bower_components/gaia-slider/gaia-slider.js"></script>
   <script src="bower_components/gaia-header/lib/font-fit.js"></script>
@@ -43,21 +43,11 @@
       margin-right: auto;
     }
 
-    gaia-menu.settings {
-
-    }
-
-/*    gaia-menu.settings > *:not(style),
-    gaia-menu.settings label {
-      display: flex !important;
-      align-items: center;
-    }*/
-
-    gaia-menu.settings [data-icon='forward'] {
+    gaia-list.settings [data-icon='forward'] {
       color: var(--text-color-minus);
     }
 
-    gaia-menu .divided {
+    gaia-list .divided {
       border-left: solid 1px;
       padding-left: 14px;
 
@@ -66,11 +56,11 @@
         var(--background-plus));
     }
 
-    gaia-menu.contacts {
+    gaia-list.contacts {
 
     }
 
-    gaia-menu.contacts .face {
+    gaia-list.contacts .face {
       position: absolute;
       top: 50%; right: 16px;
       width: 40px;
@@ -85,11 +75,11 @@
       background: var(--background-plus);
     }
 
-    gaia-menu.email > * {
+    gaia-list.email > * {
       padding-left: 32px !important;
     }
 
-    gaia-menu.email time {
+    gaia-list.email time {
       position: absolute;
       right: 0; top: 0;
       margin: 9px 16px;
@@ -97,11 +87,11 @@
       opacity: 0.6;
     }
 
-    gaia-menu.email p {
+    gaia-list.email p {
       opacity: 0.6;
     }
 
-    gaia-menu.email .unread:after {
+    gaia-list.email .unread:after {
       content: '';
       display: block;
       position: absolute;
@@ -140,15 +130,15 @@
   <hr class="l-mb-mega"/>
 
   <section class="l-mb-mega l-align-center">
-    <div><gaia-button>Gaia-button</gaia-button></div>
-    <div><gaia-button circular><span data-icon="arrow-forward"></span></div>
-    <div><gaia-button disabled>Disabled</gaia-button></div>
+    <div class="l-mb-small"><gaia-button>Gaia-button</gaia-button></div>
+    <div class="l-mb-small"><gaia-button circular><span data-icon="arrow-forward"></span></div>
+    <div class="l-mb-small"><gaia-button disabled>Disabled</gaia-button></div>
   </section>
 
   <hr class="l-mb-mega"/>
 
-  <section class="gaia-menu l-mb-mega l-align-center">
-    <gaia-menu class="settings l-mb-mega">
+  <section class="gaia-list l-mb-mega l-align-center">
+    <gaia-list class="settings l-mb-mega">
       <a>
         <i data-icon="brightness"></i><h3>Menu 1</h3><i data-icon="forward-light"></i></a>
       <a><i data-icon="location"></i><h3>Menu 2</h3><i data-icon="forward-light"></i></a>
@@ -159,9 +149,9 @@
         </label>
         <gaia-switch id="wifi-switch" class="divided"></gaia-switch>
       </li>
-    </gaia-menu>
+    </gaia-list>
 
-    <gaia-menu class="contacts l-mb-mega">
+    <gaia-list class="contacts l-mb-mega">
       <a>
         <div>
           <h3>Noah Green</h3>
@@ -183,10 +173,10 @@
           <div class="face"></div>
         </div>
       </a>
-    </gaia-menu>
+    </gaia-list>
 
 
-    <gaia-menu class="email">
+    <gaia-list class="email">
       <a class="unread">
         <div>
           <h3>Will Gordan</h3>
@@ -226,7 +216,7 @@
           <time>11:30AM</time>
         </div>
       </a>
-    </gaia-menu>
+    </gaia-list>
   </section>
 
   <hr class="l-mb-mega"/>
@@ -254,7 +244,7 @@
   <hr class="l-mb-mega"/>
 
   <section class="l-mb-mega">
-    <gaia-menu>
+    <gaia-list>
       <li class="l-flex l-flex-v-align">
         <label class="l-flex-grow" for="gaia-switch-1">This is a label</label>
         <gaia-switch id="gaia-switch-1" checked></gaia-switch>
@@ -263,13 +253,13 @@
         <label class="l-flex-grow" for="gaia-switch-2">This is a label</label>
         <gaia-switch id="gaia-switch-2"></gaia-switch>
       </li>
-    </gaia-menu>
+    </gaia-list>
   </section>
 
   <hr class="l-mb-mega"/>
 
   <section class="l-mb-mega">
-    <gaia-menu>
+    <gaia-list>
       <li class="l-flex l-flex-v-align">
         <label class="l-flex-grow" for="gaia-checkbox-1">This is a label</label>
         <gaia-checkbox checked id="gaia-checkbox-1"></gaia-checkbox>
@@ -282,7 +272,7 @@
         <label class="l-flex-grow">This is a label</label>
         <gaia-checkbox class="divided"></gaia-checkbox>
       </li>
-    </gaia-menu>
+    </gaia-list>
   </section>
 
   <hr class="l-mb-mega"/>
@@ -309,13 +299,13 @@
   <hr class="l-mb-mega"/>
 
   <section class="l-mb-mega l-plr-small">
-    <gaia-menu>
+    <gaia-list>
       <li class="js-open-dialog" data-dialog="gaia-dialog-alert">Alert<i data-icon="forward-light"></i></li>
       <li class="js-open-dialog" data-dialog="gaia-dialog-confirm">Confirm<i data-icon="forward-light"></i></li>
       <li class="js-open-dialog" data-dialog="gaia-dialog-prompt">Prompt<i data-icon="forward-light"></i></li>
       <li class="js-open-dialog" data-dialog="gaia-dialog-select">Select<i data-icon="forward-light"></i></li>
       <li class="js-open-dialog" data-dialog="gaia-dialog-select[multiple]">Select Multiple<i data-icon="forward-light"></i></li>
-    </gaia-menu>
+    </gaia-list>
 
     <script>
       var buttons = document.querySelectorAll('.js-open-dialog');
