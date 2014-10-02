@@ -29,6 +29,7 @@
   <script src="bower_components/gaia-dialog/gaia-dialog-action.js"></script>
   <script src="bower_components/gaia-dialog/gaia-dialog-select.js"></script>
   <script src="bower_components/gaia-loading/gaia-loading.js"></script>
+  <script src="bower_components/gaia-toolbar/gaia-toolbar.js"></script>
   <script src="bower_components/gaia-tabs/gaia-tabs.js"></script>
 
   <style>
@@ -106,13 +107,22 @@
     }
 
 
+    section.gaia-toolbars {
+      overflow: hidden;
+    }
+
+    section.gaia-toolbars > div {
+      /*float: left;*/
+      /*width: 50%;*/
+      /*margin-bottom: 48px;*/
+    }
 
   </style>
 </head>
 <body class="theme-settings">
   <gaia-theme-selector></gaia-theme-selector>
 
-  <section class="sg-landing sg-section-full l-mb-mega">
+  <section class="sg-landing sg-section-full l-mb-med">
     <div class="sg-title">
       <h1 class="mega l-align-center">FirefoxOS</h1>
       <h2 class="beta l-align-center l-p-micro">Design guide</h2>
@@ -294,6 +304,31 @@
       <a disabled="">Item 4</a>
       <a>Item 5</a>
     </gaia-tabs>
+  </section>
+
+  <hr class="l-mb-mega"/>
+
+  <section class="l-mb-mega l-plr-small gaia-toolbars">
+    <div class="l-mb-mega">
+      <gaia-toolbar>
+        <button data-icon="camera">Camera</button>
+        <button data-icon="star-full">Favourite</button>
+        <button data-icon="attachment">Attachment</button>
+        <button data-icon="firefox">Browser</button>
+        <button data-icon="send">Send</button>
+        <button data-icon="settings">Settings</button>
+      </gaia-toolbar>
+    </div>
+
+    <div class="">
+      <gaia-toolbar>
+        <button>Phone</button>
+        <button>Contact</button>
+        <button>Dialer</button>
+        <button>Refresh</button>
+        <button>Add to homescreen</button>
+      </gaia-toolbar>
+    </div>
   </section>
 
   <hr class="l-mb-mega"/>
