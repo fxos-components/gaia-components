@@ -15,11 +15,14 @@
     "tests",
     "README.md"
   ],
-  "_release": "16a9ee2511",
+  "dependencies": {
+    "gaia-text-input": "gaia-components/gaia-text-input"
+  },
+  "_release": "af28503664",
   "_resolution": {
     "type": "branch",
     "branch": "dev",
-    "commit": "16a9ee2511534d4dac762e3e5095773d5bba58d7"
+    "commit": "af285036648c0d381d53fa4245117d4bfa54cbff"
   },
   "_source": "git://github.com/gaia-components/gaia-dialog.git",
   "_target": "dev",

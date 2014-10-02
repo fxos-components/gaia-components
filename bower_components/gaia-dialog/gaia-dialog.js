@@ -8,6 +8,8 @@
  * @type {Object}
  */
 var proto = Object.create(HTMLElement.prototype);
+
+var innerHTML = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
 var removeAttribute = proto.removeAttribute;
 var setAttribute = proto.setAttribute;
 var has = Object.prototype.hasOwnProperty;
@@ -25,11 +27,12 @@ proto.createdCallback = function() {
   this.createShadowRoot().innerHTML = template;
 
   this.els = {
-    inner: this.shadowRoot.querySelector('.inner'),
+    inner: this.shadowRoot.querySelector('.dialog-inner'),
     background: this.shadowRoot.querySelector('.background'),
     window: this.shadowRoot.querySelector('.window')
   };
 
+  this.els.background.addEventListener('click', this.close.bind(this));
   this.setupAnimationListeners();
   this.styleHack();
 };
@@ -56,10 +59,12 @@ proto.open = function(options) {
 
 proto.close = function(options) {
   if (!this.isOpen) { return; }
-  this.animateOut();
-  this.isOpen = false;
-  this.removeAttribute('opened');
-  this.dispatch('closed');
+  var self = this;
+  self.isOpen = false;
+  this.animateOut(function() {
+    self.removeAttribute('opened');
+    self.dispatch('closed');
+  });
 };
 
 proto.attributeChangedCallback = function(name, from, to) {
@@ -92,29 +97,30 @@ proto.animateIn = function(e) {
 
 proto.animateInFromTarget = function(e) {
   var pos = e.touches && e.touches[0] || e;
-  var scale = Math.max(window.innerWidth, window.innerHeight) / 20 * 1.2;
+  var scale = Math.sqrt(innerWidth * innerHeight) / 10;
   var background = this.els.background;
+  var duration = scale * 7;
   var end = 'transitionend';
   var self = this;
 
   background.style.transform = 'translate(' + pos.clientX + 'px, ' + pos.clientY + 'px)';
-  background.style.transitionDuration = '400ms';
+  background.style.transitionDuration = duration + 'ms';
   background.classList.add('circular');
+  this.dispatch('animationstart');
 
   setTimeout(function() {
     background.style.transform += ' scale(' + scale + ')';
     background.style.opacity = 1;
-    self.dispatch('animationstart');
 
     background.addEventListener(end, function fn() {
       background.removeEventListener(end, fn);
       self.els.window.classList.add('animate-in');
       self.dispatch('animationend');
     });
-  });
+  }, 10);
 };
 
-proto.animateOut = function() {
+proto.animateOut = function(callback) {
   var end = 'animationend';
   var background = this.els.background;
   var self = this;
@@ -138,6 +144,7 @@ proto.animateOut = function() {
       background.classList.remove('circular');
       background.style = '';
       self.dispatch('animationend');
+      if (callback) { callback(); }
     });
   });
 };
@@ -167,10 +174,21 @@ proto.attrs = {
 
 Object.defineProperties(proto, proto.attrs);
 
+// Override `innerHTML` to prevent the scoped
+// stylesheet being erased by mistake.
+Object.defineProperty(proto, 'innerHTML', {
+  get: function() { return innerHTML.get.call(this); },
+  set: function(html) {
+    var style = this.querySelector('style');
+    innerHTML.set.call(this, html);
+    this.appendChild(style);
+  }
+});
+
 var template = `
 <style>
 
-* {
+.shadow-content * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
@@ -196,7 +214,7 @@ var template = `
 /** Inner
  ---------------------------------------------------------*/
 
-.inner {
+.dialog-inner {
   display: flex;
   width: 100%;
   height: 100%;
@@ -287,13 +305,16 @@ var template = `
   height: 50px;
   margin: 0;
   border: 0;
-  padding: 0rem 25px;
+  padding: 0rem 16px;
   font: inherit;
   background: var(--color-beta);
   color: var(--color-epsilon);
   transition: all 200ms;
   transition-delay: 300ms;
 }
+
+/** Button Divider Line
+ ---------------------------------------------------------*/
 
 .shadow-content button:after {
   content: '';
@@ -319,6 +340,10 @@ var template = `
 .shadow-content button:active:after {
   background: var(--highlight-color);
   transition: none;
+}
+
+.shadow-content button[data-icon]:before {
+  float: left;
 }
 
 /** Fieldset (button group)
@@ -349,9 +374,29 @@ var template = `
   transition-delay: 200ms;
 }
 
+/** Icons
+ ---------------------------------------------------------*/
+
+/**
+ * We need this rule to make data-icon
+ * attributes work on elements behind
+ * the shadow-boundary. Specifically
+ * for <gaia-toolbar>
+ */
+
+// [data-icon]:before {
+//   font-family: "gaia-icons";
+//   content: attr(data-icon);
+//   display: block;
+//   font-weight: 500;
+//   font-style: normal;
+//   text-rendering: optimizeLegibility;
+//   font-size: 30px;
+// }
+
 </style>
 
-<div class="inner">
+<div class="dialog-inner">
   <div class="background"></div>
   <div class="window"><content></content></div>
 </div>`;
