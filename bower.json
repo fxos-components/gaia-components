@@ -27,6 +27,7 @@
     "gaia-theme": "gaia-components/gaia-theme#dev",
     "gaia-button": "gaia-components/gaia-button#dev",
     "gaia-loading": "gaia-components/gaia-loading#dev",
-    "gaia-toolbar": "gaia-components/gaia-toolbar#dev"
+    "gaia-toolbar": "gaia-components/gaia-toolbar#dev",
+    "base": "gaia-components/base"
   }
 }

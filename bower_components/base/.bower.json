@@ -1,0 +1,26 @@
+{
+  "name": "base",
+  "authors": [
+    "Wilson Page <wilsonpage@me.com>"
+  ],
+  "main": "base.css",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "homepage": "https://github.com/gaia-components/base",
+  "_release": "1cdd7430ff",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "1cdd7430ff839a9fdef75812c53a67de57f4d58d"
+  },
+  "_source": "git://github.com/gaia-components/base.git",
+  "_target": "*",
+  "_originalSource": "gaia-components/base",
+  "_direct": true
+}
