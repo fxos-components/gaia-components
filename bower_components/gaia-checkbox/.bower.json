@@ -18,11 +18,11 @@
   "dependencies": {
     "gaia-icons": "gaia-components/gaia-icons#~0.6.0"
   },
-  "_release": "f126940684",
+  "_release": "b4ade6c11c",
   "_resolution": {
     "type": "branch",
     "branch": "dev",
-    "commit": "f126940684c1ea14c5cd0985f1b7a51d3a22a46b"
+    "commit": "b4ade6c11c410c50454b8157a275a3bd075a9e61"
   },
   "_source": "git://github.com/gaia-components/gaia-checkbox.git",
   "_target": "dev",

@@ -156,8 +156,7 @@ gaia-checkbox {
   left: 0px;
   position: absolute;
   z-index: -1;
-  opacity: 1;
-  transform: scale(0);
+  opacity: 0;
   background: var(--highlight-color, #000);
 }
 
@@ -166,11 +165,9 @@ gaia-checkbox {
  */
 
 .inner[checked] .background {
-  transform: scale(1.6);
-  transition-property: transform, opacity;
-  transition-duration: 300ms;
-  transition-timing-function: linear;
-  opacity: 0;
+  animation-name: gaia-checkbox-animation;
+  animation-duration: 350ms;
+  animation-fill-mode: forwards;
 }
 
 /** Tick
@@ -193,7 +190,7 @@ gaia-checkbox {
 
 [checked] .tick {
   opacity: 1;
-  transition-delay: 180ms;
+  transition-delay: 140ms;
 }
 
 /** Icon
@@ -215,6 +212,29 @@ gaia-checkbox {
   <div class="background"></div>
   <div class="tick"></div>
 </div>`;
+
+(function addKeyframes() {
+  var style = document.createElement('style');
+
+  style.innerHTML = `
+    @keyframes gaia-checkbox-animation {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      65% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1);
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+})();
 
 // Bind a 'click' delegate to the
 // window to listen for all clicks

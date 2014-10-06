@@ -21,11 +21,11 @@
     "gaia-switch": "gaia-components/gaia-switch",
     "gaia-checkbox": "gaia-components/gaia-checkbox"
   },
-  "_release": "85621954ae",
+  "_release": "bf2a4f3960",
   "_resolution": {
     "type": "branch",
     "branch": "dev",
-    "commit": "85621954aee7e21c77f4a2ffa92b0a06cc6e8d6c"
+    "commit": "bf2a4f3960a369b0061653bcff1760a51d55af87"
   },
   "_source": "git://github.com/gaia-components/gaia-theme.git",
   "_target": "dev",

@@ -218,4 +218,5 @@ Gaia theme variables
    ---------------------------------------------------------*/
 
    --button-box-shadow: none;
+   --button-box-shadow-active: none;
 }

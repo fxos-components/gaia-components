@@ -1,13 +1,14 @@
 {
   "name": "pressed",
   "main": "pressed.js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "authors": [
     "Wilson Page <wilsonpage@me.com>"
   ],
   "license": "MIT",
   "ignore": [
     "**/.*",
+    "!.jshintrc",
     "node_modules",
     "bower_components",
     "test",
