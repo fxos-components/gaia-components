@@ -30,6 +30,7 @@
     "gaia-toolbar": "gaia-components/gaia-toolbar#dev",
     "pressed": "gaia-components/pressed#dev",
     "drag": "gaia-components/drag#master",
-    "base": "gaia-components/base"
+    "base": "gaia-components/base",
+    "gaia-toast": "gaia-components/gaia-toast"
   }
 }

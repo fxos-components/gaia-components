@@ -1,0 +1,34 @@
+{
+  "name": "gaia-toast",
+  "homepage": "https://github.com/gaia-components/gaia-toast",
+  "authors": [
+    "Wilson Page <wilsonpage@me.com>"
+  ],
+  "main": "script.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "examples",
+    "README.md"
+  ],
+  "devDependencies": {
+    "base": "gaia-components/base",
+    "gaia-theme": "gaia-components/gaia-theme#~0.4.1",
+    "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1",
+    "gaia-button": "gaia-components/gaia-button#master"
+  },
+  "_release": "c720ce73d6",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "c720ce73d695bd2506e08fff03315deccf34c0c3"
+  },
+  "_source": "git://github.com/gaia-components/gaia-toast.git",
+  "_target": "*",
+  "_originalSource": "gaia-components/gaia-toast",
+  "_direct": true
+}

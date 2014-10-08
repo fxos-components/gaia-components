@@ -30,6 +30,7 @@
   <script src="bower_components/gaia-dialog/gaia-dialog-select.js"></script>
   <script src="bower_components/gaia-loading/gaia-loading.js"></script>
   <script src="bower_components/gaia-toolbar/gaia-toolbar.js"></script>
+  <script src="bower_components/gaia-toast/gaia-toast.js"></script>
   <script src="bower_components/gaia-tabs/gaia-tabs.js"></script>
 
   <style>
@@ -155,10 +156,10 @@
       <a><i data-icon="location"></i><h3>Menu 2</h3><i data-icon="forward-light"></i></a>
       <a><i data-icon="settings"></i>Menu 3<i data-icon="forward-light"></i></a>
       <li>
-        <label class="l-flex l-flex-grow" for="wifi-switch">
+        <label class="l-flex l-flex-grow">
           <i data-icon="wifi-4"></i><h3>Wifi</h3>
         </label>
-        <gaia-switch id="wifi-switch" class="divided"></gaia-switch>
+        <gaia-switch class="divided"></gaia-switch>
       </li>
     </gaia-list>
 
@@ -334,7 +335,7 @@
 
   <hr class="l-mb-mega"/>
 
-  <section class="l-mb-mega l-plr-small">
+  <section class="l-mb-mega">
     <gaia-list>
       <li class="js-open-dialog" data-dialog="gaia-dialog-alert">Alert<i data-icon="forward-light"></i></li>
       <li class="js-open-dialog" data-dialog="gaia-dialog-confirm">Confirm<i data-icon="forward-light"></i></li>
@@ -385,5 +386,17 @@
       <li>Hacker</li>
     </gaia-dialog-select>
   </div>
+
+  <hr class="l-mb-mega"/>
+
+  <section class="l-mb-mega l-align-center">
+    <gaia-button id="toast-button">Toast</gaia-button>
+    <gaia-toast>Yum...toast</gaia-toast>
+    <script>
+      this['toast-button'].addEventListener('click', function() {
+        document.querySelector('gaia-toast').show();
+      });
+    </script>
+  </section>
 </body>
 </html>
