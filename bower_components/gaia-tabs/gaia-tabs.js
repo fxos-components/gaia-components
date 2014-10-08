@@ -46,7 +46,6 @@ proto.setupMarker = function() {
 
 proto.setMarkerPosition = function(index) {
   this.els.marker.style.transform = 'translateX(' + index * 100 + '%)';
-  console.log(this.els.marker);
 };
 
 /**
@@ -167,15 +166,16 @@ var template = `
   position: relative;
   display: block;
   height: 100%;
+  outline: 0;
   border: 0;
   flex: 1;
+  font-size: 17px;
   line-height: 45px;
   text-align: center;
   font-style: italic;
   font-weight: lighter;
   background: none;
   cursor: pointer;
-
   color: inherit;
 
   transition:
@@ -200,7 +200,6 @@ var template = `
 
 .-content > .selected {
   color: var(--highlight-color, #000);
-  font-weight: 400;
 }
 
 /**

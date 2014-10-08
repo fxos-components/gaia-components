@@ -9,9 +9,6 @@
 var GaiaDialog = require('gaia-dialog');
 var pressed = require('pressed');
 
-// Needs 'gaia-icons' font-family
-require('gaia-icons');
-
 /**
  * Locals
  */
@@ -152,6 +149,11 @@ proto.onDialogClosed = function() {
 var template = `
 <style>
 
+/** Reset
+ ---------------------------------------------------------*/
+
+::-moz-focus-inner { border: 0; }
+
 /** Host
  ---------------------------------------------------------*/
 
@@ -185,6 +187,7 @@ var template = `
   height: 100%;
   padding: 0 22px;
   border: 0;
+  font-size: 17px;
   line-height: 45px;
   font-style: italic;
   font-weight: lighter;

@@ -22,14 +22,13 @@
     "gaia-dialog": "gaia-components/gaia-dialog"
   },
   "homepage": "https://github.com/gaia-components/gaia-toolbar",
-  "_release": "32b11d6233",
+  "_release": "a425c09db8",
   "_resolution": {
     "type": "branch",
     "branch": "dev",
-    "commit": "32b11d62339dfa4471809205c16a9879281b7077"
+    "commit": "a425c09db812a2098d546f352381da923b236031"
   },
   "_source": "git://github.com/gaia-components/gaia-toolbar.git",
   "_target": "dev",
-  "_originalSource": "gaia-components/gaia-toolbar",
-  "_direct": true
+  "_originalSource": "gaia-components/gaia-toolbar"
 }

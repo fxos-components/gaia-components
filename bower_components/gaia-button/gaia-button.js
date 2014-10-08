@@ -93,6 +93,7 @@ var template = `
   border-radius: 50px;
   overflow: hidden;
   cursor: pointer;
+  -moz-user-select: none;
 
   background:
     var(--button-background,
@@ -163,7 +164,7 @@ var template = `
 }
 
 .released .background {
-  transition: opacity 200ms;
+  transition: opacity 500ms;
 }
 
 /** Content

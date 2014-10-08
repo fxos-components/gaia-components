@@ -253,12 +253,13 @@ textarea[disabled] {
 
 .clear {
   position: absolute;
-  top: 12px;
+  top: 11px;
   right: 10px;
-  width: 17px;
-  height: 17px;
+  width: 18px;
+  height: 18px;
   padding: 0;
   margin: 0;
+  line-height: 17px;
   border-radius: 50%;
   opacity: 0;
   color: #fff;
@@ -286,8 +287,6 @@ input:focus ~ .clear {
   font-weight: 500;
   text-rendering: optimizeLegibility;
   font-size: 19px;
-  line-height: 1;
-  margin-top: -2px;
 }
 
 /** Focus Bar

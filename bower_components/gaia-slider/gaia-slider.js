@@ -105,6 +105,8 @@ input {
   width: 100%;
   margin: 0;
   padding: 0;
+  background: none;
+  border: 0;
 }
 
 /** Progress
@@ -121,11 +123,12 @@ input {
 ::-moz-range-track {
   width: 100%;
   height: 3px;
-  border: none;
+  border: 0;
+
   background:
     var(--slider-background,
     var(--border-color,
-    var(--background-minus)))
+    var(--background-minus)));
 }
 
 /** Thumb
@@ -149,7 +152,7 @@ input {
  * :active
  */
 
-::-moz-range-thumb:active {
+input:active::-moz-range-thumb {
   box-shadow: 0 0 0 16px rgba(0, 202, 242, 0.2);
   transform: scale(1.1);
 }

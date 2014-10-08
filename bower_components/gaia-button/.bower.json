@@ -19,11 +19,11 @@
     "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1",
     "gaia-icons": "gaia-components/gaia-icons#~0.5.6"
   },
-  "_release": "801f8db1dc",
+  "_release": "265434a541",
   "_resolution": {
     "type": "branch",
     "branch": "dev",
-    "commit": "801f8db1dc782b8ead8c3dbe7f61b652b5bfe478"
+    "commit": "265434a54150433728d5fd682264b78ec0951bd4"
   },
   "_source": "git://github.com/gaia-components/gaia-button.git",
   "_target": "dev",

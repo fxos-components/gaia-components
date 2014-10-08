@@ -14,8 +14,6 @@ var Drag = require('drag');
 
 // Extend from the HTMLElement prototype
 var proto = Object.create(HTMLElement.prototype);
-var baseComponents = window.COMPONENTS_BASE_URL || 'bower_components/';
-var base = window.GAIA_SWITCH_BASE_URL || baseComponents + 'gaia-switch/';
 
 /**
  * Attributes supported
@@ -110,6 +108,9 @@ proto.setChecked = function(value) {
     this.els.inner.removeAttribute('checked');
   }
 
+  this.els.handle.style.transform = '';
+  this.els.handle.style.transition = '';
+
   if (changed) {
     this.dispatchEvent(new CustomEvent('change'));
   }
@@ -146,6 +147,7 @@ template.innerHTML = `
 gaia-switch {
   display: inline-block;
   position: relative;
+  outline: 0;
 }
 
 /** Inner
@@ -300,6 +302,39 @@ gaia-switch {
     </div>
   </div>
 </div>`;
+
+// Bind a 'click' delegate to the
+// window to listen for all clicks
+// and toggle checkboxes when required.
+addEventListener('click', function(e) {
+  var label = getLabel(e.target);
+  var gaiaSwitch = getLinkedSwitch(label);
+  if (gaiaSwitch) { gaiaSwitch.toggle(); }
+}, true);
+
+/**
+ * Find a gaiaSwitch when given a <label>.
+ *
+ * @param  {Element} label
+ * @return {GaiaCheckbox|null}
+ */
+function getLinkedSwitch(label) {
+  if (!label) { return; }
+  var id = label.getAttribute('for');
+  var el = id && document.getElementById(id);
+  return el && el.tagName === 'GAIA-SWITCH' ? el : null;// || label.querySelector('gaia-checkbox');
+}
+
+/**
+ * Walk up the DOM tree from a given
+ * element until a <label> is found.
+ *
+ * @param  {Element} el
+ * @return {HTMLLabelElement|undefined}
+ */
+function getLabel(el) {
+  return el && (el.tagName == 'LABEL' ? el : getLabel(el.parentNode));
+}
 
 addEventListener('keypress', function(e) {
   var isSpaceKey = e.which === 32;

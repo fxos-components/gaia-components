@@ -20,11 +20,11 @@
     "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1"
   },
   "homepage": "https://github.com/gaia-components/gaia-text-input",
-  "_release": "3052d6d361",
+  "_release": "59222233ae",
   "_resolution": {
     "type": "branch",
     "branch": "dev",
-    "commit": "3052d6d361b4027e40b5b4750edeb52befe4555f"
+    "commit": "59222233aebf82b915aa2764a29898e05daa5da2"
   },
   "_source": "git://github.com/gaia-components/gaia-text-input.git",
   "_target": "dev",

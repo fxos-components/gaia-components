@@ -15,13 +15,13 @@
   "dependencies": {
     "drag": "gaia-components/drag#~0.1.0"
   },
-  "_release": "1de90a9f2b",
+  "_release": "f93e743dcc",
   "_resolution": {
     "type": "branch",
-    "branch": "v1",
-    "commit": "1de90a9f2b64890d62783a9937dbfba209525f83"
+    "branch": "dev",
+    "commit": "f93e743dccacb058012ce051757fb89db66cafb9"
   },
   "_source": "git://github.com/gaia-components/gaia-switch.git",
-  "_target": "v1",
+  "_target": "dev",
   "_originalSource": "gaia-components/gaia-switch"
 }

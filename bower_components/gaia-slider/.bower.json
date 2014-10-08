@@ -18,11 +18,11 @@
   "dependencies": {
     "pressed": "gaia-components/pressed#~0.1.0"
   },
-  "_release": "5f3529acc9",
+  "_release": "cbe814cab1",
   "_resolution": {
     "type": "branch",
     "branch": "dev",
-    "commit": "5f3529acc9cc6aee0570d2a201b0240219e1831b"
+    "commit": "cbe814cab13d24f4a6fc8ce28b7f51404554ee9a"
   },
   "_source": "git://github.com/gaia-components/gaia-slider.git",
   "_target": "dev",

@@ -15,13 +15,13 @@
     "README.md"
   ],
   "homepage": "https://github.com/gaia-components/gaia-tabs",
-  "_release": "5437bbdc89",
+  "_release": "263b1e30bc",
   "_resolution": {
     "type": "branch",
-    "branch": "v1",
-    "commit": "5437bbdc89430d7803d6a44eed14460ffc989832"
+    "branch": "dev",
+    "commit": "263b1e30bc000514561d2942e4c6fe5de45649b2"
   },
   "_source": "git://github.com/gaia-components/gaia-tabs.git",
-  "_target": "v1",
+  "_target": "dev",
   "_originalSource": "gaia-components/gaia-tabs"
 }

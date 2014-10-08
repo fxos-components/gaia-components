@@ -108,16 +108,16 @@ proto.animateInFromTarget = function(e) {
   background.classList.add('circular');
   this.dispatch('animationstart');
 
-  setTimeout(function() {
-    background.style.transform += ' scale(' + scale + ')';
-    background.style.opacity = 1;
+  var reflow = background.offsetTop;
 
-    background.addEventListener(end, function fn() {
-      background.removeEventListener(end, fn);
-      self.els.window.classList.add('animate-in');
-      self.dispatch('animationend');
-    });
-  }, 10);
+  background.style.transform += ' scale(' + scale + ')';
+  background.style.opacity = 1;
+
+  background.addEventListener(end, function fn() {
+    background.removeEventListener(end, fn);
+    self.els.window.classList.add('animate-in');
+    self.dispatch('animationend');
+  });
 };
 
 proto.animateOut = function(callback) {
@@ -275,7 +275,7 @@ var template = `
   animation-name: gaia-dialog-entrance;
   animation-duration: 300ms;
   animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1.275);
-  animation-fill-mode: forwards
+  animation-fill-mode: forwards;
 }
 
 .window.animate-out {
@@ -407,6 +407,7 @@ var animations = `
     opacity: 0;
     transform: translateY(100px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0px);

@@ -176,6 +176,7 @@ gaia-checkbox {
 .tick {
   text-align: center;
   line-height: 26px;
+  margin-left: -1px;
   opacity: 0;
 
   transition-property: opacity;
