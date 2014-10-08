@@ -313,6 +313,22 @@ var template = `
   transition-delay: 300ms;
 }
 
+/**
+ * .primary
+ */
+
+.shadow-content button.primary {
+  color: var(--color-preffered);
+}
+
+/**
+ * .warning
+ */
+
+.shadow-content button.warning {
+  color: var(--color-warning);
+}
+
 /** Button Divider Line
  ---------------------------------------------------------*/
 

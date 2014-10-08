@@ -194,7 +194,7 @@ gaia-dialog:not([multiple]) .cancel:after {
   <ul><content select="li"></content></ul>
   <fieldset>
     <button class="cancel">Cancel</button>
-    <button class="submit">Select</button>
+    <button class="submit primary">Select</button>
   </fieldset>
 </gaia-dialog>`;
 

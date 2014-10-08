@@ -46,7 +46,7 @@ proto.template = `
     <content></content>
   </section>
   <div>
-    <button class="submit">Ok</button>
+    <button class="submit primary">Ok</button>
   </div>
 </gaia-dialog>`;
 
