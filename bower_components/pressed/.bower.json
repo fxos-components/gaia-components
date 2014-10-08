@@ -1,7 +1,6 @@
 {
   "name": "pressed",
   "main": "pressed.js",
-  "version": "0.1.1",
   "authors": [
     "Wilson Page <wilsonpage@me.com>"
   ],
@@ -15,13 +14,13 @@
     "tests"
   ],
   "homepage": "https://github.com/gaia-components/pressed",
-  "_release": "0.1.1",
+  "_release": "634cb0805d",
   "_resolution": {
-    "type": "version",
-    "tag": "v0.1.1",
-    "commit": "aca54bea7ae337f5bdb5373090751e48ee323ced"
+    "type": "branch",
+    "branch": "dev",
+    "commit": "634cb0805d41a37762a9363c61d087fa3c7a2296"
   },
   "_source": "git://github.com/gaia-components/pressed.git",
-  "_target": "~0.1.0",
+  "_target": "dev",
   "_originalSource": "gaia-components/pressed"
 }

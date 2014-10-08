@@ -7,28 +7,34 @@
  * @type {Object}
  */
 var pointer = [
-  { down: 'touchstart', up: 'touchend' },
-  { down: 'mousedown', up: 'mouseup' }
+  { down: 'touchstart', up: 'touchend', move: 'touchmove' },
+  { down: 'mousedown', up: 'mouseup', move: 'mousemove' }
 ]['ontouchstart' in window ? 0 : 1];
 
-exports = module.exports = function(el, options) {
+module.exports = function(el, options) {
   var released = (options && options.released) || 200;
   var min = (options && options.min) || 300;
+  var instant = options && options.instant;
   var timeouts = {};
   var removeReleased;
 
   el.addEventListener(pointer.down, function(e) {
+    // if (scrolling) { return; }
     var start = e.timeStamp;
     var target = e.target;
+    var pressed = false;
+    var last = e;
 
     // If there is a removeRelease pending
     // run it before we add any more 'pressed'
     if (removeReleased) { removeReleased(); }
 
-    // Add the 'pressed' class up the tree
-    // and clear and pending timeouts.
-    classListUp(target, 'add', 'pressed');
-    clearTimeout(timeouts.pressed);
+    if (instant) { onPressed(); }
+    else { notScrolling(e, onPressed); }
+
+    function onPressed() {
+      classListUp(target, 'add', 'pressed');
+    }
 
     addEventListener(pointer.up, function fn(e) {
       removeEventListener(pointer.up, fn, true);
@@ -55,6 +61,59 @@ exports = module.exports = function(el, options) {
     }, true);
   }, true);
 };
+
+function notScrolling(e, fn) {
+  detectScrolling(e, function(scrolling) {
+    if (!scrolling) { fn(); }
+  });
+}
+
+function detectScrolling(e, fn) {
+  var period = 76;
+  var last = e;
+
+  if (windowScrolling) { return fn(true); }
+  if (!e.touches) { return fn(false); }
+
+  addEventListener('touchmove', onTouchMove, true);
+  setTimeout(detect, period);
+
+  function detect() {
+    removeEventListener('touchmove', onTouchMove, true);
+    if (windowScrolling) { return fn(true); }
+    var time = last.timeStamp - e.timeStamp;
+    var distance = getDistance(e.touches[0], last.touches[0]);
+    var speed = distance / time;
+    var scrolling = speed > 0.03;
+    fn(scrolling);
+  }
+
+  function onTouchMove(e) { last = e; }
+
+  function getDistance(a, b) {
+    var xs = 0;
+    var ys = 0;
+
+    xs = b.clientX - a.clientX;
+    xs = xs * xs;
+
+    ys = b.clientY - a.clientY;
+    ys = ys * ys;
+
+    return Math.sqrt(xs + ys);
+  }
+}
+
+var windowScrolling = false;
+var scrollTimeout;
+
+addEventListener('scroll', function() {
+  windowScrolling = true;
+  clearTimeout(scrollTimeout);
+  scrollTimeout = setTimeout(function() {
+    windowScrolling = false;
+  }, 60);
+});
 
 /**
  * Run a classList method on every

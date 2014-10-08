@@ -2,6 +2,17 @@
 /*jshint esnext:true*/
 
 /**
+ * Pointer event abstraction to make
+ * it work for touch and mouse.
+ *
+ * @type {Object}
+ */
+var pointer = [
+  { down: 'touchstart', up: 'touchend', move: 'touchmove' },
+  { down: 'mousedown', up: 'mouseup', move: 'mousemove' }
+]['ontouchstart' in window ? 0 : 1];
+
+/**
  * Detects presence of shadow-dom
  * CSS selectors.
  *
@@ -29,16 +40,10 @@ var proto = Object.create(HTMLElement.prototype);
  */
 proto.createdCallback = function() {
   this.createShadowRoot().innerHTML = template;
-
-  // Get els
-  this.els = {
-    inner: this.shadowRoot.querySelector('.inner')
-  };
-
-  this.addEventListener('mousedown', this.onClick.bind(this));
-  this.addEventListener('touchstart', this.onClick.bind(this));
-  this.makeAccessible();
+  this.els = { inner: this.shadowRoot.querySelector('.inner') };
+  this.addEventListener('click', this.onPointerDown.bind(this));
   this.shadowStyleHack();
+  this.makeAccessible();
 };
 
 proto.makeAccessible = function() {
@@ -78,7 +83,8 @@ proto.restyleShadowDom = function() {
 };
 
 proto.itemShouldRipple = function(el) {
-  if (el.classList.contains('ripple')) { return true; }
+  if (scrolling) { return false; }
+  else if (el.classList.contains('ripple')) { return true; }
   else if (el.classList.contains('no-ripple')) { return false; }
   else if (this.classList.contains('ripple')){ return true; }
   else if (this.classList.contains('no-ripple')){ return false; }
@@ -86,7 +92,8 @@ proto.itemShouldRipple = function(el) {
   else { return false; }
 };
 
-proto.onClick = function(e) {
+proto.onPointerDown = function(e) {
+  var point = e.touches ? e.changedTouches[0] : e;
   var target = this.getChild(e.target);
 
   if (!this.itemShouldRipple(target)) { return; }
@@ -108,18 +115,34 @@ proto.onClick = function(e) {
   els.container.style.height = pos.item.height + 'px';
 
   var offset = {
-    x: e.clientX - pos.item.left,
-    y: e.clientY - pos.item.top
+    x: point.clientX - pos.item.left,
+    y: point.clientY - pos.item.top
   };
 
   els.ripple.className = 'ripple';
   els.ripple.style.left = offset.x + 'px';
   els.ripple.style.top = offset.y + 'px';
-  els.ripple.addEventListener('animationend', els.container.remove.bind(els.container));
+  els.ripple.style.visibility = 'hidden';
 
   els.container.appendChild(els.ripple);
+  this.els.inner.appendChild(els.container);
 
-  this.appendChild(els.container);
+  // var reflow = els.ripple.offsetTop;
+  var scale = (pos.item.width / 15);
+  var duration = 500;
+
+  setTimeout(function() {
+    els.ripple.style.visibility = '';
+    els.ripple.style.transform = 'scale(' + scale + ')';
+    els.ripple.style.transitionDuration = duration  + 'ms';
+    setTimeout(function() {
+      els.ripple.style.transitionDuration = '1000ms';
+      els.ripple.style.opacity = '0';
+      setTimeout(function() {
+        els.container.remove();
+      }, 1000);
+    }, duration);
+  });
 };
 
 proto.getChild = function(el) {
@@ -132,6 +155,11 @@ var template = `
 /** Reset
  ---------------------------------------------------------*/
 
+label { background: transparent; }
+
+/** Host
+ ---------------------------------------------------------*/
+
 :host {
   display: block;
   position: relative;
@@ -140,7 +168,7 @@ var template = `
   text-align: left;
 }
 
-/** Inner
+/** Children
  ---------------------------------------------------------*/
 
 ::content > *:not(style) {
@@ -227,8 +255,11 @@ var template = `
  ---------------------------------------------------------*/
 
 .ripple-container.ripple-container {
+  box-sizing: content-box;
   position: absolute;
-  z-index: 1;
+  z-index: -1;
+  padding-top: 1px;
+  margin-top: -1px;
   overflow: hidden;
 }
 
@@ -236,7 +267,7 @@ var template = `
  ---------------------------------------------------------*/
 
 .ripple-container > .ripple {
-  background: var(--color-epsilon);
+  background: var(--background-minus);
   position: absolute;
   left: 0;
   top: 0;
@@ -244,9 +275,9 @@ var template = `
   height: 30px;
   margin: -15px;
   border-radius: 50%;
-  animation: gaia-list-item-ripple 400ms linear;
-  animation-fill-mode: forwards;
-  will-change: transform, opacity;
+  opacity: 0.2;
+  transition-property: transform, opacity;
+  will-change: transform;
 }
 
 </style>
@@ -262,23 +293,16 @@ if (!hasShadowCSS) {
     .replace(':host', '.-host', 'g');
 }
 
-(function() {
-  var style = document.createElement('style');
+var scrolling = false;
+var scrollTimeout;
 
-  style.innerHTML = `
-    @keyframes gaia-list-item-ripple {
-      0% {
-        opacity: 0.6;
-        transform: scale(1);
-      }
-      100% {
-        opacity: 0.2;
-        transform: scale(50);
-      }
-    }`;
-
-  document.head.appendChild(style);
-})();
+addEventListener('scroll', function() {
+  scrolling = true;
+  clearTimeout(scrollTimeout);
+  scrollTimeout = setTimeout(function() {
+    scrolling = false;
+  }, 100);
+});
 
 // Register and return the constructor
 // and expose `protoype` (bug 1048339)
