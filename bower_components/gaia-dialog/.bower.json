@@ -18,11 +18,11 @@
   "dependencies": {
     "gaia-text-input": "gaia-components/gaia-text-input"
   },
-  "_release": "47812b80ee",
+  "_release": "0f5cd02187",
   "_resolution": {
     "type": "branch",
     "branch": "dev",
-    "commit": "47812b80ee45e47f567dcbc7a201e88101bd17d6"
+    "commit": "0f5cd02187bdf0e6e7488e23d6898539677dfc32"
   },
   "_source": "git://github.com/gaia-components/gaia-dialog.git",
   "_target": "dev",

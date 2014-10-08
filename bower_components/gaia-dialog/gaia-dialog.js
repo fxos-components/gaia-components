@@ -318,15 +318,15 @@ var template = `
  */
 
 .shadow-content button.primary {
-  color: var(--color-preffered);
+  color: var(--highlight-color);
 }
 
 /**
- * .warning
+ * .danger
  */
 
-.shadow-content button.warning {
-  color: var(--color-warning);
+.shadow-content button.danger {
+  color: var(--color-destructive);
 }
 
 /** Button Divider Line
