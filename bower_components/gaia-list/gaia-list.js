@@ -181,7 +181,8 @@ label { background: transparent; }
   min-height: 60px;
   margin: 0;
   padding: 9px 16px;
-  font-size: 17px;
+  font-size: 18px;
+  font-weight: normal;
   font-style: normal;
   background: transparent;
   list-style-type: none;

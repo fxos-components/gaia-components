@@ -46,7 +46,7 @@ var template = `
 
   animation-name: gaia-loading-animation;
   animation-iteration-count: infinite;
-  animation-timing-function: ease-out;
+  animation-timing-function: cubic-bezier(0,.64,.46,.46);
   animation-duration: 2000ms;
 
   background:

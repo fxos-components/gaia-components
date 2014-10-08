@@ -15,14 +15,13 @@
     "examples",
     "README.md"
   ],
-  "_release": "bf8950b77b",
+  "_release": "c521011923",
   "_resolution": {
     "type": "branch",
     "branch": "dev",
-    "commit": "bf8950b77b96c75ce8e88505aa6d153feebe8572"
+    "commit": "c52101192354ce80a508ece76b861feebf52a1fb"
   },
   "_source": "git://github.com/gaia-components/gaia-loading.git",
   "_target": "dev",
-  "_originalSource": "gaia-components/gaia-loading",
-  "_direct": true
+  "_originalSource": "gaia-components/gaia-loading"
 }

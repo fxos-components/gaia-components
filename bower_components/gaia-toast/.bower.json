@@ -21,14 +21,13 @@
     "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1",
     "gaia-button": "gaia-components/gaia-button#master"
   },
-  "_release": "c720ce73d6",
+  "_release": "134d72b60f",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "c720ce73d695bd2506e08fff03315deccf34c0c3"
+    "commit": "134d72b60fac1e291485c403e7409fab4315b7d3"
   },
   "_source": "git://github.com/gaia-components/gaia-toast.git",
   "_target": "*",
-  "_originalSource": "gaia-components/gaia-toast",
-  "_direct": true
+  "_originalSource": "gaia-components/gaia-toast"
 }
