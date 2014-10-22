@@ -287,6 +287,18 @@ var template = `
   opacity: 1;
 }
 
+/** Title
+ ---------------------------------------------------------*/
+
+.shadow-content h1 {
+  padding: 16px;
+  font-size: 23px;
+  line-height: 26px;
+  font-weight: 200;
+  font-style: italic;
+  color: #858585;
+}
+
 /** Section
  ---------------------------------------------------------*/
 

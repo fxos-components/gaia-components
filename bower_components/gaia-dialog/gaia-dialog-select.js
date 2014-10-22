@@ -103,7 +103,7 @@ proto.template = `
   height: 100%;
 }
 
-/** Title
+/** Title (duplicate from gaia-dialog)
  ---------------------------------------------------------*/
 
 .shadow-content h1 {

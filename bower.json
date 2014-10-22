@@ -32,6 +32,6 @@
     "drag": "gaia-components/drag#master",
     "base": "gaia-components/base",
     "gaia-toast": "gaia-components/gaia-toast",
-    "gaia-picker": "gaia-components/gaia-picker"
+    "gaia-picker": "gaia-components/gaia-picker#master"
   }
 }

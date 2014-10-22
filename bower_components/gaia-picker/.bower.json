@@ -29,7 +29,6 @@
     "commit": "40ae7562afb277bfbca458e2e68cc3d455a28b44"
   },
   "_source": "git://github.com/gaia-components/gaia-picker.git",
-  "_target": "*",
-  "_originalSource": "gaia-components/gaia-picker",
-  "_direct": true
+  "_target": "master",
+  "_originalSource": "gaia-components/gaia-picker"
 }
