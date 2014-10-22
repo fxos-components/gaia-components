@@ -33,6 +33,11 @@
   <script src="bower_components/gaia-toast/gaia-toast.js"></script>
   <script src="bower_components/gaia-tabs/gaia-tabs.js"></script>
 
+  <!-- gaia-picker -->
+  <script src="bower_components/gaia-picker/lib/snap-scroll.js"></script>
+  <script src="bower_components/gaia-picker/gaia-picker.js"></script>
+  <script src="bower_components/gaia-picker/gaia-picker-date.js"></script>
+
   <style>
 
     body {
@@ -341,6 +346,7 @@
       <li class="js-open-dialog" data-dialog="gaia-dialog-prompt">Prompt<i data-icon="forward-light"></i></li>
       <li class="js-open-dialog" data-dialog="gaia-dialog-select">Select<i data-icon="forward-light"></i></li>
       <li class="js-open-dialog" data-dialog="gaia-dialog-select[multiple]">Select Multiple<i data-icon="forward-light"></i></li>
+      <li class="js-open-dialog" data-dialog=".dialog-date">Date Picker<i data-icon="forward-light"></i></li>
     </gaia-list>
 
     <script>
@@ -384,6 +390,15 @@
       <li>Classic courier</li>
       <li>Hacker</li>
     </gaia-dialog-select>
+
+    <gaia-dialog class="dialog-date">
+      <h1>Pick Date</h1>
+      <gaia-picker-date></gaia-picker-date>
+      <fieldset>
+      <button>Cancel</button>
+      <button class="primary">Confirm</button>
+      </fieldset>
+    </gaia-dialog>
   </div>
 
   <hr class="l-mb-mega"/>

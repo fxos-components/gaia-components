@@ -1,0 +1,35 @@
+{
+  "name": "gaia-picker",
+  "homepage": "https://github.com/gaia-components/gaia-picker",
+  "authors": [
+    "Wilson Page <wilsonpage@me.com>"
+  ],
+  "main": "gaia-picker.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "!.jshintrc",
+    "node_modules",
+    "bower_components",
+    "test",
+    "index.html",
+    "package.json",
+    "README.md"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "gaia-theme": "gaia-components/gaia-theme#~0.4.1",
+    "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1",
+    "base": "gaia-components/base"
+  },
+  "_release": "40ae7562af",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "40ae7562afb277bfbca458e2e68cc3d455a28b44"
+  },
+  "_source": "git://github.com/gaia-components/gaia-picker.git",
+  "_target": "*",
+  "_originalSource": "gaia-components/gaia-picker",
+  "_direct": true
+}
