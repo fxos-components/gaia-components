@@ -66,7 +66,7 @@ proto.createdCallback = function() {
   this.minutes = this.getAttribute('minutes') || now.getMinutes();
   this.hours = this.getAttribute('hours') || now.getHours();
 
-  this.addListeners();
+  setTimeout(this.addListeners.bind(this));
 };
 
 proto.attributeChangedCallback = function(attr, from, to) {
@@ -274,8 +274,8 @@ gaia-picker:not(:first-child):after {
 </style>
 
 <div class="inner">
-  <gaia-picker class="hours"></gaia-picker>
-  <gaia-picker class="minutes"></gaia-picker>
+  <gaia-picker class="hours" circular></gaia-picker>
+  <gaia-picker class="minutes" circular></gaia-picker>
   <gaia-picker class="ampm">
     <li>AM</li>
     <li>PM</li>
@@ -298,42 +298,6 @@ function createList(min, max, format) {
   }
   return list;
 }
-
-/**
- * Import HTML5 input[type="time"] string value
- *
- * @param {String} value 23:20:50.52, 17:39:57.
- * @return {Object} { hours: 23, minutes: 20, seconds: 50 }.
- */
-// function importTime(value) {
-//   var parts: ['hours', 'minutes', 'seconds'];
-//   var result = {
-//     hours: 0,
-//     minutes: 0,
-//     seconds: 0
-//   };
-
-//   if (typeof(value) !== 'string') {
-//     return result;
-//   }
-
-//   var parts = value.split(':');
-//   var part;
-//   var partName;
-
-//   var i = 0;
-//   var len = parts.length;
-
-//   for (; i < len; i++) {
-//     partName = parts[i];
-//     part = parts[i];
-//     if (part) {
-//       result[partName] = parseInt(part.slice(0, 2), 10) || 0;
-//     }
-//   }
-
-//   return result;
-// }
 
 // Register and return the constructor
 // and expose `protoype` (bug 1048339)

@@ -389,11 +389,13 @@ proto.updateMonthPicker = function() {
   var list = this.createMonthList();
   var firstItem = picker.children[0];
   var firstItemVal = firstItem && firstItem.textContent;
+  var trimmed = list.length < 12;
   var changed = list.length !== picker.length
     || firstItemVal !== list[0];
 
   if (!changed) { return debug('didn\'t change'); }
 
+  picker.circular = !trimmed;
   picker.fill(list);
   this.updateMonthPickerValue();
   debug('months picker updated', list);
@@ -414,7 +416,9 @@ proto.updateDayPicker = function() {
   debug('update days');
   if (!this.value) { return; }
   var picker = this.els.pickers.day;
-  var list = this.createDayList();
+  var days = this.createDayList();
+  var list = days.value;
+  var daysInMonth = getDaysInMonth();
   var firstItem = picker.children[0];
   var firstItemVal = firstItem && firstItem.textContent;
   var changed = list.length !== picker.length
@@ -422,9 +426,10 @@ proto.updateDayPicker = function() {
 
   if (!changed) { return debug('days didn\'t change'); }
 
+  picker.circular = !days.trimmed;
   picker.fill(list);
   this.updateDayPickerValue();
-  debug('day picker updated', list);
+  debug('day picker updated', days);
 };
 
 /**
@@ -596,7 +601,8 @@ proto.createMonthList = function() {
 proto.createDayList = function() {
   var month = this.value.getMonth();
   var year = this.value.getFullYear();
-  var last = this.isMaxMonth() ? this.max.getDate() : getDaysInMonth(year, month);
+  var daysInMonth = getDaysInMonth(year, month);
+  var last = this.isMaxMonth() ? this.max.getDate() : daysInMonth;
   var first = this.isMinMonth() ? this.min.getDate() : 1;
   var list = [];
 
@@ -605,7 +611,12 @@ proto.createDayList = function() {
     list.push(localeFormat(date, '%d'));
   }
 
-  return list;
+  var trimmed = daysInMonth !== list.length;
+
+  return {
+    value: list,
+    trimmed: trimmed
+  };
 };
 
 /**
@@ -624,11 +635,10 @@ proto.createDayList = function() {
  * @private
  */
 proto.setPickerHeights = function() {
-  var height = parseInt(this.style.height, 10);
-  if (!height) { return; }
-  this.els.pickers.day.height = height;
-  this.els.pickers.month.height = height;
-  this.els.pickers.year.height = height;
+  var height = this.style.height;
+  this.els.pickers.day.style.height = height;
+  this.els.pickers.month.style.height = height;
+  this.els.pickers.year.style.height = height;
   debug('set picker heights: %s', height);
 };
 
@@ -776,8 +786,8 @@ gaia-picker:after {
 </style>
 
 <div class="inner">
-  <gaia-picker class="days"></gaia-picker>
-  <gaia-picker class="months"></gaia-picker>
+  <gaia-picker class="days" circular></gaia-picker>
+  <gaia-picker class="months" circular></gaia-picker>
   <gaia-picker class="years"></gaia-picker>
 </div>`;
 
@@ -868,8 +878,8 @@ localeFormat.fallback = function(date, token) {
   switch (token) {
     case '%b': return strings.months[date.getMonth()];
     case '%A': return strings.days[date.getDay()];
-    case '%Y': return date.getFullYear();
-    case '%d': return date.getDate();
+    case '%Y': return String(date.getFullYear());
+    case '%d': return String(date.getDate());
   }
 };
 

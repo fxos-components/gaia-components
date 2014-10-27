@@ -71,13 +71,16 @@ proto.createdCallback = function() {
   this.shadowStyleHack();
 
   this.scroll = new Scroll({
-    el: this.els.list,
-    itemHeight: this.itemHeight,
-    containerHeight: this.height,
-    snap: true
+    snap: true,
+    list: this.els.list,
+    container: this,
+    items: this.els.items,
+    circular: this.hasAttribute('circular'),
+    heights: {
+      item: this.itemHeight,
+      container: this.height
+    }
   });
-
-  this.height = this.getAttribute('height');
 
   // Bind listeners later to avoid callbacks
   // firing during user configuration stage.
@@ -86,9 +89,9 @@ proto.createdCallback = function() {
 };
 
 proto.addListeners = function() {
-  this.els.list.addEventListener('panning', this.onPanning.bind(this));
-  this.els.list.addEventListener('snapped', this.onSnapped.bind(this));
-  this.els.list.addEventListener('tap', this.onListTap.bind(this));
+  this.addEventListener('panning', this.onPanning.bind(this));
+  this.addEventListener('snapped', this.onSnapped.bind(this));
+  this.addEventListener('tap', this.onListTap.bind(this));
 };
 
 proto.attachedCallback = function() {
@@ -101,10 +104,37 @@ proto.detachedCallback = function() {
   this.teardown();
 };
 
+/**
+ * When the list is tapped, we get
+ * the list item from the event target,
+ * find the index of this item in its
+ * parent container, and then select
+ * that index.
+ *
+ * This logic copes with the case whereby
+ * the item is a child of one of the
+ * cloned containers used for circular
+ * scrolling lists.
+ *
+ * @param  {Event} e
+ * @private
+ */
 proto.onListTap = function(e) {
-  var el = this.getChild(e.detail.target);
-  var index = [].indexOf.call(this.els.items, el);
+  var item = this.itemFromTarget(e.detail.target);
+  var items = item.parentNode.children;
+  var index = [].indexOf.call(items, item);
+  debug('list tapped', item, index, e);
   this.select(index);
+};
+
+/**
+ * Get the <li> from a descendent.
+ *
+ * @param  {Element} el
+ * @return {Element|null}
+ */
+proto.itemFromTarget = function(el) {
+  return el && (el.tagName === 'LI' ? el : this.getChild(el.parentNode));
 };
 
 proto.onPanning = function(e) {
@@ -112,13 +142,16 @@ proto.onPanning = function(e) {
 };
 
 proto.onSnapped = function(e) {
+  clearTimeout(this.changedTimeout);
   debug('snapped: %s', e.detail.index);
   this.selectItem(e.detail.index);
-  this.dispatch('changed', {
-    value: this.value,
-    selected: this.selected,
-    index: this.index
-  });
+  this.changedTimeout = setTimeout(function() {
+    this.dispatch('changed', {
+      value: this.value,
+      selected: this.selected,
+      index: this.index
+    });
+  }.bind(this), 300);
 };
 
 /**
@@ -186,24 +219,14 @@ proto.reflow = function() {
   if (!this.isSetup) { return; }
 
   var container = this.height || this.els.inner.clientHeight;
-  var padding = container - this.itemHeight;
-  this.els.list.style.paddingBottom = padding + 'px';
+  var padding = this.circular ? 0 : container - this.itemHeight;
 
-  // Optimize scroller
-  if (this.height) {
-    this.scroll.config.listHeight = this.els.items.length * this.itemHeight;
-    this.scroll.config.listHeight += padding;
-  }
-
+  this.els.list.style.paddingBottom = Math.max(padding, 0) + 'px';
+  this.scroll.heights.list = (this.length * this.itemHeight) + padding;
   this.scroll.refresh();
-  debug('reflowed');
+  debug('reflowed padding-bottom: %s', padding, container);
 };
 
-
-/**
- * 1. Shouldn't scroll if not setup
- * 2. Shouldn't fire the 'changed' event
- */
 
 proto.select = function(index, options) {
   debug('select: %s', index, this);
@@ -213,7 +236,6 @@ proto.select = function(index, options) {
     debug('queuedSelect');
     return;
   }
-
   var changed = index !== this.index;
   var exists = this.els.items[index];
 
@@ -247,7 +269,6 @@ proto.fill = function(list, options) {
   var els = [];
 
   this.disableTransitions();
-
   this._style.remove();
   this.innerHTML = '';
 
@@ -264,9 +285,8 @@ proto.fill = function(list, options) {
   this.clear();
 
   // Disable transitions for a short
-  // peroid of time to prevent reselection
+  // peroid of time to prevent re-selection
   // after new content fill looking glitchy
-
   setTimeout(this.enableTransitions.bind(this), 4000);
 };
 
@@ -276,10 +296,6 @@ proto.enableTransitions = function() {
 
 proto.disableTransitions = function() {
   this.classList.remove('transitions-on');
-};
-
-proto.getChild = function(el) {
-  return el && (el.parentNode === this ? el : this.getChild(el.parentNode));
 };
 
 proto.shadowStyleHack = function() {
@@ -293,12 +309,7 @@ proto.shadowStyleHack = function() {
 
 proto.attrs = {
   height: {
-    get: function() { return this._height; },
-    set: function(value) {
-      value = Number(value);
-      this.scroll.config.containerHeight = value;
-      this._height = value;
-    }
+    get: function() { return parseInt(this.style.height, 10); }
   },
 
   value: {
@@ -316,6 +327,21 @@ proto.attrs = {
   length: {
     get: function() {
       return this.els.items.length || 0;
+    }
+  },
+
+  circular: {
+    get: function() {
+      return this.scroll.config.circular;
+    },
+
+    set: function(value) {
+      debug('set circular', value);
+      value = !!value || value === '';
+      // if (value) { this.scroll.setupCircular(); }
+      // else { this.scroll.teardownCircular(); }
+      this.scroll.config.circular = value;
+      this.reflow();
     }
   }
 };

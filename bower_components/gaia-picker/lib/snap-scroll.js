@@ -33,12 +33,33 @@ var caf = cancelAnimationFrame;
 
 module.exports = Scroll;
 
+/**
+ * Initialize a new `Scroll`
+ *
+ * Config:
+ *
+ *   - {Element} `list` - The container that should be transformed
+ *   - {Boolean} `snap` (optional) - Make the list snap to items
+ *   - {Boolean} `circular` (optional) - Make the list loop
+ *   - {NodeList} `items` (optional) - The list items to snap to
+ *   - {Element} `container` (optional) - The *real* light-dom items parent node.
+ *
+ * @param {Object} config
+ */
 function Scroll(config) {
+  debug('initialize');
   this.config = config;
-  this.el = config.el;
+  this.els = config.els;
   this.scrollHeight = null;
   this.scrollTop = 0;
   this.last = {};
+
+  this.heights = config.heights || {};
+
+  this.els = {
+    list: config.list,
+    container: config.container || config.list
+  };
 
   // Bind context
   this.onPointerUpInternal = this.onPointerUpInternal.bind(this);
@@ -47,18 +68,71 @@ function Scroll(config) {
   this.onPointerUp = this.onPointerUp.bind(this);
   this.updateSpeed = this.updateSpeed.bind(this);
 
-  this.el.addEventListener(pointer.down, this.onPointerDown);
+  this.setup();
 }
 
+Scroll.prototype.setup = function() {
+  debug('setup');
+  this.els.list.addEventListener(pointer.down, this.onPointerDown);
+  if (this.config.circular) { this.setupCircular(); }
+};
+
+Scroll.prototype.teardown = function() {
+  this.els.list.removeEventListener(pointer.down, this.onPointerDown);
+};
+
+Scroll.prototype.setupCircular = function() {
+  debug('setup circular');
+
+  // Teardown old circular setup
+  if (this.circularSetup) { this.teardownCircular(); }
+
+  this.els.above = document.createElement('div');
+
+  [].forEach.call(this.getItems(), function(item) {
+    this.els.above.appendChild(item.cloneNode(true));
+  }, this);
+
+  this.els.above.style.transform = 'translateY(-100%)';
+  this.els.above.style.position = 'absolute';
+  this.els.above.style.width = '100%';
+  this.els.above.style.left = 0;
+  this.els.above.style.top = 0;
+
+  this.els.below = this.els.above.cloneNode(true);
+  this.els.below.style.transform = 'translateY(100%)';
+
+  this.els.container.style.position = 'relative';
+  this.els.container.appendChild(this.els.above);
+  this.els.container.appendChild(this.els.below);
+  this.config.circular = true;
+  this.circularSetup = true;
+  debug('circular setup');
+};
+
+Scroll.prototype.teardownCircular = function() {
+  if (!this.circularSetup) { return; }
+  this.els.above.remove();
+  this.els.below.remove();
+  this.els.container.style.position = '';
+  this.els.above = null;
+  this.els.below = null;
+  this.circularSetup = false;
+  debug('tore down circular');
+};
+
 Scroll.prototype.measure = function() {
-  var itemHeight = this.config.itemHeight;
-  var containerHeight = this.config.containerHeight || this.el.parentNode.clientHeight;
-  var listHeight = this.config.listHeight || this.el.clientHeight;
-  this.scrollHeight = Math.max(listHeight - containerHeight, 0);
+  this.heights.item = this.heights.item || this.getItems()[0].clientHeight;
+  this.heights.container = this.heights.container || this.els.list.parentNode.clientHeight;
+  this.heights.list = this.heights.list || this.els.list.clientHeight;
+  this.scrollHeight = Math.max(this.heights.list - this.heights.container, 0);
   this.measured = true;
+  debug('measured listHeight: %s, scrollHeight: %s',
+    this.heights.list, this.scrollHeight);
 };
 
 Scroll.prototype.onPointerDown = function(e) {
+  debug('pointer down');
   e.stopPropagation();
   e.preventDefault();
   this.e = this.point = null;
@@ -100,6 +174,7 @@ Scroll.prototype.onPointerUpInternal = function(e) {
   this.start = null;
 
   if (tapped) {
+    debug('tapped');
     e.stopPropagation();
     e.preventDefault();
     this.removeListeners();
@@ -109,19 +184,21 @@ Scroll.prototype.onPointerUpInternal = function(e) {
 };
 
 Scroll.prototype.addListeners = function() {
-  this.el.addEventListener(pointer.up, this.onPointerUpInternal);
+  debug('add listeners');
+  this.els.container.addEventListener(pointer.up, this.onPointerUpInternal);
   addEventListener(pointer.move, this.onPointerMove);
   addEventListener(pointer.up, this.onPointerUp);
 };
 
 Scroll.prototype.removeListeners = function() {
-  this.el.removeEventListener(pointer.up, this.onPointerUpInternal);
+  this.els.container.removeEventListener(pointer.up, this.onPointerUpInternal);
   removeEventListener(pointer.move, this.onPointerMove);
   removeEventListener(pointer.up, this.onPointerUp);
 };
 
-
 Scroll.prototype.pan = function(options) {
+  debug('pan');
+
   var silent = options && options.silent;
   this.cancelAnimate();
 
@@ -133,7 +210,6 @@ Scroll.prototype.pan = function(options) {
     if (!silent && changed) { this.dispatch('panning'); }
     debug('panned: %s', scrollTop, changed);
   }.bind(this));
-
 };
 
 Scroll.prototype.cancelPan = function() {
@@ -142,30 +218,46 @@ Scroll.prototype.cancelPan = function() {
 };
 
 Scroll.prototype.setScroll = function(value) {
+  debug('set scroll');
   if (this.measured) { this.measure(); }
-  var clamped = Math.min(Math.max(0, value), this.scrollHeight);
+  var clamped = this.clamp(value);
   if (clamped === this.scrollTop) { return false; }
+
+  clamped = this.circularCorrection(clamped);
+
   this.scrollTop = clamped;
-  this.el.style.transform = 'translateY(' + (-this.scrollTop) + 'px)';
-  debug('scroll set: %s', this.scrollTop);
+  this.els.list.style.transform = 'translateY(' + (-this.scrollTop) + 'px)';
   return true;
 };
 
+Scroll.prototype.clamp = function(scrollTop) {
+  return this.config.circular ? scrollTop : Math.min(Math.max(0,  scrollTop), this.scrollHeight);
+};
+
+Scroll.prototype.circularCorrection = function(scrollTop) {
+  if (!this.config.circular) { return scrollTop; }
+  if (scrollTop < 0) { scrollTop += this.heights.list; }
+  else if (scrollTop >= this.heights.list) { scrollTop -= this.heights.list; }
+  return scrollTop;
+};
+
 Scroll.prototype.refresh = function() {
+  if (this.config.circular) { this.setupCircular(); }
+  else { this.teardownCircular(); }
   this.setScroll(this.scrollTop);
 };
 
 Scroll.prototype.dispatch = function(name, detail) {
-  this.el.dispatchEvent(new CustomEvent(name, { detail: detail || {} }));
+  this.els.container.dispatchEvent(new CustomEvent(name, { detail: detail || {} }));
 };
 
 Scroll.prototype.getEndPoint = function(delta, options) {
-  var itemHeight = this.config.itemHeight;
+  var itemHeight = this.heights.item;
   var end = this.scrollTop + delta;
 
   this.measure();
 
-  end = Math.min(Math.max(0,  end), this.scrollHeight);
+  end = this.clamp(end);
 
   if (this.config.snap) {
     end = itemHeight * Math.round(end / itemHeight);
@@ -187,17 +279,18 @@ Scroll.prototype.scrollTo = function(delta, options) {
   var type = animate ? 'animate' : 'jump';
 
   this[type](to, options);
-  debug('%s to: %s', to);
+  debug('%s to: %s', this.scrollTop, to);
 };
 
 Scroll.prototype.jump = function(to, options) {
   debug('jump to: %s', to);
 
-  var index = to / this.config.itemHeight;
   var silent = options && options.silent;
   var shouldSnap = this.config.snap;
 
   this.setScroll(to, options);
+
+  var index = this.scrollTop / this.heights.item;
 
   if (shouldSnap && !silent) {
     this.dispatch('snapped', { index: index });
@@ -210,7 +303,6 @@ Scroll.prototype.animate = function(to, options) {
   var timeConstant = (options && options.time) || 16;
   var silent = options && options.silent;
   var remaining = this.scrollTop - to;
-  var index = to / this.config.itemHeight;
   var shouldSnap = this.config.snap;
   var self = this;
 
@@ -224,12 +316,13 @@ Scroll.prototype.animate = function(to, options) {
     var delta = remaining / timeConstant;
     var remaining_abs = Math.abs(remaining);
     var shouldSpeedUp = shouldSnap && remaining_abs < 30;
+    var scrollTop = self.scrollTop - delta;
 
     // Speed up when close to end destination
     if (shouldSpeedUp) { timeConstant *= 0.8; }
 
     // Do the draw
-    self.setScroll(self.scrollTop - delta);
+    self.setScroll(scrollTop);
     remaining -= delta;
 
     if (remaining_abs > 0.25) {
@@ -237,11 +330,14 @@ Scroll.prototype.animate = function(to, options) {
       return;
     }
 
+    // One last draw snapped to exact pixel
+    self.setScroll(Math.round(scrollTop));
     onComplete();
   }
 
   function onComplete() {
     if (shouldSnap && !silent) {
+      var index = self.scrollTop / self.heights.item;
       self.dispatch('snapped', { index: index });
     }
   }
@@ -274,13 +370,37 @@ Scroll.prototype.updateSpeed = function() {
   }
 };
 
+Scroll.prototype.getItems = function() {
+  return this.els.container.children;
+};
+
 Scroll.prototype.scrollToIndex = function(index, options) {
-  var offset = index * this.config.itemHeight;
-  var delta = offset - this.scrollTop;
+  debug('scroll to index: %s', index);
+  var delta = this.getClosestIndex(index) * this.heights.item;
   options = options || {};
-  options.time = 4;
+  options.time = 0.06 * Math.abs(delta);
   this.scrollTo(delta, options);
 };
+
+Scroll.prototype.getClosestIndex = function(index) {
+  var length = this.getItems().length;
+  var currentIndex = this.scrollTop / this.heights.item;
+  var deltaInternal = index - currentIndex;
+
+  if (!this.config.circular) { return deltaInternal; }
+
+  var deltaForward = (length - currentIndex) + index;
+  var deltaBack = (-currentIndex) - (length - index);
+  var deltas = [deltaForward, deltaBack, deltaInternal];
+
+  return smallestDelta(deltas);
+};
+
+function smallestDelta(list) {
+  return list.reduce(function(smallest, current) {
+    return Math.abs(current) < Math.abs(smallest) ? current : smallest;
+  }, list[0]);
+}
 
 function inDOM(el) {
   return el ? el.parentNode === document.body || inDOM(el.parentNode || el.host) : false;

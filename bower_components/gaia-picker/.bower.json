@@ -22,11 +22,11 @@
     "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1",
     "base": "gaia-components/base"
   },
-  "_release": "40ae7562af",
+  "_release": "ab60f0d7fd",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "40ae7562afb277bfbca458e2e68cc3d455a28b44"
+    "commit": "ab60f0d7fd1787dc2707056df27f79c82640217b"
   },
   "_source": "git://github.com/gaia-components/gaia-picker.git",
   "_target": "master",
