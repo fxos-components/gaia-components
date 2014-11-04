@@ -13,14 +13,13 @@
     "tests"
   ],
   "homepage": "https://github.com/gaia-components/base",
-  "_release": "1cdd7430ff",
+  "_release": "48ca92e984",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "1cdd7430ff839a9fdef75812c53a67de57f4d58d"
+    "commit": "48ca92e9840b03c0ff08806f46b0722d4bb9b288"
   },
   "_source": "git://github.com/gaia-components/base.git",
   "_target": "*",
-  "_originalSource": "gaia-components/base",
-  "_direct": true
+  "_originalSource": "gaia-components/base"
 }

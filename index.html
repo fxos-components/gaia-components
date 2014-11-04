@@ -37,6 +37,7 @@
   <script src="bower_components/gaia-picker/lib/snap-scroll.js"></script>
   <script src="bower_components/gaia-picker/gaia-picker.js"></script>
   <script src="bower_components/gaia-picker/gaia-picker-date.js"></script>
+  <script src="bower_components/gaia-picker/gaia-picker-time.js"></script>
 
   <style>
 
@@ -111,6 +112,10 @@
 
       background:
         var(--highlight-color);
+    }
+
+    .border {
+      border: solid 1px var(--border-color);
     }
 
 
@@ -316,6 +321,12 @@
   <hr class="l-mb-mega"/>
 
   <section class="l-mb-mega l-plr-small gaia-toolbars">
+    <style scoped>
+      button[data-icon] {
+        min-width: 50px;
+      }
+    </style>
+
     <div class="l-mb-mega">
       <gaia-toolbar>
         <button data-icon="grid">Grid</button>
@@ -323,6 +334,7 @@
         <button data-icon="artist">Artist</button>
         <button data-icon="album">Album</button>
         <button data-icon="songs">Song</button>
+        <button data-icon="firefox">Firefox</button>
       </gaia-toolbar>
     </div>
 
@@ -334,6 +346,44 @@
         <button>Refresh</button>
         <button>Add to homescreen</button>
       </gaia-toolbar>
+    </div>
+  </section>
+
+  <hr class="l-mb-mega"/>
+
+  <section class="l-mb-mega container">
+    <style scoped>
+
+      gaia-picker-date,
+      gaia-picker-time {
+        border: solid 1px var(--border-color);
+      }
+
+      .container {
+        padding: 0 var(--base-m);
+      }
+
+      .cell-1 {
+        margin-bottom: var(--base-m);
+      }
+
+
+      @media(min-width: 500px) {
+        .container { display: flex; }
+        .cell { flex: 1; }
+        .cell-1 { padding-right: var(--base-s); }
+        .cell-2 { padding-left: var(--base-s); }
+      }
+
+
+
+    </style>
+
+    <div class="cell cell-1">
+      <gaia-picker-date></gaia-picker-date>
+    </div>
+    <div class="cell cell-2">
+      <gaia-picker-time format="12hr"></gaia-picker-time>
     </div>
   </section>
 

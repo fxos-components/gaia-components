@@ -119,7 +119,7 @@ Drag.prototype.move = function(delta) {
 };
 
 Drag.prototype.set = function(pos) {
-  if (!this.edges) { return; }
+  if (!this.edges) { this.pendingSet = pos; return; }
   var x = typeof pos.x === 'string' ? this.edges[pos.x] : (pos.x || 0);
   var y = typeof pos.y === 'string' ? this.edges[pos.y] : (pos.y || 0);
   this.translate({ x: x, y: y });
@@ -215,6 +215,14 @@ Drag.prototype.updateDimensions = function() {
     x: handle.left - container.left,
     y: handle.top - container.top
   };
+
+  this.clearPendingSet();
+};
+
+Drag.prototype.clearPendingSet = function() {
+  if (!this.pendingSet) { return; }
+  this.set(this.pendingSet);
+  delete this.pendingSet;
 };
 
 });})((function(n,w){'use strict';return typeof define=='function'&&define.amd?

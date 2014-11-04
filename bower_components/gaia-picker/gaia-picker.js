@@ -8,6 +8,8 @@
 
 var Scroll = require('snap-scroll');
 
+var DEBUG = 0;
+
 /**
  * Detects presence of shadow-dom
  * CSS selectors.
@@ -18,16 +20,6 @@ var hasShadowCSS = (function() {
   try { document.querySelector(':host'); return true; }
   catch (e) { return false; }
 })();
-
-/**
- * Simple debug logger
- *
- * @param  {String} value
- */
-var debug = !~location.search.indexOf('|gaia-picker|') ? function() {} : function() {
-  arguments[0] = `[gaia-picker]  ` + arguments[0];
-  console.log.apply(console, arguments);
-};
 
 /**
  * Element prototype, extends from HTMLElement
@@ -57,6 +49,8 @@ proto.doc = document;
  * @private
  */
 proto.createdCallback = function() {
+  debug('created');
+
   this.createShadowRoot();
   this.shadowRoot.innerHTML = template;
 
@@ -69,29 +63,22 @@ proto.createdCallback = function() {
 
   this.setup = this.setup.bind(this);
   this.shadowStyleHack();
+  this.itemsFromChildren();
+  this.addListeners();
 
-  this.scroll = new Scroll({
-    snap: true,
-    list: this.els.list,
-    container: this,
-    items: this.els.items,
-    circular: this.hasAttribute('circular'),
-    heights: {
-      item: this.itemHeight,
-      container: this.height
-    }
-  });
+  this.circular = this.hasAttribute('circular');
 
-  // Bind listeners later to avoid callbacks
-  // firing during user configuration stage.
-  setTimeout(this.addListeners.bind(this), 500);
+  // Setup async to allow users chance select
   setTimeout(this.setup.bind(this));
+  this.created = true;
 };
 
 proto.addListeners = function() {
   this.addEventListener('panning', this.onPanning.bind(this));
+  this.addEventListener('scrolling', this.onPanning.bind(this));
   this.addEventListener('snapped', this.onSnapped.bind(this));
   this.addEventListener('tap', this.onListTap.bind(this));
+  debug('listeners added');
 };
 
 proto.attachedCallback = function() {
@@ -102,6 +89,35 @@ proto.attachedCallback = function() {
 proto.detachedCallback = function() {
   debug('detached');
   this.teardown();
+};
+
+proto.itemsFromChildren = function() {
+  if (!this.els.items.length) { return; }
+  this.items = [].map.call(this.els.items, function(el) {
+    el.remove();
+    return el.textContent;
+  });
+};
+
+proto.setupScroller = function() {
+  if (!this.created) { return; }
+  if (this.scroller) { return; }
+
+  this.scroller = new Scroll({
+    outer: this.els.inner,
+    inner: this.els.list,
+    length: this.items.length,
+    circular: this.circular,
+    snap: true,
+    render: this.renderItem.bind(this),
+    heights: {
+      item: this.itemHeight,
+      outer: this.height
+    }
+  });
+
+  this.updateScrollHeight();
+  debug('scroller setup', this.els.list.children);
 };
 
 /**
@@ -120,11 +136,13 @@ proto.detachedCallback = function() {
  * @private
  */
 proto.onListTap = function(e) {
-  var item = this.itemFromTarget(e.detail.target);
-  var items = item.parentNode.children;
-  var index = [].indexOf.call(items, item);
-  debug('list tapped', item, index, e);
-  this.select(index);
+  debug('tapped index: %s', e.detail.index);
+  this.select(e.detail.virtualIndex);
+};
+
+proto.renderItem = function(el, index) {
+  if (!el.firstChild) el.appendChild(document.createTextNode(''));
+  el.firstChild.nodeValue = this.items[index] || '\u2009';
 };
 
 /**
@@ -134,7 +152,7 @@ proto.onListTap = function(e) {
  * @return {Element|null}
  */
 proto.itemFromTarget = function(el) {
-  return el && (el.tagName === 'LI' ? el : this.getChild(el.parentNode));
+  return el && (el.tagName === 'LI' ? el : this.itemFromTarget(el.parentNode));
 };
 
 proto.onPanning = function(e) {
@@ -142,16 +160,23 @@ proto.onPanning = function(e) {
 };
 
 proto.onSnapped = function(e) {
+  debug('snapped: %s', e.detail);
+
+  var el = e.detail;
+  var index = el.virtualIndex;
+  var value = this.items[index];
+  var self = this;
+
+  this.selectItem(el);
   clearTimeout(this.changedTimeout);
-  debug('snapped: %s', e.detail.index);
-  this.selectItem(e.detail.index);
   this.changedTimeout = setTimeout(function() {
-    this.dispatch('changed', {
-      value: this.value,
-      selected: this.selected,
-      index: this.index
+    debug('changed', value, index);
+    self.dispatch('changed', {
+      value: value,
+      selected: self.selected,
+      index: index
     });
-  }.bind(this), 300);
+  });
 };
 
 /**
@@ -172,23 +197,25 @@ proto.onSnapped = function(e) {
 proto.setup = function() {
   debug('setup');
 
+  if (this.isSetup) { return; }
+
   // We can't setup without DOM context
   if (!inDOM(this)) { return debug('not in dom'); }
 
   // Defer setup until document has loaded
-  if (this.doc.readyState !== 'complete') {
-    addEventListener('load', this.setup);
-    return debug('doc not loaded');
-  }
+  // if (this.doc.readyState !== 'complete') {
+  //   addEventListener('load', this.setup);
+  //   return debug('doc not loaded');
+  // }
 
+  this.setupScroller();
   this.isSetup = true;
-  this.reflow();
   this.select(this.pendingSelect || 0, { animate: false });
-  this.classList.add('setup');
   setTimeout(this.enableTransitions.bind(this));
+  this.classList.add('setup');
 
   // Tidy up
-  removeEventListener('load', this.setup);
+  // removeEventListener('load', this.setup);
   delete this.pendingSelect;
 };
 
@@ -197,60 +224,24 @@ proto.teardown = function() {
   this.isSetup = false;
 };
 
-/**
- * Sets the required button-padding
- * on the list to account for the
- * y-offset.
- *
- * We also take this opportunity to
- * pass some more measurements to
- * the scroller if the user has
- * defined a 'hight' attribute.
- *
- * This means the scroller doens't
- * have to do the measuring itself,
- * which can be expensive.
- *
- * @private
- */
-proto.reflow = function() {
-  debug('reflow');
-
-  if (!this.isSetup) { return; }
-
-  var container = this.height || this.els.inner.clientHeight;
-  var padding = this.circular ? 0 : container - this.itemHeight;
-
-  this.els.list.style.paddingBottom = Math.max(padding, 0) + 'px';
-  this.scroll.heights.list = (this.length * this.itemHeight) + padding;
-  this.scroll.refresh();
-  debug('reflowed padding-bottom: %s', padding, container);
-};
-
-
 proto.select = function(index, options) {
-  debug('select: %s', index, this);
-
+  debug('select: %s', index);
+  if (isNaN(index)) { return debug('invalid argument'); }
   if (!this.isSetup) {
     this.pendingSelect = index;
-    debug('queuedSelect');
+    debug('select queued: %s', index);
     return;
   }
-  var changed = index !== this.index;
-  var exists = this.els.items[index];
 
-  if (!changed || !exists) { return debug('didn\'t change'); }
-
-  this.selectItem(index);
-  this.scroll.scrollToIndex(index, options);
+  this.scroller.scrollToIndex(index, options);
 };
 
-proto.selectItem = function(index) {
-  if (index === this.index) { return; }
+proto.selectItem = function(el) {
+  if (el === this.selected) { return; }
   this.clear();
-  this.selected = this.els.items[index];
+  this.selected = el;
+  this.index = el.virtualIndex;
   this.selected.classList.add('selected');
-  this.index = index;
 };
 
 proto.clear = function() {
@@ -262,32 +253,6 @@ proto.clear = function() {
 
 proto.dispatch = function(name, detail) {
   this.dispatchEvent(new CustomEvent(name, { detail: detail || {} }));
-};
-
-proto.fill = function(list, options) {
-  var select = options && options.select;
-  var els = [];
-
-  this.disableTransitions();
-  this._style.remove();
-  this.innerHTML = '';
-
-  list.forEach(function(item) {
-    var el = document.createElement('li');
-    el.textContent = item;
-    this.appendChild(el);
-    els.push(el);
-  }, this);
-
-  this.els.items = els;
-  this.appendChild(this._style);
-  this.reflow();
-  this.clear();
-
-  // Disable transitions for a short
-  // peroid of time to prevent re-selection
-  // after new content fill looking glitchy
-  setTimeout(this.enableTransitions.bind(this), 4000);
 };
 
 proto.enableTransitions = function() {
@@ -307,9 +272,22 @@ proto.shadowStyleHack = function() {
   this._style = style;
 };
 
+proto.updateScrollHeight = function() {
+  if (!this.scroller) { return; }
+  this.scroller.setLength(this.items.length);
+  this.scroller.heights.scroll += this.getBottomSpacing();
+  debug('updated scroll height: %s', this.scroller.heights.scroll);
+};
+
+proto.getBottomSpacing = function() {
+  return this.circular ? 0 : this.height - this.itemHeight;
+};
+
 proto.attrs = {
   height: {
-    get: function() { return parseInt(this.style.height, 10); }
+    get: function() {
+      return parseInt(this.style.height, 10) || this.clientHeight;
+    }
   },
 
   value: {
@@ -318,30 +296,31 @@ proto.attrs = {
     }
   },
 
-  children: {
-    get: function() {
-      return this.els.items || [];
-    }
-  },
-
   length: {
-    get: function() {
-      return this.els.items.length || 0;
-    }
+    get: function() { return this.items.length; }
   },
 
   circular: {
-    get: function() {
-      return this.scroll.config.circular;
-    },
-
+    get: function() { return this._circular; },
     set: function(value) {
       debug('set circular', value);
-      value = !!value || value === '';
-      // if (value) { this.scroll.setupCircular(); }
-      // else { this.scroll.teardownCircular(); }
-      this.scroll.config.circular = value;
-      this.reflow();
+      var circular = !!value || value === '';
+      this._circular = circular;
+      if (!this.scroller) { return; }
+      this.scroller.config.circular = circular;
+      this.updateScrollHeight();
+      // if (this.created) { this.scroller.refresh(); }
+    }
+  },
+
+  items: {
+    get: function() { return this._items || []; },
+    set: function(items) {
+      debug('set items', items);
+      this._items = items;
+      this.setupScroller();
+      this.updateScrollHeight();
+      // if (this.created) { this.scroller.refresh(); }
     }
   }
 };
@@ -358,7 +337,6 @@ var template = `
   overflow: hidden;
   -moz-user-select: none;
   visibility: hidden;
-    mask: url(#m1);
 }
 
 :host.setup {
@@ -403,15 +381,15 @@ var template = `
   height: 50px;
   pointer-events: none;
   background: linear-gradient(to bottom,
-    rgba(244,244,244,1) 0%,
-    rgba(244,244,244,0) 100%);
+    var(--background) 0%,
+    transparent 100%);
 }
 
 .gaia-picker-inner:after {
   top: auto; bottom: 0;
   background: linear-gradient(to top,
-    rgba(244,244,244,1) 0%,
-    rgba(244,244,244,0) 100%);
+    var(--background) 0%,
+    transparent 100%);
 }
 
 /** List
@@ -422,17 +400,20 @@ var template = `
   top: 50%; left: 0;
   width: 100%;
   margin-top: -25px;
+  oveflow: hidden;
+  will-change: transform;
 }
 
 /** List Items
  ---------------------------------------------------------*/
 
-::content li {
+.list li {
   position: relative;
   height: 50px;
   padding: 0 16px;
   font-size: 18px;
   font-weight: normal;
+  font-style: italic;
   line-height: 50px;
   text-align: center;
   list-style-type: none;
@@ -443,20 +424,21 @@ var template = `
  * .selected
  */
 
-::content li.selected {
+.list li.selected {
   color: var(--highlight-color);
-  transform: scale(1.5);
+  transition: transform 140ms linear;
+  transform: scale(1.3);
 }
 
 .transitions-on li {
-  transition: transform 140ms linear;
+  // transition: transform 140ms linear;
 }
 
 </style>
 
 <div class="gaia-picker-inner">
   <div class="selected-background"></div>
-  <div class="list"><content></content></div>
+  <div class="list"></div>
 </div>`;
 
 // If the browser doesn't support shadow-css
@@ -476,6 +458,16 @@ function inDOM(el) {
 // and expose `protoype` (bug 1048339)
 module.exports = document.registerElement('gaia-picker', { prototype: proto });
 module.exports.proto = proto;
+
+var debug;
+module.exports.debug = function(enabled) {
+  debug = enabled ? function() {
+    arguments[0] = '[gaia-picker]  ' + arguments[0];
+    console.log.apply(console, arguments);
+  } : function(){};
+};
+
+module.exports.debug(DEBUG);
 
 });})(typeof define=='function'&&define.amd?define
 :(function(n,w){'use strict';return typeof module=='object'?function(c){

@@ -4,6 +4,8 @@
 
 require('gaia-picker');
 
+var DEBUG = 0;
+
 /**
  * Detects presence of shadow-dom
  * CSS selectors.
@@ -14,16 +16,6 @@ var hasShadowCSS = (function() {
   try { document.querySelector(':host'); return true; }
   catch (e) { return false; }
 })();
-
-/**
- * Simple debug logger
- *
- * @param  {String} value
- */
-var debug = !localStorage.debug ? function() {} : function() {
-  arguments[0] = '[gaia-picker-time] ' + arguments[0];
-  console.log.apply(console, arguments);
-};
 
 /**
  * Element prototype, extends from HTMLElement
@@ -95,11 +87,11 @@ proto.onAmPmChanged = function(e) {
 };
 
 proto.setPickerHeights = function() {
-  var height = Number(this.getAttribute('height'));
-  if (!height) { return; }
-  this.els.pickers.minutes.height = height;
-  this.els.pickers.hours.height = height;
-  this.els.pickers.ampm.height = height;
+  var height = this.style.height;
+  this.els.pickers.hours.style.height = height;
+  this.els.pickers.minutes.style.height = height;
+  this.els.pickers.ampm.style.height = height;
+  debug('set picker heights: %s', height);
 };
 
 /**
@@ -112,10 +104,10 @@ proto.setPickerHeights = function() {
 proto.populate = function() {
   var startHour = this.is12 ? 1 : 0;
   var endHour = this.is12 ? (startHour + 12) : (startHour + 12 * 2);
-  this.els.pickers.hours.fill(createList(startHour, endHour));
-  this.els.pickers.minutes.fill(createList(0, 60, function(value) {
+  this.els.pickers.hours.items = createList(startHour, endHour);
+  this.els.pickers.minutes.items = createList(0, 60, function(value) {
     return value < 10 ? '0' + value : value;
-  }));
+  });
 };
 
 /**
@@ -271,10 +263,32 @@ gaia-picker:not(:first-child):after {
   display: none;
 }
 
+.colon {
+  position: absolute;
+  left: 33.33%;
+  top: 50%;
+  z-index: 3;
+  width: 10px;
+  height: 50px;
+  font-size: 30px;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 48px;
+  margin-top: -25px;
+  margin-left: -5px;
+  text-align: center;
+  color: var(--highlight-color);
+}
+
+[format='24hr'] .colon {
+  left: 50%;
+}
+
 </style>
 
 <div class="inner">
   <gaia-picker class="hours" circular></gaia-picker>
+  <div class="colon">:</div>
   <gaia-picker class="minutes" circular></gaia-picker>
   <gaia-picker class="ampm">
     <li>AM</li>
@@ -302,7 +316,18 @@ function createList(min, max, format) {
 // Register and return the constructor
 // and expose `protoype` (bug 1048339)
 module.exports = document.registerElement('gaia-picker-time', { prototype: proto });
-module.exports.proto = proto;
+module.exports.protoype = module.exports.protoype || proto;
+
+var debug;
+
+module.exports.debug = function(enabled) {
+  debug = enabled ? function() {
+    arguments[0] = '[gaia-picker-time]  ' + arguments[0];
+    console.log.apply(console, arguments);
+  } : function(){};
+};
+
+module.exports.debug(DEBUG);
 
 });})(typeof define=='function'&&define.amd?define
 :(function(n,w){'use strict';return typeof module=='object'?function(c){

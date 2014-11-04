@@ -4,8 +4,15 @@
 
 :root {
   --dim-micro: 6px;
-  --dim-small: 14px;
-  --dim-mega: 60px;
+  --dim-small: 12px;
+  --dim-medium: 24px;
+  --dim-mega: 48px;
+
+  --base-xs: 6px;
+  --base-s: 12px;
+  --base-m: 24px;
+  --base-l: 48px;
+  --base-xl: 60px;
 }
 
 /**
