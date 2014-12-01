@@ -55,8 +55,6 @@ proto.makeAccessible = function() {
 proto.shadowStyleHack = function() {
   if (hasShadowCSS) { return; }
   var style = this.shadowRoot.querySelector('style').cloneNode(true);
-  this.classList.add('-content', '-host');
-  style.setAttribute('scoped', '');
   this.appendChild(style);
 };
 
@@ -128,7 +126,7 @@ proto.onPointerDown = function(e) {
   this.els.inner.appendChild(els.container);
 
   // var reflow = els.ripple.offsetTop;
-  var scale = (pos.item.width / 15);
+  var scale = pos.item.width / 1.2;
   var duration = 500;
 
   setTimeout(function() {
@@ -155,7 +153,7 @@ var template = `
 /** Reset
  ---------------------------------------------------------*/
 
-label { background: transparent; }
+label { background: none; }
 
 /** Host
  ---------------------------------------------------------*/
@@ -165,32 +163,72 @@ label { background: transparent; }
   position: relative;
   font-size: 17px;
   overflow: hidden;
-  text-align: left;
 }
 
 /** Children
  ---------------------------------------------------------*/
 
 ::content > *:not(style) {
-  box-sizing: border-box;
   position: relative;
   z-index: 2;
+
+  box-sizing: border-box;
   display: flex;
-  align-items: center;
   width: 100%;
   min-height: 60px;
-  margin: 0;
   padding: 9px 16px;
+  margin: 0;
+  border: 0;
+  outline: 0;
+
   font-size: 18px;
   font-weight: normal;
   font-style: normal;
   background: transparent;
+  align-items: center;
   list-style-type: none;
-  outline: 0;
-  border: 0;
 
   color:
     var(--text-color);
+}
+
+::content > a {
+  cursor: pointer;
+}
+
+/** Titles
+ ---------------------------------------------------------*/
+
+::content h1,
+::content h2,
+::content h3,
+::content h4 {
+  font-weight: 400;
+}
+
+/** Layout Helpers
+ ---------------------------------------------------------*/
+
+/**
+ * [flexbox]
+ *
+ * A helper attribute to allow users to
+ * quickly define content as a flexbox.
+ */
+
+::content [flexbox] {
+  display: flex;
+}
+
+/**
+ * [flex]
+ *
+ * A helper attribute to allow users to
+ * quickly define area as flexible.
+ */
+
+::content [flex] {
+  flex: 1;
 }
 
 /** Border
@@ -199,7 +237,7 @@ label { background: transparent; }
 ::content > *:before {
   content: '';
   position: absolute;
-  bottom: 0px;
+  top: 0px;
   left: 16px;
   right: 16px;
   height: 1px;
@@ -207,6 +245,10 @@ label { background: transparent; }
   background:
     var(--border-color,
     var(--background-plus));
+}
+
+::content > :first-child:before {
+  display: none;
 }
 
 /** Titles
@@ -231,21 +273,19 @@ label { background: transparent; }
 }
 
 ::content > * > i:last-child {
-  display: block;
-  position: absolute;
-  top: 50%;
-  right: 16px;
-  margin-top: -14px;
-  line-height: 1;
-  text-align: right;
+  width: auto;
+}
+
+[dir=rtl] ::content i:before {
+  transform: scale(-1, 1);
 }
 
 /** Divided
  ---------------------------------------------------------*/
 
 ::content .divided {
-  border-left: solid 1px;
-  padding-left: 14px;
+  -moz-border-start: solid 1px;
+  -moz-padding-start: 14px;
 
   border-color:
     var(--border-color,
@@ -260,7 +300,6 @@ label { background: transparent; }
   position: absolute;
   z-index: -1;
   padding-top: 1px;
-  margin-top: -1px;
   overflow: hidden;
 }
 
@@ -268,15 +307,14 @@ label { background: transparent; }
  ---------------------------------------------------------*/
 
 .ripple-container > .ripple {
-  background: var(--background-minus);
+  background: var(--border-color);
   position: absolute;
   left: 0;
   top: 0;
-  width: 30px;
-  height: 30px;
-  margin: -15px;
+  width: 2px;
+  height: 2px;
+  margin: -1px;
   border-radius: 50%;
-  opacity: 0.2;
   transition-property: transform, opacity;
   will-change: transform;
 }
@@ -290,8 +328,8 @@ label { background: transparent; }
 // to use the shim classes instead.
 if (!hasShadowCSS) {
   template = template
-    .replace('::content', '.-content', 'g')
-    .replace(':host', '.-host', 'g');
+    .replace('::content', 'gaia-list', 'g')
+    .replace(':host', 'gaia-list', 'g');
 }
 
 var scrolling = false;

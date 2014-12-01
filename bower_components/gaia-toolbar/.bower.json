@@ -18,15 +18,14 @@
     "gaia-icons": "gaia-components/gaia-icons#~0.6.1"
   },
   "dependencies": {
-    "pressed": "gaia-components/pressed#~0.1.0",
     "gaia-dialog": "gaia-components/gaia-dialog"
   },
   "homepage": "https://github.com/gaia-components/gaia-toolbar",
-  "_release": "a425c09db8",
+  "_release": "7bff2fff5b",
   "_resolution": {
     "type": "branch",
     "branch": "dev",
-    "commit": "a425c09db812a2098d546f352381da923b236031"
+    "commit": "7bff2fff5b7b753f50f2704579ca844a891c656d"
   },
   "_source": "git://github.com/gaia-components/gaia-toolbar.git",
   "_target": "dev",

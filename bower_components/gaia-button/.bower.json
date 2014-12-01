@@ -12,20 +12,19 @@
     "test",
     "tests"
   ],
-  "dependencies": {
-    "pressed": "gaia-components/pressed#~0.1.0"
-  },
   "devDependencies": {
     "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1",
-    "gaia-icons": "gaia-components/gaia-icons#~0.5.6"
+    "gaia-icons": "gaia-components/gaia-icons#~0.7.1",
+    "base": "gaia-components/base",
+    "gaia-theme": "gaia-components/gaia-theme#~0.4.1"
   },
-  "_release": "265434a541",
+  "_release": "6c6e2fcba5",
   "_resolution": {
     "type": "branch",
-    "branch": "dev",
-    "commit": "265434a54150433728d5fd682264b78ec0951bd4"
+    "branch": "master",
+    "commit": "6c6e2fcba59dd90a0fe11a60587dbbd8d02123ac"
   },
   "_source": "git://github.com/gaia-components/gaia-button.git",
-  "_target": "dev",
+  "_target": "master",
   "_originalSource": "gaia-components/gaia-button"
 }

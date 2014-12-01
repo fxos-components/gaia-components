@@ -102,10 +102,8 @@ Drag.prototype.onTouchEnd = function(e) {
   var tapped = (e.timeStamp - this.startTime) < this.tapTime;
   this.dragging = false;
 
-  removeEventListener('touchmove', this.onTouchMove);
-  removeEventListener('mousemove', this.onTouchMove);
-  removeEventListener('touchend', this.onTouchEnd);
-  removeEventListener('mouseup', this.onTouchEnd);
+  removeEventListener(pointer.move, this.onTouchMove);
+  removeEventListener(pointer.up, this.onTouchEnd);
 
   if (tapped) { this.emit('tapped', e); }
   else { this.emit('ended', e); }

@@ -38,6 +38,7 @@ proto.createdCallback = function() {
   // Bind context
   this.toggle = this.toggle.bind(this);
   this.onSnapped = this.onSnapped.bind(this);
+  this.onTapped = this.onTapped.bind(this);
 
   // Configure
   this.checked = this.hasAttribute('checked');
@@ -64,11 +65,16 @@ proto.setupDrag = function() {
 
   this.drag.on('ended', this.drag.snapToClosestEdge);
   this.drag.on('snapped', this.onSnapped);
-  this.drag.on('tapped', this.toggle);
+  this.drag.on('tapped', this.onTapped);
 };
 
 proto.activateTransitions = function() {
   this.els.inner.classList.add('transitions-on');
+};
+
+proto.onTapped = function(e) {
+  e.stopPropagation();
+  this.toggle();
 };
 
 /**
@@ -157,6 +163,7 @@ gaia-switch {
   display: block;
   width: 50px;
   height: 32px;
+  direction: ltr;
 }
 
 /** Track

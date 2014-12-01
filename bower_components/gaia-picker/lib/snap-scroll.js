@@ -73,22 +73,24 @@ function Scroll(config) {
 }
 
 Scroll.prototype.createItems = function() {
+  var fragment = document.createDocumentFragment();
   var l = this.config.nodes;
 
   this.els.items = [];
 
   for (var i = 0; i < l; i++) {
     var el = document.createElement('li');
+    el.textContent = i;
     el.style.overflow = 'hidden';
     el.style.position = 'absolute';
     el.style.left = 0;
     el.style.right = 0;
     el.style.top = i * this.heights.item + 'px';
-    this.els.inner.appendChild(el);
+    fragment.appendChild(el);
     this.els.items.push(el);
   }
 
-  this.els.outer.appendChild(this.els.inner);
+  this.els.inner.appendChild(fragment);
   debug('created items', this.els.items.length);
 };
 

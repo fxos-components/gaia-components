@@ -16,13 +16,14 @@
     "README.md"
   ],
   "dependencies": {
-    "gaia-text-input": "gaia-components/gaia-text-input"
+    "gaia-text-input": "gaia-components/gaia-text-input",
+    "gaia-icons": "gaia-components/gaia-icons#~0.7.4"
   },
-  "_release": "9608576573",
+  "_release": "c6aec55bd4",
   "_resolution": {
     "type": "branch",
     "branch": "dev",
-    "commit": "9608576573cd4b035dde161e8746e5aab7065ce4"
+    "commit": "c6aec55bd4a0c176b6fe92228f0a916170d0f694"
   },
   "_source": "git://github.com/gaia-components/gaia-dialog.git",
   "_target": "dev",

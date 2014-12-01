@@ -51,7 +51,7 @@ proto.template = `
 
 <gaia-dialog>
   <section>
-    <content></content>
+    <p><content></content></p>
   </section>
   <fieldset>
     <button class="cancel">Cancel</button>

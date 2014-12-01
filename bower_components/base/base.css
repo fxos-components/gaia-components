@@ -9,10 +9,17 @@
   --dim-mega: 48px;
 
   --base-xs: 6px;
-  --base-s: 12px;
+  --base-s: 18px;
   --base-m: 24px;
-  --base-l: 48px;
-  --base-xl: 60px;
+  --base-l: 30px;
+  --base-xl: 42px;
+  --base-xxl: 60px;
+
+  --base-font-xs: 10px;
+  --base-font-s: 14px;
+  --base-font-m: 17px;
+  --base-font-l: 23px;
+  --base-font-xl: 60px;
 }
 
 /**
@@ -67,6 +74,14 @@ hr {
 
 em {
   font-weight: 500;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: 300;
 }
 
 .alpha {

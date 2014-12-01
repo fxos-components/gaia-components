@@ -1,5 +1,7 @@
 ;(function(define){define(function(require,exports,module){
+/*jshint laxbreak:true*/
 /*jshint esnext:true*/
+
 'use strict';
 
 /**
@@ -32,9 +34,16 @@ proto.createdCallback = function() {
     window: this.shadowRoot.querySelector('.window')
   };
 
-  this.els.background.addEventListener('click', this.close.bind(this));
+  this.shadowRoot.addEventListener('click', e => this.onClick(e));
   this.setupAnimationListeners();
   this.styleHack();
+};
+
+proto.onClick = function(e) {
+  var el = closest('[on-click]', e.target, this);
+  if (!el) { return; }
+  var method = el.getAttribute('on-click');
+  if (typeof this[method] == 'function') this[method]();
 };
 
 proto.setupAnimationListeners = function() {
@@ -190,6 +199,17 @@ var template = `
 
 .shadow-content * {
   box-sizing: border-box;
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+.shadow-content p,
+.shadow-content h1,
+.shadow-content h2,
+.shadow-content h3,
+.shadow-content h4,
+.shadow-content button,
+.shadow-content fieldset {
   padding: 0;
   margin: 0;
   border: 0;
@@ -234,21 +254,33 @@ var template = `
   background: rgba(199,199,199,0.85);
 }
 
+/**
+ * .circular
+ */
+
 .background.circular {
   width: 40px;
   height: 40px;
   margin: -20px;
   border-radius: 50%;
-  will-change: transform;
+  will-change: transform, opacity;
   transition-property: opacity, transform;
   transition-timing-function: linear;
 }
+
+/**
+ * .animate-in
+ */
 
 .background.animate-in {
   animation-name: gaia-dialog-fade-in;
   animation-duration: 300ms;
   animation-fill-mode: forwards;
 }
+
+/**
+ * .animate-out
+ */
 
 .background.animate-out {
   animation-name: gaia-dialog-fade-out;
@@ -299,12 +331,31 @@ var template = `
   color: #858585;
 }
 
+.shadow-content strong {
+  font-weight: 700;
+}
+
+.shadow-content small {
+  font-size: 0.8em;
+}
+
 /** Section
  ---------------------------------------------------------*/
 
 .shadow-content section {
-  padding: 33px 16px;
+  padding: 33px 18px;
   color: #858585;
+}
+
+.shadow-content section > *:not(:last-child) {
+  margin-bottom: 13px;
+}
+
+/** Paragraphs
+ ---------------------------------------------------------*/
+
+.shadow-content p {
+  text-align: left;
 }
 
 /** Buttons
@@ -318,6 +369,7 @@ var template = `
   margin: 0;
   border: 0;
   padding: 0rem 16px;
+  cursor: pointer;
   font: inherit;
   background: var(--color-beta);
   color: var(--color-epsilon);
@@ -402,30 +454,10 @@ var template = `
   transition-delay: 200ms;
 }
 
-/** Icons
- ---------------------------------------------------------*/
-
-/**
- * We need this rule to make data-icon
- * attributes work on elements behind
- * the shadow-boundary. Specifically
- * for <gaia-toolbar>
- */
-
-// [data-icon]:before {
-//   font-family: "gaia-icons";
-//   content: attr(data-icon);
-//   display: block;
-//   font-weight: 500;
-//   font-style: normal;
-//   text-rendering: optimizeLegibility;
-//   font-size: 30px;
-// }
-
 </style>
 
 <div class="dialog-inner">
-  <div class="background"></div>
+  <div class="background" on-click="close"></div>
   <div class="window"><content></content></div>
 </div>`;
 
@@ -503,6 +535,12 @@ var extended = {
     removeAttribute.call(this, attr);
   }
 };
+
+function closest(selector, el, top) {
+  return el && el !== top
+    ? (el.matches(selector) ? el : closest(el.parentNode))
+    : null;
+}
 
 function mixin(a, b) {
   for (var key in b) { a[key] = b[key]; }

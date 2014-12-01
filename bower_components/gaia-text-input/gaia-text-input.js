@@ -6,6 +6,17 @@
 require('gaia-icons');
 
 /**
+ * Detects presence of shadow-dom
+ * CSS selectors.
+ *
+ * @return {Boolean}
+ */
+var hasShadowCSS = (function() {
+  try { document.querySelector(':host'); return true; }
+  catch (e) { return false; }
+})();
+
+/**
  * Extend from the `HTMLElement` prototype
  *
  * @type {Object}
@@ -13,62 +24,68 @@ require('gaia-icons');
 var proto = Object.create(HTMLElement.prototype);
 
 proto.createdCallback = function() {
-  var shadow = this.createShadowRoot();
-  var tmpl = template.content.cloneNode(true);
+  this.createShadowRoot().innerHTML = template;
 
   this.els = {
-    textarea: tmpl.querySelector('textarea'),
-    inner: tmpl.querySelector('.inner'),
-    input: tmpl.querySelector('input'),
-    clear: tmpl.querySelector('.clear')
+    inner: this.shadowRoot.querySelector('.inner'),
+    input: this.shadowRoot.querySelector('input'),
+    clear: this.shadowRoot.querySelector('.clear')
   };
-
-  //
-  this.els.field = this.els.input;
 
   this.type = this.getAttribute('type');
   this.disabled = this.hasAttribute('disabled');
+  this.clearable = this.hasAttribute('clearable');
   this.placeholder = this.getAttribute('placeholder');
   this.required = this.getAttribute('required');
   this.value = this.getAttribute('value');
 
   // Don't take focus from the input field
-  this.els.clear.addEventListener('mousedown', function(e) { e.preventDefault(); });
-  this.els.clear.addEventListener('click', this.clear.bind(this));
+  this.els.clear.addEventListener('mousedown', (e) => e.preventDefault());
+  this.els.clear.addEventListener('click', e => this.clear(e));
 
-  shadow.appendChild(tmpl);
-  this.shadowStyleHack();
+  shadowStyleHack(this);
 };
 
 proto.attributeChangedCallback = function(attr, from, to) {
-  if (this.attrs[attr]) { this[attr] = to; }
-};
-
-proto.shadowStyleHack = function() {
-  var style = this.shadowRoot.querySelector('style');
-  style.setAttribute('scoped', '');
-  this.appendChild(style.cloneNode(true));
-};
-
-proto.configureField = function() {
-  var previous = this.els.field;
-  this.multiline = this.type == 'multiline';
-  this.els.field = this.multiline ? this.els.textarea : this.els.input;
-  if (!this.multiline) { this.els.field.type = this.type; }
-  if (previous) { this.els.field.value = previous.value; }
+  if (attrs[attr]) { this[attr] = to; }
 };
 
 proto.clear = function(e) {
   this.value = '';
 };
 
-proto.attrs = {
+proto.focus = function() {
+  this.els.input.focus();
+};
+
+function binaryAttributeSetter(el, attr) {
+  return function(value) {
+    value = !!(value === '' || value);
+    if (value === this[attr]) { return; }
+
+    if (value) {
+      this.els.inner.setAttribute(attr, '');
+      this.setAttribute(attr, '');
+    } else {
+      this.els.inner.removeAttribute(attr);
+      this.removeAttribute(attr);
+    }
+
+    this['_' + attr] = value;
+  };
+}
+
+/**
+ * Attributes
+ */
+
+var attrs = {
   type: {
-    get: function() { return this.els.inner.getAttribute('type'); },
+    get: function() { return this.els.input.getAttribute('type'); },
     set: function(value) {
       if (!value) { return; }
       this.els.inner.setAttribute('type', value);
-      this.configureField();
+      this.els.input.setAttribute('type', value);
     }
   },
 
@@ -76,68 +93,77 @@ proto.attrs = {
     get: function() { return this.field.placeholder; },
     set: function(value) {
       if (!value && value !== '') { return; }
-      this.els.textarea.placeholder = value;
       this.els.input.placeholder = value;
     }
   },
 
-  value: {
-    get: function() { return this.els.field.value; },
-    set: function(value) { this.els.field.value = value; }
-  },
-
-  required: {
-    get: function() { return this.els.field.required; },
+  clearable: {
+    get: function() { return this._clearable; },
     set: function(value) {
-      this.els.textarea.required = value;
-      this.els.input.required = value;
+      var clearable = !!(value === '' || value);
+      if (clearable === this.clearable) { return; }
+
+      if (clearable) {
+        this.els.inner.setAttribute('clearable', '');
+        this.setAttribute('clearable', '');
+      } else {
+        this.els.inner.removeAttribute('clearable');
+        this.removeAttribute('clearable');
+      }
+
+      this._clearable = clearable;
     }
   },
 
+  value: {
+    get: function() { return this.els.input.value; },
+    set: function(value) { this.els.input.value = value; }
+  },
+
+  required: {
+    get: function() { return this.els.input.required; },
+    set: function(value) { this.els.input.required = value; }
+  },
+
+  maxlength: {
+    get: function() { return this.els.input.getAttribute('maxlength'); },
+    set: function(value) { this.els.input.setAttribute('maxlength', value); }
+  },
+
   disabled: {
-    get: function() { return this.els.field.disabled; },
+    get: function() { return this.els.input.disabled; },
     set: function(value) {
       value = !!(value === '' || value);
-      this.els.textarea.disabled = value;
       this.els.input.disabled = value;
     }
   }
 };
 
-Object.defineProperties(proto, proto.attrs);
+Object.defineProperties(proto, attrs);
 
-// HACK: Create a <template> in memory at runtime.
-// When the custom-element is created we clone
-// this template and inject into the shadow-root.
-// Prior to this we would have had to copy/paste
-// the template into the <head> of every app that
-// wanted to use <gaia-textinput>, this would make
-// markup changes complicated, and could lead to
-// things getting out of sync. This is a short-term
-// hack until we can import entire custom-elements
-// using HTML Imports (bug 877072).
-var template = document.createElement('template');
-template.innerHTML = `
+var lightCSS = `
+gaia-text-input {
+  display: block;
+  height: 40px;
+  margin: var(--base-m, 18px);
+}`;
+
+/**
+ * Shadow Template
+ */
+
+var template = `
 <style>
 
 /** Reset
  ---------------------------------------------------------*/
 
 input,
-button,
-textarea {
+button {
   box-sizing: border-box;
   border: 0;
   margin: 0;
   padding: 0;
-}
-
-/** Host
- ---------------------------------------------------------*/
-
-gaia-text-input {
-  display: block;
-  margin-bottom: 16px;
 }
 
 /** Inner
@@ -196,31 +222,23 @@ label {
   overflow: hidden;
 }
 
-/**
- * [type='multiline']
- */
-
-[type='multiline'] .single-line {
-  display: none;
-}
-
 /** Input Field
  ---------------------------------------------------------*/
 
-input,
-textarea {
+input {
   display: block;
   width: 100%;
-  height: 40px;
-  font-size: inherit;
+  height: 100%;
   border: none;
   padding: 0 16px;
   margin: 0;
   font: inherit;
   resize: none;
 
+  /* Dynamic */
+
   color:
-    var(--input-color, #000);
+    var(--text-color, #000);
 
   background:
     var(--text-input-background,
@@ -233,8 +251,7 @@ textarea {
  * [disabled]
  */
 
-input[disabled],
-textarea[disabled] {
+input[disabled] {
   background: transparent;
 }
 
@@ -252,6 +269,7 @@ textarea[disabled] {
  ---------------------------------------------------------*/
 
 .clear {
+  display: none;
   position: absolute;
   top: 11px;
   right: 10px;
@@ -259,13 +277,21 @@ textarea[disabled] {
   height: 18px;
   padding: 0;
   margin: 0;
-  line-height: 17px;
   border-radius: 50%;
   opacity: 0;
   color: #fff;
+  cursor: pointer;
 
   background:
     var(--input-clear-background, #999);
+}
+
+/**
+ * [clearable]
+ */
+
+[clearable] .clear {
+  display: block;
 }
 
 /**
@@ -276,17 +302,16 @@ input:focus ~ .clear {
   opacity: 1;
 }
 
+
+
 /** Clear Icon
  ---------------------------------------------------------*/
 
 .clear:before {
-  font-family: 'gaia-icons';
+  font: normal 500 19px/16.5px 'gaia-icons';
   content: 'close';
   display: block;
-  font-style: normal;
-  font-weight: 500;
   text-rendering: optimizeLegibility;
-  font-size: 19px;
 }
 
 /** Focus Bar
@@ -312,48 +337,23 @@ input:focus ~ .clear {
   transition-delay: 200ms;
   visibility: visible;
 }
-
-/** Textarea Container
- ---------------------------------------------------------*/
-
-.multiline {
-  display: none;
-  height: 100%;
-}
-
-/**
- * [type='multiline']
- */
-
-[type='multiline'] .multiline {
-  display: block;
-}
-
-/** Textarea
- ---------------------------------------------------------*/
-
-textarea {
-  height: 100%;
-  min-height: 86px;
-  padding: 10px 16px;
-}
-
 </style>
 
 <div class="inner">
   <content select="label"></content>
   <div class="fields">
-    <div class="single-line">
-      <input type="text"/>
-      <button class="clear" tabindex="-1"></button>
-      <div class="focus"></div>
-    </div>
-    <div class="multiline">
-      <textarea></textarea>
-      <div class="focus"></div>
-    </div>
+    <input type="text"/>
+    <button class="clear" tabindex="-1"></button>
+    <div class="focus"></div>
   </div>
 </div>`;
+
+function shadowStyleHack(el) {
+  var style = document.createElement('style');
+  style.setAttribute('scoped', '');
+  style.innerHTML = lightCSS;
+  el.appendChild(style);
+}
 
 // Register and return the constructor
 module.exports = document.registerElement('gaia-text-input', { prototype: proto });

@@ -73,14 +73,17 @@ proto.addListeners = function() {
 };
 
 proto.onHoursChanged = function(e) {
+  e.stopPropagation();
   this.hours = this.normalizeHours(e.detail.value);
 };
 
 proto.onMinutesChanged = function(e) {
+  e.stopPropagation();
   this.minutes = e.detail.value;
 };
 
 proto.onAmPmChanged = function(e) {
+  e.stopPropagation();
   if (!e.detail.value) { return; }
   this.ampm = e.detail.value === 'PM' ? 1 : 0;
   this.hours = this.normalizeHours(this.hours);
@@ -210,9 +213,9 @@ proto.attrs = {
       debug('set minutes: %s', value);
       value = Number(value);
       if (value === this.minutes) { return; }
+      this._minutes = value;
       this.els.pickers.minutes.select(value);
       this.setAttribute('minutes', value);
-      this._minutes = value;
     }
   },
 

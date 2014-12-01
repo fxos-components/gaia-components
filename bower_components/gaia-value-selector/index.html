@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>gaia-value-selector</title>
+  <link rel="stylesheet" type="text/css" href="bower_components/base/base.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/gaia-theme/gaia-theme.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/gaia-fonts/style.css">
+  <script src="bower_components/gaia-theme/lib/gaia-theme-selector.js"></script>
+  <script src="bower_components/gaia-component/gaia-component.js"></script>
+  <script src="bower_components/gaia-list/gaia-list.js"></script>
+  <script src="gaia-value-selector.js"></script>
+  <style>
+
+    body {
+      padding-top: var(--base-l);
+    }
+
+  </style>
+</head>
+
+<body>
+  <gaia-theme-selector></gaia-theme-selector>
+
+  <gaia-list>
+    <li>
+      <h3 flex>From</h3>
+      <gaia-value-selector>03/10/2014</gaia-value-selector>
+      <gaia-value-selector>08:00 AM</gaia-value-selector>
+    </li>
+    <li>
+      <h3 flex>To</h3>
+      <gaia-value-selector>03/10/2014</gaia-value-selector>
+      <gaia-value-selector>08:00 AM</gaia-value-selector>
+    </li>
+    <li>
+      <h3 flex>Selection Type</h3>
+      <gaia-value-selector>Work</gaia-value-selector></li>
+    </li>
+    <li>
+      <h3 flex>Reminder</h3>
+      <gaia-value-selector>1 Hour Before</gaia-value-selector>
+    </li>
+  </gaia-list>
+</body>
+</html>

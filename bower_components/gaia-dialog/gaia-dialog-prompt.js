@@ -28,7 +28,7 @@ var proto = GaiaDialog.extend();
 proto.createdCallback = function() {
   this.onCreated();
 
-  this.els.input = this.shadowRoot.querySelector('gaia-text-input');
+  this.els.input = this.shadowRoot.querySelector('gaia-input');
   this.els.submit = this.shadowRoot.querySelector('.submit');
   this.els.cancel = this.shadowRoot.querySelector('.cancel');
 
@@ -51,13 +51,13 @@ gaia-dialog-prompt.animating {
   height: 100%;
 }
 
-gaia-text-input {
+gaia-input {
   margin: 16px !important;
 }
 </style>
 
 <gaia-dialog>
-  <div><gaia-text-input></gaia-text-input></div>
+  <div><gaia-input></gaia-input></div>
   <fieldset>
     <button class="cancel">Cancel</button>
     <button class="submit primary">Ok</button>

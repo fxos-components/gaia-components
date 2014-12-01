@@ -20,11 +20,11 @@
   "dependencies": {
     "pressed": "gaia-components/pressed#~0.1.0"
   },
-  "_release": "905b1cb39f",
+  "_release": "12e3576915",
   "_resolution": {
     "type": "branch",
     "branch": "dev",
-    "commit": "905b1cb39f9ab9b0f90165cc171532e41bc3a6b9"
+    "commit": "12e3576915160e752ca46e6243f37dfc9cc3de97"
   },
   "_source": "git://github.com/gaia-components/gaia-sub-header.git",
   "_target": "dev",

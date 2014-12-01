@@ -1,4 +1,4 @@
-# &lt;gaia-button&gt; ![](https://travis-ci.org/gaia-components/gaia-button.svg)
+# &lt;gaia-button&gt;
 
 ## Installation
 
@@ -8,4 +8,4 @@ $ bower install gaia-components/gaia-button
 
 ## Examples
 
-- [Example](http://gaia-components.github.io/gaia-button/examples/)
+- [Example](http://gaia-components.github.io/gaia-button/)

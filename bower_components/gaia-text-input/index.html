@@ -4,32 +4,19 @@
   <meta charset="utf-8" />
   <title>&lt;gaia-text-input&gt;</title>
   <meta name="description" content="gaia-text-input demo" />
-  <link rel="stylesheet" type="text/css" href="bower_components/gaia-theme/gaia-base.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/base/base.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/gaia-icons/gaia-icons.css">
   <link rel="stylesheet" type="text/css" href="bower_components/gaia-theme/gaia-theme.css">
   <link rel="stylesheet" type="text/css" href="bower_components/gaia-fonts/style.css">
   <script src="bower_components/gaia-theme/lib/gaia-theme-selector.js"></script>
-  <script src="bower_components/gaia-icons/gaia-icons.js"></script>
   <script src="gaia-text-input.js"></script>
+  <script src="gaia-text-input-multiline.js"></script>
+  <script src="gaia-text-input-pin.js"></script>
   <style type="text/css">
-
-    html {
-      height: 100%;
-      font-family: 'FiraSans';
-      font-weight: lighter;
-    }
 
     body {
       padding: 16px;
       padding-top: 48px;
-      background-color: var(--background);
-    }
-
-    body > * {
-      margin-bottom: 16px;
-    }
-
-    .tall {
-      height: 160px;
     }
 
   </style>
@@ -37,13 +24,26 @@
 <body role="application">
   <gaia-theme-selector></gaia-theme-selector>
 
-  <h1 class="large l-align-center">&lt;gaia-text-input&gt;</h1>
+  <button id="btn">Focus</button>
 
-  <gaia-text-input placeholder="Default"><label>Input Label</label></gaia-text-input>
-  <gaia-text-input type="password" placeholder="Password"><label>Password</label></gaia-text-input>
-  <gaia-text-input type="search" placeholder="Search..."><label>Search</label></gaia-text-input>
-  <gaia-text-input disabled placeholder="Disabled"><label>Disabled</label></gaia-text-input>
-  <gaia-text-input type="multiline" placeholder="Multiline"><label>Multiline</label></gaia-text-input>
-  <gaia-text-input type="multiline" class="tall" placeholder="Tall multiline"></gaia-text-input>
+
+  <gaia-text-input id="field" placeholder="Default"></gaia-text-input>
+  <gaia-text-input placeholder="Search" type="search"></gaia-text-input>
+  <gaia-text-input placeholder="Email" type="email" clearable></gaia-text-input>
+  <gaia-text-input-multiline placeholder="Multiline"></gaia-text-input-multiline>
+  <gaia-text-input-pin length="4"></gaia-text-input-pin>
+
+  <gaia-text-input placeholder="Disabled" disabled></gaia-text-input>
+  <gaia-text-input placeholder="Search" type="search" disabled></gaia-text-input>
+  <gaia-text-input placeholder="Email" type="email" clearable disabled></gaia-text-input>
+  <gaia-text-input-multiline placeholder="Multiline" disabled></gaia-text-input-multiline>
+  <gaia-text-input-pin length="4" disabled></gaia-text-input-pin>
+
+  <!-- <gaia-text-input-password></gaia-text-input-password> -->
+
+
+  <script>
+    btn.onclick = e => field.focus();
+  </script>
 </body>
 </html>

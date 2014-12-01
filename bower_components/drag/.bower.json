@@ -16,11 +16,11 @@
   "dependencies": {
     "evt": "gaia-components/evt#~0.4.0"
   },
-  "_release": "67b572ad48",
+  "_release": "2be25d4a99",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "67b572ad48afc59d291b08acfe9f6cf60961d314"
+    "commit": "2be25d4a996c44de7e8ead19662affe3c9fd8e82"
   },
   "_source": "git://github.com/gaia-components/drag.git",
   "_target": "master",

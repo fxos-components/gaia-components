@@ -31,8 +31,8 @@ var template = `
 
 gaia-sub-header {
   display: flex;
-  margin: 14px 0 0 0;
-  padding: 0 14px 0 14px;
+  margin: 30px 0 16px;
+  padding: 0 15px;
   align-items: center;
 }
 

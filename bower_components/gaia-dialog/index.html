@@ -5,9 +5,10 @@
   <title>&lt;gaia-dialog&gt;</title>
   <meta name="description" content="gaia-dialog" />
   <link rel="import" type="text/html" href="../src/gaia-dialog.html">
-  <link rel="stylesheet" type="text/css" href="bower_components/gaia-theme/gaia-base.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/base/base.css">
   <link rel="stylesheet" type="text/css" href="bower_components/gaia-theme/gaia-theme.css">
   <link rel="stylesheet" type="text/css" href="bower_components/gaia-fonts/style.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/gaia-icons/gaia-icons.css">
   <script src="bower_components/gaia-theme/lib/gaia-theme-selector.js"></script>
   <script src="bower_components/pressed/pressed.js"></script>
   <script src="bower_components/gaia-icons/gaia-icons.js"></script>
@@ -19,8 +20,8 @@
   <script src="gaia-dialog-prompt.js"></script>
   <script src="gaia-dialog-action.js"></script>
   <script src="gaia-dialog-select.js"></script>
-  <style type="text/css">
-
+  <script src="gaia-dialog-menu.js"></script>
+  <style>
     body {
       padding-top: 48px;
     }
@@ -36,7 +37,7 @@
     <div class="l-mb-small"><gaia-button data-for="gaia-dialog-action">Action</gaia-button></div>
     <div class="l-mb-small"><gaia-button data-for="gaia-dialog-select">Select</gaia-button></div>
     <div class="l-mb-small"><gaia-button data-for="gaia-dialog-select[multiple]">Select Multiple</gaia-button></div>
-    <div class="l-mb-small"><gaia-button data-for="gaia-dialog-context">Context</gaia-button></div>
+    <div class="l-mb-small"><gaia-button data-for="gaia-dialog-menu">Menu</gaia-button></div>
     <div class="l-mb-small"><gaia-button data-for="#custom-dialog-1">Custom</gaia-button></div>
   </div>
 
@@ -71,12 +72,12 @@
       <li>Hacker</li>
     </gaia-dialog-select>
 
-    <gaia-dialog-context>
-      <button>Open in new window</button>
-      <button>Add to Home Screen</button>
-      <button>Share link</button>
-      <button>Settings</button>
-    </gaia-dialog-context>
+    <gaia-dialog-menu>
+      <button data-icon="firefox">Open in new window</button>
+      <button data-icon="firefox">Add to Home Screen</button>
+      <button data-icon="firefox">Share link</button>
+      <button data-icon="firefox">Settings</button>
+    </gaia-dialog-menu>
 
     <gaia-dialog id="custom-dialog-1">
       <section>
@@ -111,15 +112,11 @@
   <script>
     var buttons = document.querySelectorAll('gaia-button');
     [].forEach.call(buttons, function(button) {
-      button.addEventListener('click', function() {
+      button.addEventListener('click', function(e) {
         var dialog = document.querySelector(button.dataset.for);
-        dialog.open = true;
+        dialog.open(e);
       });
     });
-
-    // document.body.onclick = function() {
-    //   dialog.open = !dialog.open;
-    // };
   </script>
 </body>
 </html>

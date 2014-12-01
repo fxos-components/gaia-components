@@ -13,11 +13,10 @@
     "test",
     "tests"
   ],
-  "dependencies": {
-    "pressed": "gaia-components/pressed#~0.1.0"
-  },
   "devDependencies": {
     "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1",
-    "gaia-icons": "gaia-components/gaia-icons#~0.5.6"
+    "gaia-icons": "gaia-components/gaia-icons#~0.7.1",
+    "base": "gaia-components/base",
+    "gaia-theme": "gaia-components/gaia-theme#~0.4.1"
   }
 }

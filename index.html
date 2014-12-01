@@ -11,10 +11,14 @@
   <script src="bower_components/evt/index.js"></script>
   <script src="bower_components/drag/index.js"></script>
   <script src="bower_components/pressed/pressed.js"></script>
+  <script src="bower_components/gaia-component/gaia-component.js"></script>
   <script src="bower_components/gaia-icons/gaia-icons.js"></script>
   <script src="bower_components/gaia-theme/lib/gaia-theme-selector.js"></script>
   <script src="bower_components/gaia-sub-header/gaia-sub-header.js"></script>
   <script src="bower_components/gaia-text-input/gaia-text-input.js"></script>
+  <script src="bower_components/gaia-text-input/gaia-text-input-multiline.js"></script>
+  <script src="bower_components/gaia-text-input/gaia-text-input-pin.js"></script>
+  <script src="bower_components/gaia-value-selector/gaia-value-selector.js"></script>
   <script src="bower_components/gaia-list/gaia-list.js"></script>
   <script src="bower_components/gaia-checkbox/gaia-checkbox.js"></script>
   <script src="bower_components/gaia-slider/gaia-slider.js"></script>
@@ -28,6 +32,8 @@
   <script src="bower_components/gaia-dialog/gaia-dialog-prompt.js"></script>
   <script src="bower_components/gaia-dialog/gaia-dialog-action.js"></script>
   <script src="bower_components/gaia-dialog/gaia-dialog-select.js"></script>
+  <script src="bower_components/gaia-dialog/gaia-dialog-menu.js"></script>
+  <script src="bower_components/gaia-progress/gaia-progress.js"></script>
   <script src="bower_components/gaia-loading/gaia-loading.js"></script>
   <script src="bower_components/gaia-toolbar/gaia-toolbar.js"></script>
   <script src="bower_components/gaia-toast/gaia-toast.js"></script>
@@ -40,52 +46,55 @@
   <script src="bower_components/gaia-picker/gaia-picker-time.js"></script>
 
   <style>
-
     body {
-      padding-top: 48px;
+      padding-top: 80px;
+    }
+
+    .page-title > h1 {
+      font-size: var(--base-font-xl);
     }
 
     body > section {
       max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
+      border: solid 1px var(--border-color);
+      margin: 0 auto;
+      margin-bottom: var(--base-xxl);
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    body > section > h2 {
+      margin: var(--base-m);
+
+      font-size: 23px;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 26px;
+      text-align: center;
+      color: var(--title-color);
     }
 
     gaia-list.settings [data-icon='forward'] {
       color: var(--text-color-minus);
     }
 
-    gaia-list .divided {
-      border-left: solid 1px;
-      padding-left: 14px;
-
-      border-color:
-        var(--border-color,
-        var(--background-plus));
-    }
-
-    gaia-list.contacts {
-
-    }
-
     gaia-list.contacts .face {
       box-sizing: border-box;
-      position: absolute;
-      top: 50%; right: 16px;
       width: 40px;
       height: 40px;
-      margin-top: -20px;
       border-radius: 50%;
-      border: solid 2px;
-
-      border-color:
-        var(--border-color,
-        var(--background-minus));
+      overflow: hidden;
       background: var(--background-plus);
     }
 
+    gaia-list.contacts .face > img {
+      width: 100%;
+    }
+
     gaia-list.email > * {
-      padding-left: 32px !important;
+      -moz-padding-start: 32px !important;
     }
 
     gaia-list.email time {
@@ -96,107 +105,124 @@
       opacity: 0.6;
     }
 
+    [dir=rtl] gaia-list.email time {
+      left: 0;
+      right: auto;
+    }
+
     gaia-list.email p {
       opacity: 0.6;
     }
 
     gaia-list.email .unread:after {
+      position: absolute;
+      left: 0;
+      top: 50%;
+
       content: '';
       display: block;
-      position: absolute;
-      left: 16px; top: 50%;
       width: 8px;
       height: 8px;
-      margin-top: -4px;
+      margin: -4px 16px 0;
       border-radius: 50%;
 
       background:
         var(--highlight-color);
     }
 
+    [dir=rtl] gaia-list.email .unread:after {
+      left: auto;
+      right: 0;
+    }
+
     .border {
       border: solid 1px var(--border-color);
     }
-
-
-    section.gaia-toolbars {
-      overflow: hidden;
-    }
-
-    section.gaia-toolbars > div {
-      /*float: left;*/
-      /*width: 50%;*/
-      /*margin-bottom: 48px;*/
-    }
-
   </style>
 </head>
-<body class="theme-settings">
+<body>
   <gaia-theme-selector></gaia-theme-selector>
 
-  <section class="sg-landing sg-section-full l-mb-med">
-    <div class="sg-title">
-      <h1 class="mega l-align-center">FirefoxOS</h1>
-      <h2 class="beta l-align-center l-p-micro">Design guide</h2>
-    </div>
+  <div class="page-title l-mb-mega">
+    <h1 class="center l-mb-mega">FirefoxOS</h1>
+    <h2 class="center">Design guide</h2>
+  </div>
+
+  <section>
+    <h2>Text Input</h2>
+
+    <gaia-text-input placeholder="Default"></gaia-text-input>
+    <gaia-text-input placeholder="Disabled" disabled></gaia-text-input>
+    <gaia-text-input type="password" placeholder="Password"></gaia-text-input>
+    <gaia-text-input type="search" placeholder="Search..."></gaia-text-input>
+    <gaia-text-input-multiline type="multiline" placeholder="Multiline"></gaia-text-input-multiline>
+    <gaia-text-input-pin></gaia-text-input-pin>
   </section>
 
-  <section class="l-mb-mega l-plr-small ">
-    <gaia-text-input placeholder="Default"><label>Input Label</label></gaia-text-input>
-    <gaia-text-input placeholder="Disabled" disabled><label>Disabled Input</label></gaia-text-input>
-    <gaia-text-input type="password" placeholder="Password"><label>Password</label></gaia-text-input>
-    <gaia-text-input type="search" placeholder="Search..."><label>Search</label></gaia-text-input>
-    <gaia-text-input type="multiline" placeholder="Multiline"><label>Multi-line</label></gaia-text-input>
+  <section class="center">
+    <h2>Button</h2>
+
+    <div><gaia-button>Gaia-button</gaia-button></div>
+    <div><gaia-button><i data-icon="settings"></i><span>Settings</span></gaia-button></div>
+    <div><gaia-button circular><span data-icon="arrow-forward"></span></gaia-button></div>
+    <gaia-button disabled>Disabled</gaia-button>
   </section>
 
-  <hr class="l-mb-mega"/>
+  <section>
+    <h2>List</h2>
 
-  <section class="l-mb-mega l-align-center">
-    <div class="l-mb-small"><gaia-button>Gaia-button</gaia-button></div>
-    <div class="l-mb-small"><gaia-button circular><span data-icon="arrow-forward"></span></div>
-    <div class="l-mb-small"><gaia-button disabled>Disabled</gaia-button></div>
-  </section>
-
-  <hr class="l-mb-mega"/>
-
-  <section class="gaia-list l-mb-mega l-align-center">
-    <gaia-list class="settings l-mb-mega">
+    <gaia-list class="settings">
       <a>
-        <i data-icon="brightness"></i><h3>Menu 1</h3><i data-icon="forward-light"></i></a>
-      <a><i data-icon="location"></i><h3>Menu 2</h3><i data-icon="forward-light"></i></a>
-      <a><i data-icon="settings"></i>Menu 3<i data-icon="forward-light"></i></a>
+        <i data-icon="brightness"></i>
+        <h3 flex>Menu 1</h3>
+        <i data-icon="forward-light"></i>
+      </a>
+      <a>
+        <i data-icon="location"></i>
+        <h3 flex>Menu 2</h3>
+        <i data-icon="forward-light"></i>
+      </a>
+      <a>
+        <i data-icon="settings"></i>
+        <h3 flex>Menu 3</h3>
+        <i data-icon="forward-light"></i>
+      </a>
       <li class="ripple">
-        <label class="l-flex l-flex-grow">
-          <i data-icon="wifi-4"></i><h3>Wifi</h3>
+        <label flex flexbox>
+          <i data-icon="wifi-4"></i>
+          <h3>Wifi</h3>
         </label>
         <gaia-switch class="divided"></gaia-switch>
       </li>
     </gaia-list>
 
-    <gaia-list class="contacts l-mb-mega">
+    <gaia-sub-header>Contacts</gaia-sub-header>
+
+    <gaia-list class="contacts">
       <a>
-        <div>
+        <div flex>
           <h3>Noah Green</h3>
           <p>Atsara Kitchens</p>
-          <div class="face"></div>
         </div>
+        <div class="face"><img src="images/contact_image_1.png"/></div>
       </a>
       <a>
-        <div>
+        <div flex>
           <h3>Will Grand</h3>
           <p>CBN Studio</p>
-          <div class="face"></div>
         </div>
+        <div class="face"><img src="images/contact_image_2.png"/></div>
       </a>
       <a>
-        <div>
+        <div flex>
           <h3>Carolina Grey</h3>
           <p>Mozilla</p>
-          <div class="face"></div>
         </div>
+        <div class="face"><img src="images/contact_image_3.png"/></div>
       </a>
     </gaia-list>
 
+    <gaia-sub-header>Email</gaia-sub-header>
 
     <gaia-list class="email">
       <a class="unread">
@@ -241,74 +267,73 @@
     </gaia-list>
   </section>
 
-  <hr class="l-mb-mega"/>
-
-  <section class="l-mb-mega l-align-center">
+  <section class="center">
+    <h2>Spinner</h2>
     <gaia-loading></gaia-loading>
   </section>
 
-  <hr class="l-mb-mega"/>
+  <section>
+    <h2>Headers</h2>
 
-  <section class="l-mb-mega">
     <gaia-header action="back">
       <h1>Application Header</h1>
       <button>Done</button>
     </gaia-header>
-  </section>
 
-  <hr class="l-mb-mega"/>
-
-  <section class="l-mb-mega">
     <gaia-sub-header>Sub-Header</gaia-sub-header>
     <gaia-sub-header><a>Gaia Sub-Header Link</a></gaia-sub-header>
   </section>
 
-  <hr class="l-mb-mega"/>
+  <section>
+    <h2>Switch</h2>
 
-  <section class="l-mb-mega">
     <gaia-list>
-      <li class="l-flex l-flex-v-align">
-        <label class="l-flex-grow" for="gaia-switch-1">This is a label</label>
+      <li>
+        <label flex for="gaia-switch-1">This is a label</label>
         <gaia-switch id="gaia-switch-1" checked></gaia-switch>
       </li>
-      <li class="l-flex l-flex-v-align">
-        <label class="l-flex-grow" for="gaia-switch-2">This is a label</label>
+      <li>
+        <label flex for="gaia-switch-2">This is a label</label>
         <gaia-switch id="gaia-switch-2"></gaia-switch>
       </li>
     </gaia-list>
   </section>
 
-  <hr class="l-mb-mega"/>
+  <section>
+    <h2>Checkbox</h2>
 
-  <section class="l-mb-mega">
     <gaia-list>
-      <li class="l-flex l-flex-v-align">
-        <label class="l-flex-grow" for="gaia-checkbox-1">This is a label</label>
+      <li>
+        <label flex for="gaia-checkbox-1">This is a label</label>
         <gaia-checkbox checked id="gaia-checkbox-1"></gaia-checkbox>
       </li>
-      <li class="l-flex l-flex-v-align">
-        <label class="l-flex-grow" for="gaia-checkbox-2">This is a label</label>
+      <li>
+        <label flex for="gaia-checkbox-2">This is a label</label>
         <gaia-checkbox id="gaia-checkbox-2"></gaia-checkbox>
       </li>
-      <li class="l-flex l-flex-v-align ripple">
-        <label class="l-flex-grow">This is a label</label>
+      <li class="ripple">
+        <label flex>This is a label</label>
         <gaia-checkbox class="divided"></gaia-checkbox>
       </li>
     </gaia-list>
   </section>
 
-  <hr class="l-mb-mega"/>
+  <section>
+    <h2>Slider</h2>
 
-  <section class="l-mb-mega l-plr-small">
     <gaia-slider>
       <label>Range slider</label>
       <output></output>
     </gaia-slider>
   </section>
 
-  <hr class="l-mb-mega"/>
+  <section class="flush">
+    <h2>Tabs</h2>
 
-  <section class="l-mb-mega l-plr-small">
+    <style scoped>
+      section { padding-bottom: 0; }
+    </style>
+
     <gaia-tabs selected="2">
       <a class="icon-dialer">Item 1</a>
       <a class="icon-contacts">Item 2</a>
@@ -318,108 +343,134 @@
     </gaia-tabs>
   </section>
 
-  <hr class="l-mb-mega"/>
+  <section>
+    <h2>Value Selector</h2>
 
-  <section class="l-mb-mega l-plr-small gaia-toolbars">
-    <style scoped>
-      button[data-icon] {
-        min-width: 50px;
-      }
-    </style>
-
-    <div class="l-mb-mega">
-      <gaia-toolbar>
-        <button data-icon="grid">Grid</button>
-        <button data-icon="playlist">Playlist</button>
-        <button data-icon="artist">Artist</button>
-        <button data-icon="album">Album</button>
-        <button data-icon="songs">Song</button>
-        <button data-icon="firefox">Firefox</button>
-      </gaia-toolbar>
-    </div>
-
-    <div class="">
-      <gaia-toolbar>
-        <button>Phone</button>
-        <button>Contact</button>
-        <button>Dialer</button>
-        <button>Refresh</button>
-        <button>Add to homescreen</button>
-      </gaia-toolbar>
-    </div>
-  </section>
-
-  <hr class="l-mb-mega"/>
-
-  <section class="l-mb-mega container">
-    <style scoped>
-
-      gaia-picker-date,
-      gaia-picker-time {
-        border: solid 1px var(--border-color);
-      }
-
-      .container {
-        padding: 0 var(--base-m);
-      }
-
-      .cell-1 {
-        margin-bottom: var(--base-m);
-      }
-
-
-      @media(min-width: 500px) {
-        .container { display: flex; }
-        .cell { flex: 1; }
-        .cell-1 { padding-right: var(--base-s); }
-        .cell-2 { padding-left: var(--base-s); }
-      }
-
-
-
-    </style>
-
-    <div class="cell cell-1">
-      <gaia-picker-date></gaia-picker-date>
-    </div>
-    <div class="cell cell-2">
-      <gaia-picker-time format="12hr"></gaia-picker-time>
-    </div>
-  </section>
-
-  <hr class="l-mb-mega"/>
-
-  <section class="l-mb-mega">
     <gaia-list>
-      <li class="js-open-dialog" data-dialog="gaia-dialog-alert">Alert<i data-icon="forward-light"></i></li>
-      <li class="js-open-dialog" data-dialog="gaia-dialog-confirm">Confirm<i data-icon="forward-light"></i></li>
-      <li class="js-open-dialog" data-dialog="gaia-dialog-prompt">Prompt<i data-icon="forward-light"></i></li>
-      <li class="js-open-dialog" data-dialog="gaia-dialog-select">Select<i data-icon="forward-light"></i></li>
-      <li class="js-open-dialog" data-dialog="gaia-dialog-select[multiple]">Select Multiple<i data-icon="forward-light"></i></li>
-      <li class="js-open-dialog" data-dialog=".dialog-date">Date Picker<i data-icon="forward-light"></i></li>
+      <li>
+        <h3 flex>From</h3>
+        <gaia-value-selector for=".dialog-value-selector-date">03/10/2014</gaia-value-selector>
+        <gaia-value-selector for=".dialog-value-selector-time">08:00 AM</gaia-value-selector>
+      </li>
+      <li>
+        <h3 flex>To</h3>
+        <gaia-value-selector for=".dialog-value-selector-date">03/10/2014</gaia-value-selector>
+        <gaia-value-selector for=".dialog-value-selector-time">08:00 AM</gaia-value-selector>
+      </li>
+      <li>
+        <h3 flex>Selection Type</h3>
+        <gaia-value-selector for=".dialog-calendar-selector">Work</gaia-value-selector></li>
+      </li>
+      <li>
+        <h3 flex>Reminder</h3>
+        <gaia-value-selector for=".dialog-reminder-selector">1 Hour Before</gaia-value-selector>
+      </li>
     </gaia-list>
 
+    <gaia-dialog class="dialog-value-selector-time theme-settings">
+      <h1>Pick Time</h1>
+      <gaia-picker-time style="height:200px" hours="8" minutes="0"></gaia-picker-time>
+      <fieldset>
+        <button on-click="close">Cancel</button>
+        <button class="primary" on-click="close">Confirm</button>
+      </fieldset>
+    </gaia-dialog>
+
+    <gaia-dialog class="dialog-value-selector-date theme-settings">
+      <h1>Pick Date</h1>
+      <gaia-picker-date style="height:200px"></gaia-picker-date>
+      <fieldset>
+        <button on-click="close">Cancel</button>
+        <button class="primary" on-click="close">Confirm</button>
+      </fieldset>
+    </gaia-dialog>
+
+    <gaia-dialog-select class="dialog-calendar-selector">
+      <h1>Selecton Type</h1>
+      <li value="work" aria-selected="true">Work</li>
+      <li value="shared">Shared</li>
+      <li value="personal">Personal</li>
+    </gaia-dialog-select>
+
+    <gaia-dialog-select class="dialog-reminder-selector">
+      <h1>Reminder</h1>
+      <li value="work">30 minutes before</li>
+      <li value="shared" aria-selected="true">1 hours before</li>
+      <li value="personal">2 hours before</li>
+    </gaia-dialog-select>
+
     <script>
-      var buttons = document.querySelectorAll('.js-open-dialog');
-      [].forEach.call(buttons, function(button) {
-        button.addEventListener('mouseup', function(e) {
-          var dialog = document.querySelector(button.dataset.dialog);
-          dialog.open(e);
+      (function() {
+        var els = document.querySelectorAll('gaia-value-selector');
+        [].forEach.call(els, function(el) {
+          el.addEventListener('click', function(e) {
+            var dialog = document.querySelector(el.getAttribute('for'));
+            el.selector = dialog;
+            dialog.open(e);
+          });
         });
-      });
+      })();
     </script>
   </section>
 
-  <div id="dialogs">
+  <section>
+    <h2>Toolbar</h2>
+
+    <style scoped>
+      section { padding-bottom: 0; }
+      gaia-toolbar { margin-bottom: 0; }
+      button[data-icon] { min-width: 50px; }
+    </style>
+
+    <gaia-toolbar>
+      <button data-icon="grid">Grid</button>
+      <button data-icon="playlist">Playlist</button>
+      <button data-icon="artist">Artist</button>
+      <button data-icon="album">Album</button>
+      <button data-icon="songs">Song</button>
+      <button data-icon="firefox">Firefox</button>
+    </gaia-toolbar>
+
+    <gaia-toolbar>
+      <button>Phone</button>
+      <button>Contact</button>
+      <button>Dialer</button>
+      <button>Refresh</button>
+      <button>Add to homescreen</button>
+    </gaia-toolbar>
+  </section>
+
+  <section>
+    <h2>Pickers</h2>
+
+    <style scoped>
+      gaia-picker-date,
+      gaia-picker-time {
+        max-width: 260px;
+        margin: var(--base-m) auto;
+        border: solid 1px var(--border-color);
+      }
+    </style>
+
+    <gaia-picker-date style="height:200px"></gaia-picker-date>
+    <gaia-picker-time format="12hr" style="height:200px"></gaia-picker-time>
+  </section>
+
+  <section>
+    <h2>Dialog</h2>
+
     <gaia-dialog-alert>No SIM card is present</gaia-dialog-alert>
     <gaia-dialog-confirm>Are you sure you want to delete this contact?</gaia-dialog-confirm>
     <gaia-dialog-prompt>Device name</gaia-dialog-prompt>
 
-    <gaia-dialog-action>
-      <h1>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eu mollis tortor.</h1>
-      <button>Action 1</button>
-      <button>Action 2</button>
-    </gaia-dialog-action>
+    <gaia-dialog class="dialog-action">
+      <section>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur eu mollis tortor. Lab mit dior tempor incidentunt ut et dolore magna...</p>
+      </section>
+      <button on-click="close">Action 1</button>
+      <button on-click="close">Action 2</button>
+      <button on-click="close">Cancel</button>
+    </gaia-dialog>
 
     <gaia-dialog-select>
       <h1>Ring tone</h1>
@@ -441,20 +492,120 @@
       <li>Hacker</li>
     </gaia-dialog-select>
 
-    <gaia-dialog class="dialog-date">
+    <gaia-dialog class="dialog-date theme-settings">
       <h1>Pick Date</h1>
       <gaia-picker-date style="height:200px"></gaia-picker-date>
       <fieldset>
-      <button>Cancel</button>
-      <button class="primary">Confirm</button>
+        <button on-click="close">Cancel</button>
+        <button class="primary" on-click="close">Confirm</button>
       </fieldset>
     </gaia-dialog>
-  </div>
 
-  <hr class="l-mb-mega"/>
+    <gaia-dialog class="dialog-time theme-settings">
+      <h1>Pick Time</h1>
+      <gaia-picker-time style="height:200px"></gaia-picker-time>
+      <fieldset>
+        <button on-click="close">Cancel</button>
+        <button class="primary" on-click="close">Confirm</button>
+      </fieldset>
+    </gaia-dialog>
 
-  <section class="l-mb-mega l-align-center">
-    <gaia-button id="toast-button">Toast</gaia-button>
+    <gaia-dialog class="dialog-install">
+      <section>
+        <img src="images/facebook.png"/>
+        <div>
+          <h3><strong>Facebook</strong></h3>
+          <h4><small>Facebook Enterprises LLC</small></h4>
+        </div>
+        <hr/>
+        <p>Do you want to download and install this application?</p>
+      </section>
+      <fieldset>
+        <button on-click="close">Cancel</button>
+        <button class="primary" on-click="close">Install</button>
+      </fieldset>
+    </gaia-dialog>
+
+    <gaia-dialog class="dialog-progress">
+      <section>
+        <p>Importing (83/139)</p>
+      </section>
+      <gaia-progress value="40"></gaia-progress>
+      <button on-click="close">Cancel</button>
+    </gaia-dialog>
+
+    <gaia-list>
+      <li class="js-open-dialog" data-dialog="gaia-dialog-alert">
+        <h3 flex>Alert</h3>
+        <i data-icon="forward-light"></i></li>
+      <li class="js-open-dialog" data-dialog="gaia-dialog-confirm">
+        <h3 flex>Confirm</h3>
+        <i data-icon="forward-light"></i>
+      </li>
+      <li class="js-open-dialog" data-dialog=".dialog-action">
+        <h3 flex>Action</h3>
+        <i data-icon="forward-light"></i>
+      </li>
+      <li class="js-open-dialog" data-dialog="gaia-dialog-prompt">
+        <h3 flex>Prompt</h3>
+        <i data-icon="forward-light"></i>
+      </li>
+      <li class="js-open-dialog" data-dialog=".dialog-progress">
+        <h3 flex>Progress</h3>
+        <i data-icon="forward-light"></i>
+      </li>
+    </gaia-list>
+
+    <gaia-sub-header>Value Select</gaia-sub-header>
+
+    <gaia-list>
+      <li class="js-open-dialog" data-dialog="gaia-dialog-select">
+        <h3 flex>Select</h3>
+        <i data-icon="forward-light"></i>
+      </li>
+      <li class="js-open-dialog" data-dialog="gaia-dialog-select[multiple]">
+        <h3 flex>Select Multiple</h3>
+        <i data-icon="forward-light"></i>
+      </li>
+      <li class="js-open-dialog" data-dialog=".dialog-date">
+        <h3 flex>Date Picker</h3>
+        <i data-icon="forward-light"></i>
+      </li>
+      <li class="js-open-dialog" data-dialog=".dialog-time">
+        <h3 flex>Time Picker</h3>
+        <i data-icon="forward-light"></i>
+      </li>
+      <li class="js-open-dialog" data-dialog=".dialog-install">
+        <h3 flex>Install</h3>
+        <i data-icon="forward-light"></i>
+      </li>
+    </gaia-list>
+
+    <style>
+      .dialog-install img {
+        display: block;
+        width: 38px;
+        height: 38px;
+        margin: -10px auto 0;
+        border-radius: 50%;
+        overflow: hidden;
+      }
+    </style>
+
+    <script>
+      var buttons = document.querySelectorAll('.js-open-dialog');
+      [].forEach.call(buttons, function(button) {
+        button.addEventListener('mouseup', function(e) {
+          var dialog = document.querySelector(button.dataset.dialog);
+          dialog.open(e);
+        });
+      });
+    </script>
+  </section>
+
+  <section class="center">
+    <h2>Toast</h2>
+    <gaia-button id="toast-button">Let's toast</gaia-button>
     <gaia-toast>Yum...toast</gaia-toast>
     <script>
       this['toast-button'].addEventListener('click', function() {

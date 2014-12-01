@@ -17,14 +17,17 @@
     "gaia-icons": "gaia-components/gaia-icons#~0.6.0"
   },
   "devDependencies": {
-    "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1"
+    "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1",
+    "gaia-theme": "gaia-components/gaia-theme#~0.4.3",
+    "base": "gaia-components/base",
+    "gaia-icons": "gaia-components/gaia-icons#master"
   },
   "homepage": "https://github.com/gaia-components/gaia-text-input",
-  "_release": "59222233ae",
+  "_release": "b475913456",
   "_resolution": {
     "type": "branch",
     "branch": "dev",
-    "commit": "59222233aebf82b915aa2764a29898e05daa5da2"
+    "commit": "b475913456e416a9ae29ac608682f36a9cf4b839"
   },
   "_source": "git://github.com/gaia-components/gaia-text-input.git",
   "_target": "dev",

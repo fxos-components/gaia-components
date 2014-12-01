@@ -18,13 +18,13 @@
     "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1",
     "gaia-icons": "gaia-components/gaia-icons#~0.6.1"
   },
-  "_release": "b46eda7bd4",
+  "_release": "2ef76bed70",
   "_resolution": {
     "type": "branch",
-    "branch": "dev",
-    "commit": "b46eda7bd4385de08fb2053c6cfc9236efa5b5e9"
+    "branch": "master",
+    "commit": "2ef76bed70a7616b286786001a2e74d18cfb9a1a"
   },
   "_source": "git://github.com/gaia-components/gaia-list.git",
-  "_target": "dev",
+  "_target": "master",
   "_originalSource": "gaia-components/gaia-list"
 }

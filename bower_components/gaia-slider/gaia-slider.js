@@ -57,6 +57,7 @@ var template = `
 
 .-host {
   display: block;
+  margin: var(--base-m, 18px);
 }
 
 /** Head
@@ -70,14 +71,17 @@ var template = `
 .-content label {
   display: block;
   line-height: 1;
+  text-align: start;
 }
 
 
 .-content output {
   display: block;
   position: absolute;
-  right: 0; bottom: 0;
-  text-align: right;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: end;
   font-size: 17px;
   font-style: italic;
   font-weight: 400;

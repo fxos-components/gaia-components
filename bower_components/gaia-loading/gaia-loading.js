@@ -29,9 +29,10 @@ var template = `
 
 .-host {
   position: relative;
-  display: inline-block;
+  display: block;
   width: 40px;
   height: 40px;
+  margin: var(--base-l, 24px) auto;
 }
 
 /** Circle

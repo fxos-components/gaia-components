@@ -44,14 +44,32 @@ proto.createdCallback = function() {
 proto.onListClick = function(e) {
   var el = getLi(e.target);
   var selected = el.getAttribute('aria-selected') === 'true';
-  if (!this.multiple) { this.close(); }
+
+  if (this.multiple) { this.onChangeMultiple(el, selected); }
+  else { this.onChange(el, selected); }
+};
+
+proto.onChange = function(el, selected) {
+  this.clearSelected();
+  if (!selected) { el.setAttribute('aria-selected', !selected); }
+  this.fireChange();
+  this.close();
+};
+
+proto.onChangeMultiple = function(el, selected) {
   el.setAttribute('aria-selected', !selected);
+  this.fireChange();
 };
 
 proto.clearSelected = function() {
   [].forEach.call(this.selectedOptions, function(option) {
     option.removeAttribute('aria-selected');
   });
+};
+
+proto.fireChange = function() {
+  var e = new CustomEvent('change', { detail: { value: this.valueString }});
+  this.dispatchEvent(e);
 };
 
 proto.attrs = {
@@ -78,8 +96,22 @@ proto.attrs = {
     get: function() { return this.querySelectorAll('li[aria-selected="true"]'); }
   },
 
-  value: {
+  selected: {
     get: function() { return this.selectedOptions[0]; }
+  },
+
+  value: {
+    get: function() {
+      var selected = this.selectedOptions[0];
+      return selected && selected.getAttribute('value');
+    }
+  },
+
+  valueString: {
+    get: function() {
+      var selected = this.selected;
+      return selected && selected.textContent;
+    }
   },
 
   length: {

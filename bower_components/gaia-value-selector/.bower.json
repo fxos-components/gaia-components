@@ -1,0 +1,35 @@
+{
+  "name": "gaia-value-selector",
+  "main": "gaia-value-selector.js",
+  "authors": [
+    "Wilson Page <wilsonpage@me.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "base": "gaia-components/base",
+    "gaia-fonts": "gaia-components/gaia-font#~0.2.1",
+    "gaia-theme": "gaia-components/gaia-theme#~0.4.4"
+  },
+  "devDependencies": {
+    "gaia-menu-item": "gaia-components/gaia-list",
+    "gaia-list": "gaia-components/gaia-list"
+  },
+  "homepage": "https://github.com/gaia-components/gaia-value-selector",
+  "_release": "f3c4dd4413",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "f3c4dd44133b1b83aaef17a344e39a6c632d1d3f"
+  },
+  "_source": "git://github.com/gaia-components/gaia-value-selector.git",
+  "_target": "*",
+  "_originalSource": "gaia-components/gaia-value-selector",
+  "_direct": true
+}

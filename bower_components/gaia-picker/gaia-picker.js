@@ -141,7 +141,6 @@ proto.onListTap = function(e) {
 };
 
 proto.renderItem = function(el, index) {
-  if (!el.firstChild) el.appendChild(document.createTextNode(''));
   el.firstChild.nodeValue = this.items[index] || '\u2009';
 };
 
@@ -168,14 +167,11 @@ proto.onSnapped = function(e) {
   var self = this;
 
   this.selectItem(el);
-  clearTimeout(this.changedTimeout);
-  this.changedTimeout = setTimeout(function() {
-    debug('changed', value, index);
-    self.dispatch('changed', {
-      value: value,
-      selected: self.selected,
-      index: index
-    });
+  debug('changed', value, index);
+  self.dispatch('changed', {
+    value: value,
+    selected: self.selected,
+    index: index
   });
 };
 

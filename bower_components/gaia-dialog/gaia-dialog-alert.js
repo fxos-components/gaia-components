@@ -43,7 +43,7 @@ proto.template = `
 
 <gaia-dialog>
   <section>
-    <content></content>
+    <p><content></content></p>
   </section>
   <div>
     <button class="submit primary">Ok</button>
