@@ -33,6 +33,7 @@
     "base": "gaia-components/base#master",
     "gaia-toast": "gaia-components/gaia-toast",
     "gaia-picker": "gaia-components/gaia-picker#master",
-    "gaia-value-selector": "gaia-components/gaia-value-selector"
+    "gaia-value-selector": "gaia-components/gaia-value-selector",
+    "gaia-progress": "gaia-components/gaia-progress"
   }
 }
