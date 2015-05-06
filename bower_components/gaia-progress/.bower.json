@@ -12,21 +12,22 @@
     "test",
     "tests"
   ],
-  "dependencies": {
+  "devDependencies": {
     "base": "gaia-components/base",
     "gaia-fonts": "gaia-components/gaia-font#~0.2.1",
-    "gaia-theme": "gaia-components/gaia-theme#~0.4.4",
-    "gaia-component": "gaia-components/gaia-component#~0.1.3"
+    "gaia-theme": "gaia-components/gaia-theme#~0.4.4"
+  },
+  "dependencies": {
+    "gaia-component": "gaia-components/gaia-component#~0.3.0"
   },
   "homepage": "https://github.com/gaia-components/gaia-progress",
-  "_release": "4521759743",
+  "_release": "02c312574a",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "452175974383c7d857bd0e430610908e9230cf1e"
+    "commit": "02c312574a82b2e6a4769c68bd7a4ba40c649891"
   },
   "_source": "git://github.com/gaia-components/gaia-progress.git",
   "_target": "*",
-  "_originalSource": "gaia-components/gaia-progress",
-  "_direct": true
+  "_originalSource": "gaia-components/gaia-progress"
 }

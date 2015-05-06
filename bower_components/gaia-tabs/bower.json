@@ -1,10 +1,10 @@
 {
   "name": "gaia-tabs",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "authors": [
     "Wilson Page <wilsonpage@me.com>"
   ],
-  "main": "script.js",
+  "main": "gaia-tabs.js",
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -14,5 +14,11 @@
     "test",
     "tests",
     "README.md"
-  ]
+  ],
+  "dependencies": {
+    "gaia-component": "gaia-components/gaia-component#~0.3.0"
+  },
+  "devDependencies": {
+    "base": "gaia-components/base"
+  }
 }

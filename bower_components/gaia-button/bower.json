@@ -1,6 +1,7 @@
 {
   "name": "gaia-button",
-  "version": "0.0.1",
+  "version": "0.0.3",
+  "main": "gaia-button.js",
   "homepage": "https://github.com/gaia-components/gaia-button",
   "authors": [
     "cyee@mozilla.com"
@@ -18,5 +19,8 @@
     "gaia-icons": "gaia-components/gaia-icons#~0.7.1",
     "base": "gaia-components/base",
     "gaia-theme": "gaia-components/gaia-theme#~0.4.1"
+  },
+  "dependencies": {
+    "gaia-component": "gaia-components/gaia-component#~0.3.0"
   }
 }

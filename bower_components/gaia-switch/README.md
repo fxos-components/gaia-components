@@ -8,7 +8,7 @@ $ bower install gaia-components/gaia-switch
 
 ## Examples
 
-- [Example](http://gaia-components.github.io/gaia-switch/examples/)
+- [Example](http://gaia-components.github.io/gaia-switch/)
 
 ## Tests
 

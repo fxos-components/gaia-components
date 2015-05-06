@@ -1,15 +1,28 @@
 ;(function(define){define(function(require,exports,module){
+/*jshint esnext:true*/
+
+/**
+ * Dependencies
+ */
 
 var component = require('gaia-component');
 
+/**
+ * Exports
+ */
+
 module.exports = component.register('gaia-progress', {
   created: function() {
-    this.createShadowRoot().innerHTML = this.template;
+    this.setupShadowRoot();
 
     this.els = {
       inner: this.shadowRoot.querySelector('.inner'),
       bar: this.shadowRoot.querySelector('.bar'),
-    }
+    };
+
+    this.els.inner.setAttribute('role', 'progressbar');
+    this.els.inner.setAttribute('aria-valuemin', '0');
+    this.els.inner.setAttribute('aria-valuemax', '100');
 
     this.value = this.getAttribute('value') || 0;
   },
@@ -29,6 +42,9 @@ module.exports = component.register('gaia-progress', {
           var duration = (delta / 100) * this.fillTime;
           this.els.bar.style.transform = `translateX(${value}%)`;
           this.els.bar.style.transitionDuration = duration + 'ms';
+          this.els.inner.setAttribute('aria-valuenow', value);
+        } else {
+          this.els.inner.removeAttribute('aria-valuenow');
         }
 
         this.els.inner.classList.toggle('no-value', !value);
@@ -38,6 +54,10 @@ module.exports = component.register('gaia-progress', {
   },
 
   template: `
+    <div class="inner">
+      <div class="bar"></div>
+    </div>
+
     <style>
 
       :host {
@@ -94,10 +114,6 @@ module.exports = component.register('gaia-progress', {
       }
 
     </style>
-
-    <div class="inner">
-      <div class="bar"></div>
-    </div>
   `,
 
   globalCss: `

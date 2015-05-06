@@ -1,5 +1,6 @@
 {
   "name": "gaia-checkbox",
+  "version": "0.0.3",
   "homepage": "https://github.com/gaia-components/gaia-checkbox",
   "authors": [
     "Wilson Page <wilsonpage@me.com>"
@@ -16,15 +17,16 @@
     "README.md"
   ],
   "dependencies": {
-    "gaia-icons": "gaia-components/gaia-icons#~0.6.0"
+    "gaia-icons": "gaia-components/gaia-icons#~0.7.0",
+    "gaia-component": "gaia-components/gaia-component#~0.3.0"
   },
-  "_release": "76acbfc241",
+  "_release": "0.0.3",
   "_resolution": {
-    "type": "branch",
-    "branch": "dev",
-    "commit": "76acbfc24177d3b70f5be1c7336fa22462a4eff1"
+    "type": "version",
+    "tag": "v0.0.3",
+    "commit": "7bf1139035ef5bb5d1c2bdb8464255e4d5c9a651"
   },
   "_source": "git://github.com/gaia-components/gaia-checkbox.git",
-  "_target": "dev",
+  "_target": "*",
   "_originalSource": "gaia-components/gaia-checkbox"
 }

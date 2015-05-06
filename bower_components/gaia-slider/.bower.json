@@ -16,15 +16,15 @@
     "README.md"
   ],
   "dependencies": {
-    "pressed": "gaia-components/pressed#~0.1.0"
+    "gaia-component": "gaia-components/gaia-component#~0.2.0"
   },
-  "_release": "47ed85db96",
+  "_release": "796330f304",
   "_resolution": {
     "type": "branch",
-    "branch": "dev",
-    "commit": "47ed85db965a59afc410d24ad70be97954204461"
+    "branch": "master",
+    "commit": "796330f30486dfae9e11b1b6316165c246cdca4e"
   },
   "_source": "git://github.com/gaia-components/gaia-slider.git",
-  "_target": "dev",
+  "_target": "*",
   "_originalSource": "gaia-components/gaia-slider"
 }

@@ -4,7 +4,7 @@
   "authors": [
     "Wilson Page <wilsonpage@me.com>"
   ],
-  "main": "script.js",
+  "main": "gaia-loading.js",
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -15,13 +15,16 @@
     "examples",
     "README.md"
   ],
-  "_release": "6b4988ac6c",
+  "dependencies": {
+    "gaia-component": "gaia-components/gaia-component#~0.3.0"
+  },
+  "_release": "84a8803886",
   "_resolution": {
     "type": "branch",
-    "branch": "dev",
-    "commit": "6b4988ac6c6ca7277f2f02db4ee2632a430e2add"
+    "branch": "master",
+    "commit": "84a880388686523e68172651fce2d570d4499daf"
   },
   "_source": "git://github.com/gaia-components/gaia-loading.git",
-  "_target": "dev",
+  "_target": "*",
   "_originalSource": "gaia-components/gaia-loading"
 }

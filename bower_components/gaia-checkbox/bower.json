@@ -1,6 +1,6 @@
 {
   "name": "gaia-checkbox",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "homepage": "https://github.com/gaia-components/gaia-checkbox",
   "authors": [
     "Wilson Page <wilsonpage@me.com>"
@@ -17,6 +17,7 @@
     "README.md"
   ],
   "dependencies": {
-    "gaia-icons": "gaia-components/gaia-icons#~0.6.0"
+    "gaia-icons": "gaia-components/gaia-icons#~0.7.0",
+    "gaia-component": "gaia-components/gaia-component#~0.3.0"
   }
 }

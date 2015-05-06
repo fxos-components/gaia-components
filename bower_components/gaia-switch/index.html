@@ -2,81 +2,44 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>GaiaSwitch Demo</title>
+  <title>gaia-switch</title>
   <meta name="description" content="Demo app for gaia-switch" />
+  <link rel="stylesheet" href="bower_components/gaia-theme/gaia-theme.css">
+  <link rel="stylesheet" href="bower_components/gaia-fonts/style.css">
+  <link rel="stylesheet" href="bower_components/base/base.css">
+  <script src="bower_components/gaia-theme/lib/gaia-theme-selector.js"></script>
+  <script src="bower_components/gaia-component/gaia-component.js"></script>
+  <script src="bower_components/gaia-list/gaia-list.js"></script>
+  <script src="bower_components/drag/drag.js"></script>
+  <script src="gaia-switch.js"></script>
   <style type="text/css">
     html,
     body {
       margin: 0;
       padding: 0;
-      font: 10px sans-serif;
-      background-color: #fff;
-      width: 100%;
-      color: #444;
     }
 
-    ul {
-      margin: 0;
-      padding: 0;
-    }
-
-    li {
-      display: flex;
-      list-style-type: none;
-      font-size: 16px;
-      padding: 0 1rem;
-      align-items: center;
-      border-bottom: solid 1px #eee;
-    }
-
-    li label {
-      flex: 1;
-      padding: 2rem 0;
-    }
-
-    .track {
-      width: 100px;
-      height: 50px;
-      background: silver
-    }
-
-    .thumb {
-      width: 50px;
-      height: 50px;
-      background: red;
+    gaia-theme-selector {
+      position: relative !important;
+      display: block;
     }
   </style>
-  <script>
-    window.GAIA_SWITCH_BASE_URL = './';
-  </script>
-  <script src="bower_components/gaia-component-utils/index.js"></script>
-  <script src="bower_components/evt/index.js"></script>
-  <script src="bower_components/drag/index.js"></script>
-  <script src="gaia-switch.js"></script>
 </head>
 <body role="application">
-  <section>
+  <gaia-theme-selector></gaia-theme-selector>
+  <gaia-list>
     <li>
-      <label>This is a label</label>
+      <label flex>This is a label</label>
       <gaia-switch checked></gaia-switch>
     </li>
     <li>
-      <label>This is a label</label>
+      <label flex>This is a label</label>
       <gaia-switch></gaia-switch>
     </li>
-  </section>
-  <div id="result"></div>
-  <script>
-  (function() {
-    'use strict';
-    var elements = document.querySelectorAll('gaia-switch');
-    [].forEach.call(elements, function(switchEl, index) {
-      switchEl.addEventListener('click', function(e) {
-        result.textContent = 'Switch event for: ' + (index + 1) + ' value: ' +
-          e.target.checked;
-      });
-    });
-  })();
-  </script>
+    <li>
+      <label flex>This is a label</label>
+      <gaia-switch disabled></gaia-switch>
+    </li>
+  </gaia-list>
 </body>
 </html>

@@ -1,11 +1,11 @@
 {
   "name": "gaia-dialog",
-  "version": "0.0.0",
+  "version": "0.0.6",
   "homepage": "https://github.com/gaia-components/gaia-dialog",
   "authors": [
     "Wilson Page <wilsonpage@me.com>"
   ],
-  "main": "script.js",
+  "main": "gaia-dialog.js",
   "license": "MIT",
   "ignore": [
     "**/.*",
