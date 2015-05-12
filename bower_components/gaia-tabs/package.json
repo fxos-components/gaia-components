@@ -1,8 +1,7 @@
 {
   "name": "gaia-tabs",
   "version": "0.1.0",
-  "description": "",
-  "main": "script.js",
+  "main": "gaia-tabs.js",
   "directories": {
     "example": "examples",
     "test": "test"

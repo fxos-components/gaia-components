@@ -1,9 +1,10 @@
 {
   "name": "gaia-text-input",
+  "version": "0.1.1",
   "authors": [
     "Wilson Page <wilsonpage@me.com>"
   ],
-  "main": "script.js",
+  "main": "gaia-text-input.js",
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -14,7 +15,8 @@
     "README.md"
   ],
   "dependencies": {
-    "gaia-icons": "gaia-components/gaia-icons#~0.6.0"
+    "gaia-icons": "gaia-components/gaia-icons#~0.7.0",
+    "gaia-component": "gaia-components/gaia-component#~0.3.3"
   },
   "devDependencies": {
     "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1",
@@ -23,13 +25,13 @@
     "gaia-icons": "gaia-components/gaia-icons#master"
   },
   "homepage": "https://github.com/gaia-components/gaia-text-input",
-  "_release": "b475913456",
+  "_release": "0.1.1",
   "_resolution": {
-    "type": "branch",
-    "branch": "dev",
-    "commit": "b475913456e416a9ae29ac608682f36a9cf4b839"
+    "type": "version",
+    "tag": "v0.1.1",
+    "commit": "f0bb7566d874bef530de248581094d165d62d33f"
   },
   "_source": "git://github.com/gaia-components/gaia-text-input.git",
-  "_target": "dev",
+  "_target": "*",
   "_originalSource": "gaia-components/gaia-text-input"
 }

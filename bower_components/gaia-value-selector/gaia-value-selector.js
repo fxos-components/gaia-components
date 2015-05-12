@@ -5,7 +5,7 @@ var component = require('gaia-component');
 
 module.exports = component.register('gaia-value-selector', {
   created: function() {
-    this.createShadowRoot().innerHTML = this.template;
+    this.setupShadowRoot();
 
     this.els = {
       inner: this.shadowRoot.querySelector('.inner'),
@@ -43,8 +43,6 @@ module.exports = component.register('gaia-value-selector', {
     <style>
       :host {
         display: inline-block;
-        padding: 0 var(--base-s, 18px);
-
         font-size: 16px;
         font-style: italic;
         font-weight: 400;
@@ -67,7 +65,13 @@ module.exports = component.register('gaia-value-selector', {
         border-bottom: 9px solid;
         border-left: 9px solid transparent;
       }
-    </style>`
+    </style>`,
+
+    globalCss: `
+      gaia-value-selector + gaia-value-selector {
+        -moz-padding-start: var(--base-s, 18px);
+      }
+    `
 });
 
 });})(typeof define=='function'&&define.amd?define

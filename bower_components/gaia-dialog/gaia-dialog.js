@@ -43,7 +43,7 @@ proto.onClick = function(e) {
   var el = closest('[on-click]', e.target, this);
   if (!el) { return; }
   var method = el.getAttribute('on-click');
-  if (typeof this[method] == 'function') this[method]();
+  if (typeof this[method] == 'function') { this[method](); }
 };
 
 proto.setupAnimationListeners = function() {
@@ -375,6 +375,7 @@ var template = `
   color: var(--color-epsilon);
   transition: all 200ms;
   transition-delay: 300ms;
+  border-radius: 0;
 }
 
 /**
@@ -391,6 +392,14 @@ var template = `
 
 .shadow-content button.danger {
   color: var(--color-destructive);
+}
+
+/**
+ * Disabled buttons
+ */
+
+.shadow-content button[disabled] {
+  color: var(--color-zeta);
 }
 
 /** Button Divider Line
@@ -487,17 +496,41 @@ var animations = `
 (function() {
   var style = document.createElement('style');
   style.innerHTML = animations;
-  document.head.appendChild(style);
+
+  headReady().then(() => {
+    document.head.appendChild(style);
+  });
+
+  /**
+   * Resolves a promise once document.head is ready.
+   *
+   * @private
+   */
+  function headReady() {
+    return new Promise(resolve => {
+      if (document.head) { return resolve(); }
+      window.addEventListener('load', function fn() {
+        window.removeEventListener('load', fn);
+        resolve();
+      });
+    });
+  }
 })();
 
+
 // Register and expose the constructor
-module.exports = document.registerElement('gaia-dialog', { prototype: proto });
-module.exports.proto = proto;
+try {
+  module.exports = document.registerElement('gaia-dialog', { prototype: proto });
+  module.exports.proto = proto;
 
-
-module.exports.extend = function() {
-  return mixin(Object.create(proto), extended);
-};
+  module.exports.extend = function() {
+    return mixin(Object.create(proto), extended);
+  };
+} catch (e) {
+  if (e.name !== 'NotSupportedError') {
+    throw e;
+  }
+}
 
 var extended = {
   onCreated: function() {

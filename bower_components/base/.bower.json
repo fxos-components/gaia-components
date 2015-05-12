@@ -20,6 +20,6 @@
     "commit": "737e0003253ee4f3ceff5c1223543a1b3f7d39dd"
   },
   "_source": "git://github.com/gaia-components/base.git",
-  "_target": "master",
+  "_target": "*",
   "_originalSource": "gaia-components/base"
 }

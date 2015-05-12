@@ -1,9 +1,10 @@
 {
   "name": "gaia-tabs",
+  "version": "0.0.1",
   "authors": [
     "Wilson Page <wilsonpage@me.com>"
   ],
-  "main": "script.js",
+  "main": "gaia-tabs.js",
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -14,14 +15,20 @@
     "tests",
     "README.md"
   ],
+  "dependencies": {
+    "gaia-component": "gaia-components/gaia-component#~0.3.0"
+  },
+  "devDependencies": {
+    "base": "gaia-components/base"
+  },
   "homepage": "https://github.com/gaia-components/gaia-tabs",
-  "_release": "263b1e30bc",
+  "_release": "0.0.1",
   "_resolution": {
-    "type": "branch",
-    "branch": "dev",
-    "commit": "263b1e30bc000514561d2942e4c6fe5de45649b2"
+    "type": "version",
+    "tag": "v0.0.1",
+    "commit": "66b00b7b348695140705f49caee9513b2d3a91d0"
   },
   "_source": "git://github.com/gaia-components/gaia-tabs.git",
-  "_target": "dev",
+  "_target": "*",
   "_originalSource": "gaia-components/gaia-tabs"
 }

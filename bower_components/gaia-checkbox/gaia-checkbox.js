@@ -2,223 +2,205 @@
 /*jshint esnext:true*/
 'use strict';
 
-// Load 'gaia-icons' font-family
+/**
+ * Dependencies
+ */
+
+var component = require('gaia-component');
+
+// Load icon font
 require('gaia-icons');
 
 /**
- * Prototype extends from
- * the HTMLElement.
- *
- * @type {Object}
+ * Exports
  */
-var proto = Object.create(HTMLElement.prototype);
 
-/**
- * Attributes supported
- * by this component.
- *
- * @type {Object}
- */
-proto.attrs = {
-  checked: true,
-  danger: true,
-  name: true
-};
+module.exports = component.register('gaia-checkbox', {
+  created: function() {
+    this.setupShadowRoot();
 
-proto.createdCallback = function() {
-  this.createShadowRoot().appendChild(template.content.cloneNode(true));
+    this.els = { inner: this.shadowRoot.querySelector('.inner') };
+    this.addEventListener('click', this.onClick.bind(this));
 
-  this.els = { inner: this.shadowRoot.querySelector('.inner') };
-  this.els.inner.addEventListener('click', this.onClick.bind(this));
+    // Setup initial attributes
+    this.checked = this.getAttribute('checked');
+    this.danger = this.getAttribute('danger');
+    this.name = this.getAttribute('name');
 
-  // Setup initial attributes
-  this.checked = this.getAttribute('checked');
-  this.danger = this.getAttribute('danger');
-  this.name = this.getAttribute('name');
-
-  // Make tabable
-  this.tabIndex = 0;
-};
-
-proto.attributeChangedCallback = function(name, from, to) {
-  if (this.attrs[name]) { this[name] = to; }
-};
-
-proto.onClick = function(e) {
-  e.stopPropagation();
-  this.checked = !this.checked;
-};
-
-proto.toggle = function(value) {
-  value = arguments.length ? value : !this.checked;
-  if (value || value === '') { this.check(); }
-  else { this.uncheck(); }
-};
-
-proto.check = function() {
-  if (this.checked) { return; }
-  this.els.inner.setAttribute('checked', '');
-  this.setAttribute('checked', '');
-  this._checked = true;
-};
-
-proto.uncheck = function() {
-  if (!this.checked) { return; }
-  this.els.inner.removeAttribute('checked');
-  this.removeAttribute('checked');
-  this._checked = false;
-};
-
-Object.defineProperties(proto, {
-  checked: {
-    get: function() { return !!this._checked; },
-    set: proto.toggle
+    // Make tabable
+    this.tabIndex = 0;
   },
-  danger: {
-    get: function() { return this._danger; },
-    set: function(value) {
-      if (value || value === '') { this.els.inner.setAttribute('danger', value); }
-      else { this.els.inner.removeAttribute('danger'); }
-      this._danger = value;
+
+  onClick: function(e) {
+    e.stopPropagation();
+    this.checked = !this.checked;
+  },
+
+  toggle: function(value) {
+    value = arguments.length ? value : !this.checked;
+    if (value || value === '') { this.check(); }
+    else { this.uncheck(); }
+  },
+
+  check: function() {
+    if (this.checked) { return; }
+    this.els.inner.setAttribute('checked', '');
+    this.setAttribute('checked', '');
+    this._checked = true;
+  },
+
+  uncheck: function() {
+    if (!this.checked) { return; }
+    this.els.inner.removeAttribute('checked');
+    this.removeAttribute('checked');
+    this._checked = false;
+  },
+
+  attrs: {
+    checked: {
+      get: function() { return !!this._checked; },
+      set: function() { this.toggle(); }
+    },
+
+    danger: {
+      get: function() { return this._danger; },
+      set: function(value) {
+        if (value || value === '') { this.els.inner.setAttribute('danger', value); }
+        else { this.els.inner.removeAttribute('danger'); }
+        this._danger = value;
+      }
+    },
+
+    name: {
+      get: function() { return this._name; },
+      set: function(value) {
+        if (value === null) { this.els.inner.removeAttribute('name'); }
+        else { this.els.inner.setAttribute('name', value); }
+        this._name = value;
+      }
     }
   },
-  name: {
-    get: function() { return this._name; },
-    set: function(value) {
-      if (value === null) { this.els.inner.removeAttribute('name'); }
-      else { this.els.inner.setAttribute('name', value); }
-      this._name = value;
+
+  template: `<div class="inner">
+      <div class="background"></div>
+      <div class="tick"></div>
+    </div>
+    <style>
+
+    /** Host
+     ---------------------------------------------------------*/
+
+    :host {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+      outline: 0;
     }
-  }
-});
 
-var template = document.createElement('template');
-template.innerHTML = `
-<style>
+    /** Inner
+     ---------------------------------------------------------*/
 
-/** Host
- ---------------------------------------------------------*/
+    .inner {
+      display: block;
+      box-sizing: border-box;
+      position: relative;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid #a6a6a6;
+      z-index: 0;
 
-gaia-checkbox {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-  outline: 0;
-}
+      --gaia-checkbox-background:
+        var(--checkbox-background,
+        var(--input-background,
+        var(--button-background,
+        var(--background-plus))));
 
-/** Inner
- ---------------------------------------------------------*/
+      background:
+        var(--gaia-checkbox-background);
 
-.inner {
-  display: block;
-  box-sizing: border-box;
-  position: relative;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 2px solid #a6a6a6;
-  z-index: 0;
+      border-color:
+        var(--checkbox-border-color,
+        var(--border-color,
+        var(--background-minus)));
+    }
 
-  --gaia-checkbox-background:
-    var(--checkbox-background,
-    var(--input-background,
-    var(--button-background,
-    var(--background-plus))));
+    /**
+     * Increase hit area
+     */
 
-  background:
-    var(--gaia-checkbox-background);
+    .inner:before {
+      content: '';
+      position: absolute;
+      top: -10px; right: -10px;
+      bottom: -10px; left: -10px;
+    }
 
-  border-color:
-    var(--checkbox-border-color,
-    var(--border-color,
-    var(--background-minus)));
-}
+    /** Background
+     ---------------------------------------------------------*/
 
-/**
- * Increase hit area
- */
+    .background {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      top: 0px;
+      left: 0px;
+      position: absolute;
+      z-index: -1;
+      opacity: 0;
+      background: var(--highlight-color, #000);
+    }
 
-.inner:before {
-  content: '';
-  position: absolute;
-  top: -10px; right: -10px;
-  bottom: -10px; left: -10px;
-}
+    /**
+     * .active
+     */
 
-/** Background
- ---------------------------------------------------------*/
+    .inner[checked] .background {
+      animation-name: gaia-checkbox-animation;
+      animation-duration: 350ms;
+      animation-fill-mode: forwards;
+    }
 
-.background {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  top: 0px;
-  left: 0px;
-  position: absolute;
-  z-index: -1;
-  opacity: 0;
-  background: var(--highlight-color, #000);
-}
+    /** Tick
+     ---------------------------------------------------------*/
 
-/**
- * .active
- */
+    .tick {
+      text-align: center;
+      line-height: 26px;
+      margin-left: -1px;
+      opacity: 0;
 
-.inner[checked] .background {
-  animation-name: gaia-checkbox-animation;
-  animation-duration: 350ms;
-  animation-fill-mode: forwards;
-}
+      transition-property: opacity;
+      transition-duration: 100ms;
 
-/** Tick
- ---------------------------------------------------------*/
+      color: var(--highlight-color, #000);
+    }
 
-.tick {
-  text-align: center;
-  line-height: 26px;
-  margin-left: -1px;
-  opacity: 0;
+    /**
+     * [checked]
+     */
 
-  transition-property: opacity;
-  transition-duration: 100ms;
+    [checked] .tick {
+      opacity: 1;
+      transition-delay: 140ms;
+    }
 
-  color: var(--highlight-color, #000);
-}
+    /** Icon
+     ---------------------------------------------------------*/
 
-/**
- * [checked]
- */
+    .tick:before {
+      font-family: 'gaia-icons';
+      content: 'tick';
+      font-style: normal;
+      font-weight: 500;
+      text-rendering: optimizeLegibility;
+      font-size: 16px;
+      line-height: 1;
+    }
 
-[checked] .tick {
-  opacity: 1;
-  transition-delay: 140ms;
-}
+    </style>`,
 
-/** Icon
- ---------------------------------------------------------*/
-
-.tick:before {
-  font-family: 'gaia-icons';
-  content: 'tick';
-  font-style: normal;
-  font-weight: 500;
-  text-rendering: optimizeLegibility;
-  font-size: 16px;
-  line-height: 1;
-}
-
-</style>
-
-<div class="inner">
-  <div class="background"></div>
-  <div class="tick"></div>
-</div>`;
-
-(function addKeyframes() {
-  var style = document.createElement('style');
-
-  style.innerHTML = `
-    @keyframes gaia-checkbox-animation {
+    globalCss: `@keyframes gaia-checkbox-animation {
       0% {
         transform: scale(0);
         opacity: 1;
@@ -231,11 +213,8 @@ gaia-checkbox {
         opacity: 0;
         transform: scale(1);
       }
-    }
-  `;
-
-  document.head.appendChild(style);
-})();
+    }`
+});
 
 // Bind a 'click' delegate to the
 // window to listen for all clicks
@@ -275,11 +254,8 @@ addEventListener('keypress', function(e) {
   if (e.which !== 32) { return; }
   var el = document.activeElement;
   var isCheckbox = el.tagName === 'GAIA-CHECKBOX';
-  if (isCheckbox) { el.toggle(); }
+  if (isCheckbox) { el.click(); }
 });
-
-// Register and return the constructor
-module.exports = document.registerElement('gaia-checkbox', { prototype: proto });
 
 });})(typeof define=='function'&&define.amd?define
 :(function(n,w){return typeof module=='object'?function(c){

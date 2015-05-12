@@ -9,12 +9,11 @@
   <link rel="stylesheet" type="text/css" href="bower_components/gaia-icons/gaia-icons.css">
   <link rel="stylesheet" type="text/css" href="bower_components/gaia-fonts/style.css">
   <script src="bower_components/gaia-theme/lib/gaia-theme-selector.js"></script>
-  <script src="bower_components/pressed/pressed.js"></script>
+  <script src="bower_components/gaia-component/gaia-component.js"></script>
   <script src="gaia-button.js"></script>
   <style type="text/css">
 
     body {
-      padding: 16px;
       padding-top: 48px;
       background-color: var(--background);
     }
@@ -30,7 +29,11 @@
       margin-right: -9px;
     }*/
 
-
+    [flex] {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
   </style>
 </head>
 <body role="application" class="l-align-center">
@@ -39,6 +42,7 @@
 
   <section>
     <gaia-button>Gaia button 1</gaia-button>
+    <gaia-button disabled>Gaia button 1</gaia-button>
   </section>
 
   <hr/>
@@ -50,7 +54,7 @@
 
   <hr/>
 
-  <section>
+  <section flex>
     <gaia-button circular><i data-icon="camera"></i></gaia-button>
     <gaia-button circular><i data-icon="bug"></i></gaia-button>
     <gaia-button circular><i data-icon="video"></i></gaia-button>

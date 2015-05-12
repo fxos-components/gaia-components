@@ -3,248 +3,213 @@
 'use strict';
 
 /**
- * Detects presence of shadow-dom
- * CSS selectors.
- *
- * @return {Boolean}
+ * Dependencies
  */
-var hasShadowCSS = (function() {
-  try { document.querySelector(':host'); return true; }
-  catch (e) { return false; }
-})();
+
+var component = require('gaia-component');
 
 /**
- * Extend from the `HTMLElement` prototype
- *
- * @type {Object}
+ * Exports
  */
-var proto = Object.create(HTMLElement.prototype);
 
-proto.createdCallback = function() {
-  this.createShadowRoot().innerHTML = template;
+module.exports = component.register('gaia-text-input-multiline', {
+  created: function() {
+    this.setupShadowRoot();
 
-  this.els = {
-    inner: this.shadowRoot.querySelector('.inner'),
-    field: this.shadowRoot.querySelector('textarea')
-  };
+    this.els = {
+      inner: this.shadowRoot.querySelector('.inner'),
+      field: this.shadowRoot.querySelector('textarea')
+    };
 
-  this.type = this.getAttribute('type');
-  this.disabled = this.hasAttribute('disabled');
-  this.placeholder = this.getAttribute('placeholder');
-  this.required = this.getAttribute('required');
-  this.value = this.getAttribute('value');
-
-  shadowStyleHack(this);
-};
-
-proto.attributeChangedCallback = function(attr, from, to) {
-  if (this.attrs[attr]) { this[attr] = to; }
-};
-
-proto.clear = function(e) {
-  this.value = '';
-};
-
-proto.attrs = {
-  placeholder: {
-    get: function() { return this.els.field.placeholder; },
-    set: function(value) { this.els.field.placeholder = value || ''; }
+    this.type = this.getAttribute('type');
+    this.disabled = this.hasAttribute('disabled');
+    this.placeholder = this.getAttribute('placeholder');
+    this.required = this.getAttribute('required');
+    this.value = this.getAttribute('value');
   },
 
-  value: {
-    get: function() { return this.els.field.value; },
-    set: function(value) { this.els.field.value = value; }
+  clear: function(e) {
+    this.value = '';
   },
 
-  required: {
-    get: function() { return this.els.field.required; },
-    set: function(value) { this.els.field.required = value; }
-  },
+  attrs: {
+    placeholder: {
+      get: function() { return this.els.field.placeholder; },
+      set: function(value) { this.els.field.placeholder = value || ''; }
+    },
 
-  disabled: {
-    get: function() { return this.els.field.disabled; },
-    set: function(value) {
-      value = !!(value === '' || value);
-      this.els.field.disabled = value;
+    value: {
+      get: function() { return this.els.field.value; },
+      set: function(value) { this.els.field.value = value; }
+    },
+
+    required: {
+      get: function() { return this.els.field.required; },
+      set: function(value) { this.els.field.required = value; }
+    },
+
+    disabled: {
+      get: function() { return this.els.field.disabled; },
+      set: function(value) {
+        value = !!(value === '' || value);
+        this.els.field.disabled = value;
+      }
     }
-  }
-};
+  },
 
-Object.defineProperties(proto, proto.attrs);
+  template: `<div class="inner">
+      <content select="label"></content>
+      <div class="fields">
+        <textarea></textarea>
+        <div class="focus focus-1"></div>
+        <div class="focus focus-2"></div>
+      </div>
+    </div>
+    <style>
 
-var template = `
-<style>
+    /** Reset
+     ---------------------------------------------------------*/
 
-/** Reset
- ---------------------------------------------------------*/
+    textarea {
+      box-sizing: border-box;
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }
 
-textarea {
-  box-sizing: border-box;
-  border: 0;
-  margin: 0;
-  padding: 0;
-}
+    /** Host
+     ---------------------------------------------------------*/
 
-/** Host
- ---------------------------------------------------------*/
+    :host {
+      display: block;
+      margin-top: var(--base-m, 18px);
+      margin-bottom: var(--base-m, 18px);
+    }
 
-:host {
-  display: block;
-  margin: var(--base-m, 18px);
-}
+    /** Inner
+     ---------------------------------------------------------*/
 
-/** Inner
- ---------------------------------------------------------*/
+    .inner {
+      height: 100%;
+    }
 
-.inner {
-  height: 100%;
-}
+    /** Label
+     ---------------------------------------------------------*/
 
-/** Label
- ---------------------------------------------------------*/
+    label {
+      font-size: 14px;
+      display: block;
+      margin: 0 0 4px 16px;
+    }
 
-label {
-  font-size: 14px;
-  display: block;
-  margin: 0 0 4px 16px;
-}
+    /**
+     * [disbled]
+     */
 
-/**
- * [disbled]
- */
+    [disabled] label {
+      opacity: 0.3;
+    }
 
-[disabled] label {
-  opacity: 0.3;
-}
+    /** Fields
+     ---------------------------------------------------------*/
 
-/** Fields
- ---------------------------------------------------------*/
+    .fields {
+      box-sizing: border-box;
+      position: relative;
+      width: 100%;
+      height: 100%;
 
-.fields {
-  position: relative;
-  width: 100%;
-  height: 100%;
+      --gi-border-color:
+        var(--input-border-color,
+        var(--border-color,
+        var(--background-plus,
+        #e7e7e7)));
 
-  --gi-border-color:
-    var(--input-border-color,
-    var(--border-color,
-    var(--background-plus,
-    #e7e7e7)));
+      border-color:
+        var(--gi-border-color);
 
-  border-color:
-    var(--gi-border-color);
+      border:
+        var(--input-border,
+        var(--border,
+        1px solid var(--gi-border-color)));
+    }
 
-  border:
-    var(--input-border,
-    var(--border,
-    1px solid var(--gi-border-color)));
-}
+    /** Textarea
+     ---------------------------------------------------------*/
 
-/** Textarea
- ---------------------------------------------------------*/
+    textarea {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 86px;
+      padding: 10px 16px;
+      font-size: inherit;
+      border: none;
+      margin: 0;
+      font: inherit;
+      resize: none;
 
-textarea {
-  display: block;
-  width: 100%;
-  height: 100%;
-  min-height: 86px;
-  padding: 10px 16px;
-  font-size: inherit;
-  border: none;
-  margin: 0;
-  font: inherit;
-  resize: none;
+      /* dynamic */
 
-  /* dynamic */
+      color:
+        var(--text-color, #000);
 
-  color:
-    var(--text-color, #000);
+      background:
+        var(--text-input-background,
+        var(--input-background,
+        var(--background-minus,
+        #fff)));
+    }
 
-  background:
-    var(--text-input-background,
-    var(--input-background,
-    var(--background-minus,
-    #fff)));
-}
+    /**
+     * [disabled]
+     */
 
-/**
- * [disabled]
- */
+    textarea[disabled] {
+      background: transparent;
+    }
 
-textarea[disabled] {
-  background: transparent;
-}
+    /** Placeholder Text
+     ---------------------------------------------------------*/
 
-/** Placeholder Text
- ---------------------------------------------------------*/
+    ::-moz-placeholder {
+      font-style: italic;
 
-::-moz-placeholder {
-  font-style: italic;
+      color:
+        var(--input-placeholder-color, #909ca7);
+    }
 
-  color:
-    var(--input-placeholder-color, #909ca7);
-}
+    /** Focus Bar
+     ---------------------------------------------------------*/
 
-/** Focus Bar
- ---------------------------------------------------------*/
+    .focus {
+      position: absolute;
+      bottom: 0px;
+      width: 100%;
+      height: 3px;
+      transition: all 200ms;
+      transform: scaleX(0);
+      visibility: hidden;
+      background: var(--highlight-color, #000);
+    }
 
-.focus {
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
-  height: 3px;
-  transition: all 200ms;
-  transform: scaleX(0);
-  visibility: hidden;
-  background: var(--highlight-color, #000);
-}
+    /**
+     * input:focus
+     */
 
-/**
- * input:focus
- */
+    :focus ~ .focus {
+      transform: scaleX(1);
+      transition-delay: 200ms;
+      visibility: visible;
+    }
 
-:focus ~ .focus {
-  transform: scaleX(1);
-  transition-delay: 200ms;
-  visibility: visible;
-}
+    .focus-2 {
+      top: 0;
+      bottom: auto;
+    }
 
-.focus-2 {
-  top: 0;
-  bottom: auto;
-}
-
-</style>
-
-<div class="inner">
-  <content select="label"></content>
-  <div class="fields">
-    <textarea></textarea>
-    <div class="focus focus-1"></div>
-    <div class="focus focus-2"></div>
-  </div>
-</div>`;
-
-// If the browser doesn't support shadow-css
-// selectors yet, we update the template
-// to use the shim classes instead.
-if (!hasShadowCSS) {
-  template = template
-    .replace('::content', 'gaia-text-input-multiline.-content', 'g')
-    .replace(':host', 'gaia-text-input-multiline.-host', 'g');
-}
-
-function shadowStyleHack(el) {
-  if (hasShadowCSS) { return; }
-  var style = el.shadowRoot.querySelector('style').cloneNode(true);
-  el.classList.add('-content', '-host');
-  style.setAttribute('scoped', '');
-  el.appendChild(style);
-}
-
-// Register and return the constructor
-module.exports = document.registerElement('gaia-text-input-multiline', { prototype: proto });
-module.exports.prototype = module.exports.prototype || proto;
+    </style>`
+});
 
 });})((function(n,w){return typeof define=='function'&&define.amd?
 define:typeof module=='object'?function(c){c(require,exports,module);}:function(c){

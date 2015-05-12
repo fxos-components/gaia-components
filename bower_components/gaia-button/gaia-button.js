@@ -3,227 +3,195 @@
 'use strict';
 
 /**
- * Prototype extends from
- * the HTMLElement.
- *
- * @type {Object}
+ * Dependencies
  */
-var proto = Object.create(HTMLButtonElement.prototype);
 
-proto.createdCallback = function() {
-  this.createShadowRoot().innerHTML = template;
-  this.els = {
-    inner: this.shadowRoot.querySelector('.inner'),
-    content: this.shadowRoot.querySelector('.content')
-  };
+var component = require('gaia-component');
 
-  this.circular = this.hasAttribute('circular');
-  this.disabled = this.hasAttribute('disabled');
-  this.setAttribute('role', 'button');
-  this.tabIndex = 0;
-  this.styleHack();
-};
+/**
+ * Exports
+ */
 
-proto.attributeChangedCallback = function(attr, from, to) {
-  if (this.attrs[attr]) { this[attr] = to; }
-};
+module.exports = component.register('gaia-button', {
+  created: function() {
+    this.setupShadowRoot();
+    this.setAttribute('role', 'button');
+    this.tabIndex = 0;
+  },
 
-proto.styleHack = function() {
-  var style = this.shadowRoot.querySelector('style').cloneNode(true);
-  this.classList.add('-host', '-content');
-  style.setAttribute('scoped', '');
-  this.appendChild(style);
-};
+  attrs: {
+    circular: {
+      get: function() { return this.getAttribute('circular'); },
+      set: function(value) {
+        value = !!(value === '' || value);
+        if (value) {
+          this.setAttribute('circular', '');
+        } else {
+          this.removeAttribute('circular');
+        }
+      }
+    },
 
-proto.attrs = {
-  circular: {
-    get: function() { this.getAttribute('circular'); },
-    set: function(value) {
-      value = !!(value === '' || value);
-      if (value) {
-        this.setAttribute('circular', '');
-        this.els.inner.setAttribute('circular', '');
-      } else {
-        this.removeAttribute('circular');
-        this.els.inner.removeAttribute('circular');
+    disabled: {
+      get: function() { return this.getAttribute('disabled'); },
+      set: function(value) {
+        value = !!(value === '' || value);
+        if (value) {
+          this.setAttribute('disabled', '');
+        } else {
+          this.removeAttribute('disabled');
+        }
       }
     }
   },
 
-  disabled: {
-    get: function() { this.getAttribute('disabled'); },
-    set: function(value) {
-      value = !!(value === '' || value);
-      if (value) {
-        this.setAttribute('disabled', '');
-        this.els.inner.setAttribute('disabled', '');
-      } else {
-        this.removeAttribute('disabled');
-        this.els.inner.removeAttribute('disabled');
-      }
+  template: `
+    <div class="inner">
+      <div class="background"></div>
+      <div class="content"><content></content></div>
+    </div>
+
+    <style>
+
+    :host {
+      display: block;
+      box-sizing: border-box;
+      overflow: hidden;
+      height: 50px;
+      min-width: 50%;
+      border-radius: 50px;
+      margin: var(--base-m, 18px) 0;
+      outline: 0;
+      font-style: italic;
+      font-size: 17px;
+      cursor: pointer;
+      -moz-user-select: none;
+      line-height: 1;
+
+      background:
+        var(--button-background,
+        var(--input-background,
+        var(--background-plus,
+        #fff)));
+
+      color:
+        var(--button-color,
+        var(--text-color,
+        inherit));
+
+      box-shadow:
+        var(--button-box-shadow,
+        var(--box-shadow,
+        none));
+
+      transition: color 0ms 300ms;
     }
-  }
-};
 
-Object.defineProperties(proto, proto.attrs);
+    @media(min-width:500px) {
+      :host { min-width: 140px; }
+    }
 
-var template = `
-<style>
+    /**
+     * Pressed
+     */
 
-.-host {
-  display: inline-block;
-  box-sizing: border-box;
-  min-width: 50%;
-  margin: 0 var(--base-m, 18px) var(--base-m, 18px);
-  outline: 0;
-}
+    :host(:active) {
+      color: var(--button-color-active, #fff);
+      box-shadow: var(--button-box-shadow-active, none);
+      transition: none;
+    }
 
-@media(min-width:500px) {
-  .-host { min-width: 140px; }
-}
+    /**
+     * [circular]
+     */
 
-.-host[circular] {
-  width: 50px;
-  min-width: 0;
-}
+    :host([circular]) {
+      width: 50px;
+      min-width: 0;
+      border-radius: 50%;
+    }
 
-/** Inner
- ---------------------------------------------------------*/
+    :host([disabled]) {
+      pointer-events: none;
+      opacity: 0.5;
+    }
 
-.inner {
-  position: relative;
-  height: 50px;
-  border-radius: 50px;
-  overflow: hidden;
-  cursor: pointer;
-  -moz-user-select: none;
-  line-height: 1;
-  transition: color 0ms 300ms;
+    /** Inner
+     ---------------------------------------------------------*/
 
-  background:
-    var(--button-background,
-    var(--input-background,
-    var(--background-plus,
-    #fff)));
+    .inner {
+      position: relative;
+      height: 100%;
+    }
 
-  color:
-    var(--button-color,
-    var(--text-color,
-    inherit));
+    /** Background
+     ---------------------------------------------------------*/
 
-  box-shadow:
-    var(--button-box-shadow,
-    var(--box-shadow,
-    none));
-}
+    .background {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
 
-/**
- * [circular]
- */
+      transition: opacity 500ms 200ms;
 
-.inner[circular] {
-  border-radius: 50%;
-}
+      background:
+        var(--button-background-active,
+        var(--highlight-color,
+        #333));
+    }
 
-/**
- * [disabled]
- */
-
-.inner[disabled] {
-  pointer-events: none;
-  opacity: 0.5;
-}
-
-/**
- * .pressed
- */
-
-.inner:active {
-  transition: none;
-  color: var(--button-color-active, #fff);
-  box-shadow: var(--button-box-shadow-active, none);
-}
-
-/** Background
- ---------------------------------------------------------*/
-
-.background {
-  content: '';
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-
-  transition: opacity 500ms 200ms;
-
-  background:
-    var(--button-background-active,
-    var(--highlight-color,
-    #333));
-}
-
-:active .background {
-  transition: none;
-  opacity: 1;
-}
-
-.released .background {
-  transition: opacity 500ms;
-}
-
-i:before {
-  font-size: 26px;
-}
-
-.-content i {
-  margin-left: -2px;
-  margin-right: -2px;
-}
-
-.-content i + span,
-.-content span + i {
-  -moz-margin-start: 8px;
-}
+    :active .background {
+      transition: none;
+      opacity: 1;
+    }
 
 
 
-/** Content
- ---------------------------------------------------------*/
+    /** Content
+     ---------------------------------------------------------*/
 
-/**
- * 1. In some cases events seems to be getting
- *    swallowed by text-nodes. Ignoring pointer-
- *    events means we can listen on parent nodes
- *    instead.
- */
+    /**
+     * 1. In some cases events seems to be getting
+     *    swallowed by text-nodes. Ignoring pointer-
+     *    events means we can listen on parent nodes
+     *    instead.
+     */
 
-.content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  z-index: 2;
-  height: 100%;
-  padding: 0 18px;
-  font-style: italic;
-  font-size: 17px;
-  pointer-events: none; /* 1 */
-}
+    .content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      padding: 0 18px;
+      pointer-events: none; /* 1 */
+    }
 
-[circular] .content {
-  padding: 0;
-}
+    [circular] .content {
+      padding: 0;
+    }
 
-</style>
-<div class="inner">
-  <div class="background"></div>
-  <div class="content"><content></content></div>
-</div>`;
+    i:before {
+      font-size: 26px;
+    }
 
-module.exports = document.registerElement('gaia-button', { prototype: proto });
+    ::content i {
+      margin-left: -2px;
+      margin-right: -2px;
+    }
+
+    ::content i + span,
+    ::content span + i {
+      -moz-margin-start: 8px;
+    }
+
+    </style>`
+});
 
 });})((function(n,w){return typeof define=='function'&&define.amd?
 define:typeof module=='object'?function(c){c(require,exports,module);}:function(c){

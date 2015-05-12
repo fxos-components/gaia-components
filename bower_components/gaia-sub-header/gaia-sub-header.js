@@ -3,105 +3,99 @@
 /*jshint node:true*/
 /*globals define*/
 
-var pressed = require('pressed');
-
 /**
- * Prototype extends from the HTMLElement.
- *
- * @type {Object}
- */
-var proto = Object.create(HTMLElement.prototype);
-
-
-proto.createdCallback = function() {
-  this.createShadowRoot().innerHTML = template;
-  this.styleHack();
-  pressed(this);
-};
-
-proto.styleHack = function() {
-  var style = this.shadowRoot.querySelector('style').cloneNode(true);
-  this.classList.add('-content', '-host');
-  style.setAttribute('scoped', '');
-  this.appendChild(style);
-};
-
-var template = `
-<style>
-
-gaia-sub-header {
-  display: flex;
-  margin: 30px 0 16px;
-  padding: 0 15px;
-  align-items: center;
-}
-
-.line {
-  position: relative;
-  height: 2px;
-  flex: 1;
-
-  background:
-    var(--border-color,
-    var(--background-plus));
-}
-
-.middle {
-  margin: 0 14px 0 14px;
-  padding: 0;
-  text-transform: uppercase;
-  font-size: 14px;
-  font-weight: normal;
-
-  color:
-    var(--color-zeta);
-}
-
-a,
-button {
-  position: relative;
-  display: block;
-  padding-right: 16px;
-  font: inherit;
-  cursor: pointer;
-
-  color:
-    var(--highlight-color);
-}
-
-/**
- * .pressed
+ * Dependencies
  */
 
-a.pressed,
-button.pressed {
-  opacity: 0.5;
-}
+var component = require('gaia-component');
 
-a:after,
-button:after {
-  content: " ";
-  position: absolute;
-  width: 0px;
-  height: 0px;
-  top: 6px;
-  right: 0px;
-  border-bottom: 8px solid;
-  border-left: 8px solid transparent;
+/**
+ * Exports
+ */
 
-  border-bottom-color:
-    var(--highlight-color,
-    var(--color-zeta))
-}
+module.exports = component.register('gaia-sub-header', {
+  created: function() {
+    this.setupShadowRoot();
+  },
 
-</style>
+  template: `<div class="inner">
+      <div class="line left"></div>
+      <div class="middle"><content></content></div>
+      <div class="line right"></div>
+    </div>
 
-<div class="line left"></div>
-<div class="middle"><content></content></div>
-<div class="line right"></div>`;
+    <style>
 
-// Register and return the constructor
-module.exports = document.registerElement('gaia-sub-header', { prototype: proto });
+    :host {
+      display: block;
+    }
+
+    .inner {
+      display: flex;
+      margin: 16px 16px 0 16px;
+      align-items: center;
+    }
+
+    .line {
+      position: relative;
+      height: 2px;
+      flex: 1;
+
+      background:
+        var(--border-color,
+        var(--background-plus));
+    }
+
+    .middle {
+      margin: 0 14px 0 14px;
+      padding: 0;
+      text-transform: uppercase;
+      font-size: 14px;
+      font-weight: normal;
+
+      color:
+        var(--color-epsilon);
+    }
+
+    a,
+    button {
+      position: relative;
+      display: block;
+      padding-right: 16px;
+      font: inherit;
+      cursor: pointer;
+
+      color:
+        var(--highlight-color);
+    }
+
+    /**
+     * .pressed
+     */
+
+    a:active,
+    button:active {
+      opacity: 0.5;
+    }
+
+    a:after,
+    button:after {
+      content: " ";
+      position: absolute;
+      width: 0px;
+      height: 0px;
+      top: 6px;
+      right: 0px;
+      border-bottom: 8px solid;
+      border-left: 8px solid transparent;
+
+      border-bottom-color:
+        var(--highlight-color,
+        var(--color-zeta))
+    }
+
+    </style>`
+});
 
 });})((function(n,w){'use strict';return typeof define=='function'&&define.amd?
 define:typeof module=='object'?function(c){c(require,exports,module);}:

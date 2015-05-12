@@ -3,74 +3,63 @@
 'use strict';
 
 /**
- * Extend from the `HTMLElement` prototype
- *
- * @type {Object}
+ * Dependencies
  */
-var proto = Object.create(HTMLElement.prototype);
 
-proto.createdCallback = function() {
-  this.createShadowRoot().innerHTML = template;
-  this.shadowStyleHack();
-};
+var component = require('gaia-component');
 
-proto.shadowStyleHack = function() {
-  var style = this.shadowRoot.querySelector('style').cloneNode(true);
-  this.classList.add('-content', '-host');
-  style.setAttribute('scoped', '');
-  this.appendChild(style);
-};
+/**
+ * Exports
+ */
 
-var template = `
-<style>
+module.exports = component.register('gaia-loading', {
+  created: function() {
+    this.setupShadowRoot();
+  },
 
-/** Host
- ---------------------------------------------------------*/
+  template: `
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
 
-.-host {
-  position: relative;
-  display: block;
-  width: 40px;
-  height: 40px;
-  margin: var(--base-l, 24px) auto;
-}
+    <style>
 
-/** Circle
- ---------------------------------------------------------*/
+    /** Host
+     ---------------------------------------------------------*/
 
-.circle {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
+    :host {
+      position: relative;
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: var(--base-l, 24px) auto;
+    }
 
-  animation-name: gaia-loading-animation;
-  animation-iteration-count: infinite;
-  animation-timing-function: cubic-bezier(0,.64,.46,.46);
-  animation-duration: 2000ms;
+    /** Circle
+     ---------------------------------------------------------*/
 
-  background:
-    var(--highlight-color);
-}
+    .circle {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
 
-.circle-2 {
-  animation-delay: 395ms;
-}
+      animation-name: gaia-loading-animation;
+      animation-iteration-count: infinite;
+      animation-timing-function: cubic-bezier(0,.64,.46,.46);
+      animation-duration: 2000ms;
 
-</style>
+      background:
+        var(--highlight-color);
+    }
 
-<div class="circle circle-1"></div>
-<div class="circle circle-2"></div>`;
+    .circle-2 {
+      animation-delay: 395ms;
+    }
 
-// Currently @keyframe animation
-// declarations have to be global.
-// Defining them inside scoped/shadow
-// stylesheets doesn't work.
-(function() {
-  var style = document.createElement('style');
+    </style>`,
 
-  style.innerHTML = `
+  globalCss: `
     @keyframes gaia-loading-animation {
       0% {
         transform: scale(0);
@@ -84,14 +73,8 @@ var template = `
         transform: scale(2);
         opacity: 0;
       }
-    }
-  `;
-
-  document.head.appendChild(style);
-})();
-
-// Register and return the constructor
-module.exports = document.registerElement('gaia-loading', { prototype: proto });
+    }`
+});
 
 });})(typeof define=='function'&&define.amd?define
 :(function(n,w){'use strict';return typeof module=='object'?function(c){

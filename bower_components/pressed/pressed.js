@@ -1,4 +1,4 @@
-;(function(define){define(function(require,exports,module){
+;(function(define){'use strict';define(function(require,exports,module){
 
 /**
  * Pointer event abstraction to make
@@ -13,13 +13,13 @@ var pointer = [
 
 module.exports = function(el, options) {
   var released = (options && options.released) || 200;
+  var scope = (options && options.scope) || el;
   var min = (options && options.min) || 300;
   var instant = options && options.instant;
   var timeouts = {};
   var removeReleased;
 
   el.addEventListener(pointer.down, function(e) {
-    // if (scrolling) { return; }
     var start = e.timeStamp;
     var target = e.target;
     var pressed = false;
@@ -33,7 +33,7 @@ module.exports = function(el, options) {
     else { notScrolling(e, onPressed); }
 
     function onPressed() {
-      classListUp(target, 'add', 'pressed');
+      classListUp(target, scope, 'add', 'pressed');
     }
 
     addEventListener(pointer.up, function fn(e) {
@@ -47,12 +47,12 @@ module.exports = function(el, options) {
       // to be over, we remove the 'pressed'
       // class and add a 'released' class.
       timeouts.pressed = setTimeout(function() {
-        classListUp(target, 'remove', 'pressed');
-        classListUp(target, 'add', 'released');
+        classListUp(target, scope, 'remove', 'pressed');
+        classListUp(target, scope, 'add', 'released');
 
         removeReleased = function() {
           clearTimeout(timeouts.released);
-          classListUp(target, 'remove', 'released');
+          classListUp(target, scope, 'remove', 'released');
           removeReleased = null;
         };
 
@@ -107,24 +107,26 @@ function detectScrolling(e, fn) {
 var windowScrolling = false;
 var scrollTimeout;
 
-addEventListener('scroll', function() {
-  windowScrolling = true;
-  clearTimeout(scrollTimeout);
-  scrollTimeout = setTimeout(function() {
-    windowScrolling = false;
-  }, 60);
-});
+// addEventListener('scroll', function() {
+//   windowScrolling = true;
+//   clearTimeout(scrollTimeout);
+//   scrollTimeout = setTimeout(function() {
+//     windowScrolling = false;
+//   }, 60);
+// });
 
 /**
  * Run a classList method on every
- * element up the DOM tree.
+ * element up the DOM tree, until
+ * the given scope.
  *
  * @param  {Element} el
+ * @param {Element} scope
  * @param  {String} method
  * @param  {String} cls
  */
-function classListUp(el, method, cls) {
-  while (el && el.classList) {
+function classListUp(el, scope, method, cls) {
+  while (el && el.classList && el !== scope.parentNode) {
     el.classList[method](cls);
     el = el.parentNode;
   }

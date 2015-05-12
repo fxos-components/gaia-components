@@ -2,361 +2,315 @@
 /*jshint esnext:true*/
 'use strict';
 
-// Load gaia-icons
-require('gaia-icons');
-
 /**
- * Detects presence of shadow-dom
- * CSS selectors.
- *
- * @return {Boolean}
- */
-var hasShadowCSS = (function() {
-  try { document.querySelector(':host'); return true; }
-  catch (e) { return false; }
-})();
-
-/**
- * Extend from the `HTMLElement` prototype
- *
- * @type {Object}
- */
-var proto = Object.create(HTMLElement.prototype);
-
-proto.createdCallback = function() {
-  this.createShadowRoot().innerHTML = template;
-
-  this.els = {
-    inner: this.shadowRoot.querySelector('.inner'),
-    input: this.shadowRoot.querySelector('input'),
-    clear: this.shadowRoot.querySelector('.clear')
-  };
-
-  this.type = this.getAttribute('type');
-  this.disabled = this.hasAttribute('disabled');
-  this.clearable = this.hasAttribute('clearable');
-  this.placeholder = this.getAttribute('placeholder');
-  this.required = this.getAttribute('required');
-  this.value = this.getAttribute('value');
-
-  // Don't take focus from the input field
-  this.els.clear.addEventListener('mousedown', (e) => e.preventDefault());
-  this.els.clear.addEventListener('click', e => this.clear(e));
-
-  shadowStyleHack(this);
-};
-
-proto.attributeChangedCallback = function(attr, from, to) {
-  if (attrs[attr]) { this[attr] = to; }
-};
-
-proto.clear = function(e) {
-  this.value = '';
-};
-
-proto.focus = function() {
-  this.els.input.focus();
-};
-
-function binaryAttributeSetter(el, attr) {
-  return function(value) {
-    value = !!(value === '' || value);
-    if (value === this[attr]) { return; }
-
-    if (value) {
-      this.els.inner.setAttribute(attr, '');
-      this.setAttribute(attr, '');
-    } else {
-      this.els.inner.removeAttribute(attr);
-      this.removeAttribute(attr);
-    }
-
-    this['_' + attr] = value;
-  };
-}
-
-/**
- * Attributes
+ * Dependencies
  */
 
-var attrs = {
-  type: {
-    get: function() { return this.els.input.getAttribute('type'); },
-    set: function(value) {
-      if (!value) { return; }
-      this.els.inner.setAttribute('type', value);
-      this.els.input.setAttribute('type', value);
-    }
+var component = require('gaia-component');
+require('gaia-icons'); // Load gaia-icons
+
+/**
+ * Exports
+ */
+
+module.exports = component.register('gaia-text-input', {
+  extends: HTMLInputElement,
+
+  created: function() {
+    this.setupShadowRoot();
+
+    this.els = {
+      inner: this.shadowRoot.querySelector('.inner'),
+      input: this.shadowRoot.querySelector('input'),
+      clear: this.shadowRoot.querySelector('.clear')
+    };
+
+    this.type = this.getAttribute('type');
+    this.disabled = this.hasAttribute('disabled');
+    this.clearable = this.hasAttribute('clearable');
+    this.placeholder = this.getAttribute('placeholder');
+    this.required = this.getAttribute('required');
+    this.value = this.getAttribute('value');
+
+    // Don't take focus from the input field
+    this.els.clear.addEventListener('mousedown', (e) => e.preventDefault());
+    this.els.clear.addEventListener('click', e => this.clear(e));
   },
 
-  placeholder: {
-    get: function() { return this.field.placeholder; },
-    set: function(value) {
-      if (!value && value !== '') { return; }
-      this.els.input.placeholder = value;
-    }
+  clear: function(e) {
+    this.value = '';
   },
 
-  clearable: {
-    get: function() { return this._clearable; },
-    set: function(value) {
-      var clearable = !!(value === '' || value);
-      if (clearable === this.clearable) { return; }
+  focus: function() {
+    this.els.input.focus();
+  },
 
-      if (clearable) {
-        this.els.inner.setAttribute('clearable', '');
-        this.setAttribute('clearable', '');
-      } else {
-        this.els.inner.removeAttribute('clearable');
-        this.removeAttribute('clearable');
+  /**
+   * Attributes
+   */
+
+  attrs: {
+    type: {
+      get: function() { return this.els.input.getAttribute('type'); },
+      set: function(value) {
+        if (!value) { return; }
+        this.els.inner.setAttribute('type', value);
+        this.els.input.setAttribute('type', value);
       }
+    },
 
-      this._clearable = clearable;
+    placeholder: {
+      get: function() { return this.field.placeholder; },
+      set: function(value) {
+        if (!value && value !== '') { return; }
+        this.els.input.placeholder = value;
+      }
+    },
+
+    clearable: {
+      get: function() { return this._clearable; },
+      set: function(value) {
+        var clearable = !!(value === '' || value);
+        if (clearable === this.clearable) { return; }
+
+        if (clearable) {
+          this.els.inner.setAttribute('clearable', '');
+          this.setAttribute('clearable', '');
+        } else {
+          this.els.inner.removeAttribute('clearable');
+          this.removeAttribute('clearable');
+        }
+
+        this._clearable = clearable;
+      }
+    },
+
+    value: {
+      get: function() { return this.els.input.value; },
+      set: function(value) { this.els.input.value = value; }
+    },
+
+    required: {
+      get: function() { return this.els.input.required; },
+      set: function(value) { this.els.input.required = value; }
+    },
+
+    maxlength: {
+      get: function() { return this.els.input.getAttribute('maxlength'); },
+      set: function(value) { this.els.input.setAttribute('maxlength', value); }
+    },
+
+    disabled: {
+      get: function() { return this.els.input.disabled; },
+      set: function(value) {
+        value = !!(value === '' || value);
+        this.els.input.disabled = value;
+      }
     }
   },
 
-  value: {
-    get: function() { return this.els.input.value; },
-    set: function(value) { this.els.input.value = value; }
-  },
+  template: `
+    <div class="inner">
+      <content select="label"></content>
+      <div class="fields">
+        <input type="text"/>
+        <button class="clear" tabindex="-1"></button>
+        <div class="focus"></div>
+      </div>
+    </div>
 
-  required: {
-    get: function() { return this.els.input.required; },
-    set: function(value) { this.els.input.required = value; }
-  },
+    <style>
 
-  maxlength: {
-    get: function() { return this.els.input.getAttribute('maxlength'); },
-    set: function(value) { this.els.input.setAttribute('maxlength', value); }
-  },
-
-  disabled: {
-    get: function() { return this.els.input.disabled; },
-    set: function(value) {
-      value = !!(value === '' || value);
-      this.els.input.disabled = value;
+    :host {
+      display: block;
+      height: 40px;
+      margin-top: var(--base-m, 18px);
+      margin-bottom: var(--base-m, 18px);
     }
-  }
-};
 
-Object.defineProperties(proto, attrs);
+    /** Reset
+     ---------------------------------------------------------*/
 
-var lightCSS = `
-gaia-text-input {
-  display: block;
-  height: 40px;
-  margin: var(--base-m, 18px);
-}`;
+    input,
+    button {
+      box-sizing: border-box;
+      border: 0;
+      margin: 0;
+      padding: 0;
+    }
 
-/**
- * Shadow Template
- */
+    /** Inner
+     ---------------------------------------------------------*/
 
-var template = `
-<style>
+    .inner {
+      height: 100%;
+    }
 
-/** Reset
- ---------------------------------------------------------*/
+    /** Label
+     ---------------------------------------------------------*/
 
-input,
-button {
-  box-sizing: border-box;
-  border: 0;
-  margin: 0;
-  padding: 0;
-}
+    label {
+      font-size: 14px;
+      display: block;
+      margin: 0 0 4px 16px;
+    }
 
-/** Inner
- ---------------------------------------------------------*/
+    /**
+     * [disbled]
+     */
 
-.inner {
-  height: 100%;
-}
+    [disabled] label {
+      opacity: 0.3;
+    }
 
-/** Label
- ---------------------------------------------------------*/
+    /** Fields
+     ---------------------------------------------------------*/
 
-label {
-  font-size: 14px;
-  display: block;
-  margin: 0 0 4px 16px;
-}
+    .fields {
+      position: relative;
+      width: 100%;
+      height: 100%;
 
-/**
- * [disbled]
- */
+      --gi-border-color:
+        var(--input-border-color,
+        var(--border-color,
+        var(--background-plus,
+        #e7e7e7)));
 
-[disabled] label {
-  opacity: 0.3;
-}
+      border-color:
+        var(--gi-border-color);
 
-/** Fields
- ---------------------------------------------------------*/
+      border:
+        var(--input-border,
+        var(--border,
+        1px solid var(--gi-border-color)));
+    }
 
-.fields {
-  position: relative;
-  width: 100%;
-  height: 100%;
+    /**
+     * [type='search']
+     */
 
-  --gi-border-color:
-    var(--input-border-color,
-    var(--border-color,
-    var(--background-plus,
-    #e7e7e7)));
+    [type='search'] .fields {
+      border-radius: 30px;
+      overflow: hidden;
+    }
 
-  border-color:
-    var(--gi-border-color);
+    /** Input Field
+     ---------------------------------------------------------*/
 
-  border:
-    var(--input-border,
-    var(--border,
-    1px solid var(--gi-border-color)));
-}
+    input {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: none;
+      padding: 0 16px;
+      margin: 0;
+      font: inherit;
+      resize: none;
 
-/**
- * [type='search']
- */
+      /* Dynamic */
 
-[type='search'] .fields {
-  border-radius: 30px;
-  overflow: hidden;
-}
+      color:
+        var(--text-color, #000);
 
-/** Input Field
- ---------------------------------------------------------*/
+      background:
+        var(--text-input-background,
+        var(--input-background,
+        var(--background-minus,
+        #fff)));
+    }
 
-input {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border: none;
-  padding: 0 16px;
-  margin: 0;
-  font: inherit;
-  resize: none;
+    /**
+     * [disabled]
+     */
 
-  /* Dynamic */
+    input[disabled] {
+      background: transparent;
+    }
 
-  color:
-    var(--text-color, #000);
+    /** Placeholder Text
+     ---------------------------------------------------------*/
 
-  background:
-    var(--text-input-background,
-    var(--input-background,
-    var(--background-minus,
-    #fff)));
-}
+    ::-moz-placeholder {
+      font-style: italic;
 
-/**
- * [disabled]
- */
+      color:
+        var(--input-placeholder-color, #909ca7);
+    }
 
-input[disabled] {
-  background: transparent;
-}
+    /** Clear Button
+     ---------------------------------------------------------*/
 
-/** Placeholder Text
- ---------------------------------------------------------*/
+    .clear {
+      display: none;
+      position: absolute;
+      top: 11px;
+      right: 10px;
+      width: 18px;
+      height: 18px;
+      padding: 0;
+      margin: 0;
+      border-radius: 50%;
+      opacity: 0;
+      color: #fff;
+      cursor: pointer;
 
-::-moz-placeholder {
-  font-style: italic;
+      background:
+        var(--input-clear-background, #999);
+    }
 
-  color:
-    var(--input-placeholder-color, #909ca7);
-}
+    /**
+     * [clearable]
+     */
 
-/** Clear Button
- ---------------------------------------------------------*/
+    [clearable] .clear {
+      display: block;
+    }
 
-.clear {
-  display: none;
-  position: absolute;
-  top: 11px;
-  right: 10px;
-  width: 18px;
-  height: 18px;
-  padding: 0;
-  margin: 0;
-  border-radius: 50%;
-  opacity: 0;
-  color: #fff;
-  cursor: pointer;
+    /**
+     * input:focus
+     */
 
-  background:
-    var(--input-clear-background, #999);
-}
+    input:focus ~ .clear {
+      opacity: 1;
+    }
 
-/**
- * [clearable]
- */
+    /** Clear Icon
+     ---------------------------------------------------------*/
 
-[clearable] .clear {
-  display: block;
-}
+    .clear:before {
+      font: normal 500 19px/16.5px 'gaia-icons';
+      content: 'close';
+      display: block;
+      text-rendering: optimizeLegibility;
+    }
 
-/**
- * input:focus
- */
+    /** Focus Bar
+     ---------------------------------------------------------*/
 
-input:focus ~ .clear {
-  opacity: 1;
-}
+    .focus {
+      position: absolute;
+      bottom: 0px;
+      width: 100%;
+      height: 3px;
+      transition: all 200ms;
+      transform: scaleX(0);
+      visibility: hidden;
+      background: var(--highlight-color, #000);
+    }
 
+    /**
+     * input:focus
+     */
 
-
-/** Clear Icon
- ---------------------------------------------------------*/
-
-.clear:before {
-  font: normal 500 19px/16.5px 'gaia-icons';
-  content: 'close';
-  display: block;
-  text-rendering: optimizeLegibility;
-}
-
-/** Focus Bar
- ---------------------------------------------------------*/
-
-.focus {
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
-  height: 3px;
-  transition: all 200ms;
-  transform: scaleX(0);
-  visibility: hidden;
-  background: var(--highlight-color, #000);
-}
-
-/**
- * input:focus
- */
-
-:focus ~ .focus {
-  transform: scaleX(1);
-  transition-delay: 200ms;
-  visibility: visible;
-}
-</style>
-
-<div class="inner">
-  <content select="label"></content>
-  <div class="fields">
-    <input type="text"/>
-    <button class="clear" tabindex="-1"></button>
-    <div class="focus"></div>
-  </div>
-</div>`;
-
-function shadowStyleHack(el) {
-  var style = document.createElement('style');
-  style.setAttribute('scoped', '');
-  style.innerHTML = lightCSS;
-  el.appendChild(style);
-}
-
-// Register and return the constructor
-module.exports = document.registerElement('gaia-text-input', { prototype: proto });
+    :focus ~ .focus {
+      transform: scaleX(1);
+      transition-delay: 200ms;
+      visibility: visible;
+    }
+    </style>
+  `
+});
 
 });})((function(n,w){return typeof define=='function'&&define.amd?
 define:typeof module=='object'?function(c){c(require,exports,module);}:function(c){

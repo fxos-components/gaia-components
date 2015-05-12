@@ -1,11 +1,11 @@
 {
   "name": "gaia-sub-header",
-  "version": "0.1.0",
+  "version": "0.3.1",
   "homepage": "https://github.com/gaia-components/gaia-subheader",
   "authors": [
     "rnowm <arnau@arnaumarch.com>"
   ],
-  "main": "script.js",
+  "main": "gaia-sub-header.js",
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -19,6 +19,6 @@
     "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1"
   },
   "dependencies": {
-    "pressed": "gaia-components/pressed#~0.1.0"
+    "gaia-component": "gaia-components/gaia-component#~0.3.0"
   }
 }

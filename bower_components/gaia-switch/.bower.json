@@ -1,5 +1,6 @@
 {
   "name": "gaia-switch",
+  "main": "gaia-switch.js",
   "homepage": "https://github.com/gaia-components/gaia-switch",
   "authors": [
     "Wilson Page <wilsonpage@me.com>"
@@ -13,15 +14,22 @@
     "tests"
   ],
   "dependencies": {
-    "drag": "gaia-components/drag#~0.1.0"
+    "drag": "gaia-components/drag#~0.2.0",
+    "gaia-component": "gaia-components/gaia-component#~0.3.0"
   },
-  "_release": "0db899a416",
+  "devDependencies": {
+    "gaia-theme": "gaia-components/gaia-theme#~0.4.5",
+    "gaia-list": "gaia-components/gaia-list#~0.1.1",
+    "base": "gaia-components/base",
+    "gaia-fonts": "gaia-components/gaia-fonts#~0.2.1"
+  },
+  "_release": "4c28f022ca",
   "_resolution": {
     "type": "branch",
-    "branch": "dev",
-    "commit": "0db899a416424042ae6fba2187358ef65804fa29"
+    "branch": "master",
+    "commit": "4c28f022cabc3fb19542d4fe67692488ca39d748"
   },
   "_source": "git://github.com/gaia-components/gaia-switch.git",
-  "_target": "dev",
+  "_target": "*",
   "_originalSource": "gaia-components/gaia-switch"
 }
