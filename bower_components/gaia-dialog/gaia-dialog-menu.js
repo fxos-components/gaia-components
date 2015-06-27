@@ -1,126 +1,90 @@
-;(function(define){define(function(require,exports,module){
-/*jshint esnext:true*/
-'use strict';
+/* global define */
+;(function(define){'use strict';define(function(require,exports,module){
 
 /**
  * Dependencies
  */
 
-var GaiaDialog = require('gaia-dialog');
+var GaiaDialogProto = require('gaia-dialog').prototype;
+var component = require('gaia-component');
 
 /**
- * Detects presence of shadow-dom
- * CSS selectors.
- *
- * @return {Boolean}
+ * Exports
  */
-var hasShadowCSS = (function() {
-  try { document.querySelector(':host'); return true; }
-  catch (e) { return false; }
-})();
+module.exports = component.register('gaia-dialog-menu', {
+  created: function() {
+    this.setupShadowRoot();
+    this.els = {
+      dialog: this.shadowRoot.querySelector('gaia-dialog')
+    };
+  },
 
-/**
- * Extend from the `HTMLElement` prototype
- *
- * @type {Object}
- */
-var proto = GaiaDialog.extend();
+  open: function(e) {
+    return GaiaDialogProto.show.call(this)
+      .then(() => this.els.dialog.open(e));
+  },
 
-/**
- * Runs when an instance of `GaiaTabs`
- * is first created.
- *
- * The initial value of the `select` attribute
- * is used to select a tab.
- *
- * @private
- */
-proto.createdCallback = function() {
-  this.onCreated();
-  this.els.submit = this.shadowRoot.querySelector('.submit');
-  this.els.cancel = this.shadowRoot.querySelector('.cancel');
-};
+  close: function() {
+    return GaiaDialogProto.show.call(this)
+      .then(() => this.els.dialog.close());
+  },
 
-proto.template = `
-<style>
-:host {
-  display: none;
-}
+  template: `
+    <gaia-dialog>
+      <div class="items"><content select="button"></content></div>
+    </gaia-dialog>
 
-:host[opened],
-:host.animating {
-  display: block;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-}
+    <style>
 
-::content > button {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 50px;
-  line-height: 50px;
-  margin: 0;
-  border: 0;
-  padding: 0rem 16px;
-  font: inherit;
-  font-style: italic;
-  text-align: left;
-  background: var(--color-beta);
-  color: var(--highlight-color);
-}
+    :host {
+      display: none;
+      position: fixed;
+      width: 100%;
+      height: 100%;
+    }
 
-::content > button[data-icon]:before {
-  width: 50px;
-  font-size: 22px;
-  margin-left: -16px;
-  vertical-align: middle;
-  text-align: center;
-}
+    ::content > button {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 50px;
+      line-height: 51px;
+      margin: 0;
+      border: 0;
+      padding: 0rem 16px;
+      font: inherit;
+      font-style: italic;
+      text-align: start;
+      background: var(--color-beta);
+      color: var(--highlight-color);
+    }
 
-/** Button Divider Line
- ---------------------------------------------------------*/
+    ::content > button[data-icon]:before {
+      width: 50px;
+      font-size: 22px;
+      vertical-align: middle;
+    }
 
-::content > button:after {
-  content: '';
-  display: block;
-  position: absolute;
-  height: 1px;
-  left: 6px;
-  right: 6px;
-  top: 49px;
-  background: #E7E7E7;
-}
+    /** Button Divider Line
+     ---------------------------------------------------------*/
 
-::content > button:last-of-type:after {
-  display: none;
-}
+    ::content > button:after {
+      content: '';
+      display: block;
+      position: absolute;
+      height: 1px;
+      left: 6px;
+      right: 6px;
+      top: 49px;
+      background: #E7E7E7;
+    }
 
-</style>
+    ::content > button:last-of-type:after {
+      display: none;
+    }
 
-<gaia-dialog>
-  <div class="items"><content select="button"></content></div>
-</gaia-dialog>`;
-
-// If the browser doesn't support shadow-css
-// selectors yet, we update the template
-// to use the shim classes instead.
-if (!hasShadowCSS) {
-  proto.template = proto.template
-    .replace('::content', 'gaia-dialog-menu.shadow-content', 'g')
-    .replace(':host', 'gaia-dialog-menu.shadow-host', 'g');
-}
-
-// Register and expose the constructor
-try {
-  module.exports = document.registerElement('gaia-dialog-menu', { prototype: proto });
-  module.exports.proto = proto;
-} catch (e) {
-  if (e.name !== 'NotSupportedError') {
-    throw e;
-  }
-}
+    </style>`
+});
 
 });})(typeof define=='function'&&define.amd?define
 :(function(n,w){'use strict';return typeof module=='object'?function(c){

@@ -62,8 +62,16 @@
       margin-bottom: var(--base-xxl);
     }
 
+    body > section.padded {
+      padding: 0 var(--base-m);
+    }
+
     .center {
       text-align: center;
+    }
+
+    .centered {
+      margin: 0 auto !important;
     }
 
     body > section > h2 {
@@ -149,7 +157,7 @@
     <h2 class="center">Design guide</h2>
   </div>
 
-  <section>
+  <section class="padded">
     <h2>Text Input</h2>
 
     <gaia-text-input placeholder="Default"></gaia-text-input>
@@ -160,16 +168,16 @@
     <gaia-text-input-pin></gaia-text-input-pin>
   </section>
 
-  <section class="center">
+  <section class="center padded">
     <h2>Button</h2>
 
     <div><gaia-button>Gaia-button</gaia-button></div>
     <div><gaia-button><i data-icon="settings"></i><span>Settings</span></gaia-button></div>
-    <div><gaia-button circular><i data-icon="arrow-forward" aria-hidden="true"></i></gaia-button></div>
+    <div><gaia-button class="centered" circular><i data-icon="arrow-forward" aria-hidden="true"></i></gaia-button></div>
     <gaia-button disabled>Disabled</gaia-button>
   </section>
 
-  <section>
+  <section class="padding-bottom:40px">
     <h2>List</h2>
 
     <gaia-list class="settings">
@@ -268,12 +276,12 @@
     </gaia-list>
   </section>
 
-  <section class="center">
+  <section class="center padded">
     <h2>Spinner</h2>
     <gaia-loading></gaia-loading>
   </section>
 
-  <section>
+  <section class="padded" style="padding-bottom: 40px">
     <h2>Headers</h2>
 
     <gaia-header action="back">
@@ -328,7 +336,7 @@
     </gaia-slider>
   </section>
 
-  <section class="flush">
+  <section>
     <h2>Tabs</h2>
 
     <style scoped>
@@ -604,7 +612,7 @@
     </script>
   </section>
 
-  <section class="center">
+  <section class="center padded">
     <h2>Toast</h2>
     <gaia-button id="toast-button">Let's toast</gaia-button>
     <gaia-toast>Yum...toast</gaia-toast>
