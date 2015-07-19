@@ -7,5 +7,5 @@ To view the result on FirefoxOS device, connect your device and open WebIDE in d
 
 ## Track components status
 
-You can check [https://wiki.mozilla.org/Gaia/Shared/Components Is Gaia Components Ready] page to track current gaia web components status.
+You can check [Is Gaia Components Ready](https://wiki.mozilla.org/Gaia/Shared/Components) page to track current gaia web components status.
 
